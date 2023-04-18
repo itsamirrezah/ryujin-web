@@ -1,0 +1,16 @@
+.container {
+    display: flex;
+}
+
+.container > div {
+    width: var(--256);
+}
+
+.left {
+    margin-right: -9%;
+    z-index: 1;
+}
+
+.right {
+    z-index: 2;
+}
