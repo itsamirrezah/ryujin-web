@@ -1,8 +1,8 @@
-import MasterGreen from "./master-green";
-import MasterRed from "./master-red";
-import styles from "./logo-masters.module.css"
+import MasterGreen from "../icons/master-green";
+import MasterRed from "../icons/master-red";
+import styles from "./masters.module.css"
 
-export default function LogoMasters(){
+export default function Masters(){
     return (
             <div className={styles.container}>
                 <div className={styles.left}>

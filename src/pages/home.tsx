@@ -1,24 +1,18 @@
-import LogoMasters from "@/components/logo/logo-masters"
-import LogoPrimary from "@/components/logo/logo-primary"
-import LogoSecondary from "@/components/logo/logo-secondary"
+import Masters from "@/components/home/masters"
 import RoundButton from "@/components/round-button/round-button"
 import styles from "./home.module.css"
+import Ryujin from "@/components/home/ryujin"
 
 export default function HomePage(){
   return (
     <div>
         <div className={styles.main}>
             <div>
-                <div style={{width: 400}}>
-                    <LogoPrimary/>
-                </div>
-                <div style={{width: 400, marginTop: -10}}>
-                    <LogoSecondary/>
-                </div>
-            <h3>Play online and challenge your friends</h3>
+                <Ryujin />
+                <h3>Play online and challenge your friends</h3>
             </div>
             <div>
-                <LogoMasters/>
+                <Masters />
                 <RoundButton>Sign Up</RoundButton>
                 <RoundButton>Login</RoundButton>
             </div>
