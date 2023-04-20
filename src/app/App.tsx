@@ -1,6 +1,6 @@
 import { RouterProvider } from "@tanstack/router"
-import Layout from "./components/layout/layout"
-import { router } from "./lib/router"
+import Layout from "@/components/layout/layout"
+import { router } from "@/lib/router"
 
 function App() {
     return (
