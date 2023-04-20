@@ -70,3 +70,6 @@ body {
 button {
     cursor: pointer;
 }
+svg {
+    max-width: 100%;
+}

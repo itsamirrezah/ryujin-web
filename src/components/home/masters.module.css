@@ -3,10 +3,6 @@
     justify-content: center;
 }
 
-.container > div {
-    width: var(--256);
-}
-
 .left {
     margin-right: -96px;
     z-index: 1;
@@ -14,4 +10,8 @@
 
 .right {
     z-index: 2;
+}
+
+.left > svg, .right > svg {
+    width: var(--256);
 }

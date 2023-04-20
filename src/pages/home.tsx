@@ -14,7 +14,7 @@ export default function HomePage(){
             </div>
             <div className={styles.get_started}>
                 <Masters />
-                <RoundButton>Start Playing</RoundButton>
+                <RoundButton>Play Now</RoundButton>
             </div>
             </div>
         <div>

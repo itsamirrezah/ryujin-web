@@ -4,6 +4,7 @@
     padding: var(--64) 6%;
     justify-content: space-around;
     align-items: center;
+    gap: 2%;
 }
 
 .main > div {
