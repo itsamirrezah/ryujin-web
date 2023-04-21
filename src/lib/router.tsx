@@ -1,4 +1,4 @@
-import App from "@/App";
+import Layout from "@/components/layout/layout";
 import HomePage from "@/pages/home";
 import { RootRoute, Router, Route } from "@tanstack/router";
 
@@ -8,7 +8,7 @@ declare module '@tanstack/router' {
   }
 }
 
-const root = new RootRoute();
+const root = new RootRoute({component: Layout});
 
 const indexRoute = new Route({
     getParentRoute: ()=> root,
@@ -16,7 +16,22 @@ const indexRoute = new Route({
     component: HomePage
 })
 
-const routeTree = root.addChildren([indexRoute])
+const playRoute = new Route({
+    getParentRoute: ()=> root,
+    path: '/play'
+})
+
+const rulesRoute = new Route({
+    getParentRoute: ()=> root,
+    path: "/rules" 
+})
+
+const aboutRoute= new Route({
+    getParentRoute: ()=> root,
+    path: "/about" 
+})
+
+const routeTree = root.addChildren([indexRoute, playRoute, rulesRoute, aboutRoute])
 
 export const router = new Router({ routeTree })
 

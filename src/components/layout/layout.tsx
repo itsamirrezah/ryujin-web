@@ -1,16 +1,12 @@
-import { ReactNode } from "react"
 import Header from "../header/header"
 import styles from "./layout.module.css"
+import { Outlet } from "@tanstack/router"
 
-interface ILayoutProps{
-    children: ReactNode
-}
-
-export default function Layout({children}: ILayoutProps){
+export default function Layout(){
     return (
             <div className={`${styles.container} ${styles.home}`}>
-                <Header/>
-                <main>{children}</main> 
+                <Header />
+                <main><Outlet/></main> 
             </div>
    )
 }
