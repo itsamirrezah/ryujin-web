@@ -1,7 +1,10 @@
 import LogoPrimary from "../icons/logo-primary"
+import NavItems from "../navigation/nav-items"
 import styles from "./header.module.css"
 
+
 export default function Header(){
+
     return (
         <header className={styles.container}>
             <div className={styles.logo}>
@@ -9,10 +12,7 @@ export default function Header(){
             </div>
             <nav>
                 <ul className={styles.navigation}>
-                    <li>Home</li>
-                    <li>Play</li>
-                    <li>Rules</li>
-                    <li>About</li>
+                    <NavItems />
                 </ul>
             </nav>
             <div className={styles.user}>User-Profile</div>
