@@ -9,7 +9,7 @@ interface ILayoutProps{
 export default function Layout({children}: ILayoutProps){
     return (
             <div className={`${styles.container} ${styles.home}`}>
-                <header><Header/></header>
+                <Header/>
                 <main>{children}</main> 
             </div>
    )

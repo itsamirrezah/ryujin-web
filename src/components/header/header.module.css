@@ -1,3 +1,28 @@
+.container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: var(--8) 4%;
+}
 
-.logo {
+.logo > svg {
+    width: var(--80);
+}
+
+.container > nav {
+    flex-grow: 1;
+}
+
+.navigation {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.user {
+    display: none;
 }

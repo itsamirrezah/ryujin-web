@@ -3,19 +3,19 @@ import styles from "./header.module.css"
 
 export default function Header(){
     return (
-        <div>
+        <header className={styles.container}>
             <div className={styles.logo}>
                 <LogoPrimary />
             </div>
             <nav>
-                <ul>
+                <ul className={styles.navigation}>
                     <li>Home</li>
-                    <li>Start</li>
+                    <li>Play</li>
                     <li>Rules</li>
                     <li>About</li>
                 </ul>
             </nav>
-            <div>Profile</div>
-        </div>
+            <div className={styles.user}>User-Profile</div>
+        </header>
     )
 }
