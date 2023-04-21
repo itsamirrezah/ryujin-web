@@ -1,4 +1,5 @@
 import { ReactNode } from "react"
+import Header from "../header/header"
 import styles from "./layout.module.css"
 
 interface ILayoutProps{
@@ -8,6 +9,7 @@ interface ILayoutProps{
 export default function Layout({children}: ILayoutProps){
     return (
             <div className={`${styles.container} ${styles.home}`}>
+                <header><Header/></header>
                 <main>{children}</main> 
             </div>
    )
