@@ -1,0 +1,18 @@
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background-color: rgba(72, 72, 72, 0.53);
+    background-blend-mode: multiply;
+    color: #ffffff;
+    text-align: center;
+    padding: var(--4);
+}
+
+.footer > small {
+    font-family: var(--font-lato);
+    font-size: var(--12);
+    line-height: var(--18);
+    text-transform: uppercase;
+    letter-spacing: 0.125em;
+}
