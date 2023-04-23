@@ -1,0 +1,6 @@
+.h2 {
+    font-family: var(--font-marker);
+    font-size: var(--112);
+    line-height: var(--160);
+    color: #FF6565
+}

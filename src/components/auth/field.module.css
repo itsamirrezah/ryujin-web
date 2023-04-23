@@ -1,0 +1,14 @@
+.container {
+    display: inline-block;
+    padding: var(--8) var(--36);
+    background-color: #ffffff;
+    border-radius: var(--16);
+}
+
+.container > input {
+    background-color: transparent;
+    width: 100%;
+    font-family: var(--font-lato);
+    font-size: var(--28);
+    border: none;
+}
