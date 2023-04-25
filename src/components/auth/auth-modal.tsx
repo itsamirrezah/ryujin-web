@@ -10,7 +10,7 @@ interface IAuthModalType {
     onClose: ()=> void;
 }
 
-export default function AuthModal({signType = "signup", onClose }: IAuthModalType){
+export default function AuthModal({signType = "signin", onClose }: IAuthModalType){
     return (
         <Modal>
             <div className={styles.container}>

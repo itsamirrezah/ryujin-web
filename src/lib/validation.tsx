@@ -1,9 +1,13 @@
 import { z, ZodType } from "zod";
 
-interface ISignUpSchema {
+
+interface ISignSchema {
     username: string,
-    email: string,
     password: string
+}
+
+interface ISignUpSchema extends ISignSchema {
+    email: string,
 }
 
 const signUpSchema: ZodType<ISignUpSchema> = z.object({
@@ -12,6 +16,11 @@ const signUpSchema: ZodType<ISignUpSchema> = z.object({
         password: z.string().min(8).max(20)
     })
 
-export {signUpSchema}
+const signInSchema: ZodType<ISignSchema> = z.object({
+        username: z.string().min(6).max(20),
+        password: z.string().min(8).max(20)
+    })
 
-export type {ISignUpSchema}
+export {signUpSchema, signInSchema}
+
+export type {ISignUpSchema, ISignSchema}
