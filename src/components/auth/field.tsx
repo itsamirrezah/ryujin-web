@@ -1,10 +1,12 @@
-import { InputHTMLAttributes } from "react";
+import { forwardRef, InputHTMLAttributes } from "react";
 import styles from "./field.module.css"
 
-export default function Field({name, ...rest}: InputHTMLAttributes<HTMLInputElement>){
+const Field = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputElement>>((props, ref) => {
     return (
-        <label className={styles.container} htmlFor={name}>
-            <input className={styles.input} id={name} name={name} {...rest} />
+        <label className={styles.container} htmlFor={props.name}>
+            <input ref={ref} className={styles.input} id={props.name} name={props.name} {...props} />
         </label>
     );
-}
+})
+
+export default Field;
