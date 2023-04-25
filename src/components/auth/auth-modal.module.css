@@ -1,0 +1,22 @@
+.container {
+    background-color: #FFFFFFD4;
+    width: 72%;
+    max-width: 100rem;
+    min-width: 320px;
+    border-radius: var(--32);
+    padding: var(--64) var(--80);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--12);
+}
+
+.form {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--20);
+}
+
+
