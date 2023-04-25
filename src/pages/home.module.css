@@ -1,7 +1,9 @@
 .main {
     background: linear-gradient(56.84deg, rgba(186, 8, 8, 0.59) 12.73%, rgba(187, 112, 0, 0) 197.99%);
     display: flex;
-    padding: var(--64) 6%;
+    padding: 6%;
+    padding-top: var(--112);
+    padding-bottom: var(--80);
     justify-content: space-around;
     align-items: center;
     gap: 2%;
