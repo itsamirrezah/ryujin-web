@@ -1,8 +1,9 @@
 .container {
+    position: relative;
     background-color: #FFFFFFD4;
     width: 72%;
-    max-width: 100rem;
-    min-width: 320px;
+    max-width: 80rem;
+    min-width: 40rem;
     border-radius: var(--32);
     padding: var(--64) var(--80);
     display: flex;
@@ -12,11 +13,51 @@
 }
 
 .form {
-    display: flex;
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--20);
+}
+
+.fields {
+    width: 100%;
+    display: flex;
     flex-direction: column;
     align-items: center;
     gap: var(--20);
 }
 
+.close {
+    position: absolute;
+    top: var(--20);
+    right: var(--20);
+    width: var(--24);
+    height: var(--24);
+}
 
+.join {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--4);
+}
+
+.join > small {
+    font-family: var(--font-marker);
+    font-size: var(--12);
+}
+
+.terms {
+    font-size: var(--14);
+    font-family: var(--font-lato);
+    text-align: center;
+    letter-spacing: 0.025em;
+    font-weight: 700;
+    line-height: 1.7;
+    text-transform: uppercase;
+    color: #7B7979;
+}
+
+.terms > a{
+    color: #000000
+}

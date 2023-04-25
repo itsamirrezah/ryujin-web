@@ -1,5 +1,9 @@
 import styles from "./h2.module.css"
 
-export default function H2(){
-    return <h2 className={styles.h2}>Test</h2>
+interface IH2Props {
+    children: string
+}
+
+export default function H2({children}: IH2Props){
+    return <h2 className={styles.h2}>{children}</h2>
 }

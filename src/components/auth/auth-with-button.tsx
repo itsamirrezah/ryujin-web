@@ -1,11 +1,14 @@
 import Google from "../icons/google"
 import styles from "./auth-with-button.module.css"
 
-export default function AuthWithButton(){
+interface IAuthWithButtonProps {
+    children: string
+}
+export default function AuthWithButton({children}: IAuthWithButtonProps){
     return (
         <button className={styles.button}>
             <span className={styles.icon}><Google/></span>
-            <span className={styles.text}>Auth With Google</span>
+            <span className={styles.text}>{children}</span>
         </button>
     )
 }

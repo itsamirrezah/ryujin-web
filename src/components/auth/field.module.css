@@ -1,14 +1,22 @@
 .container {
-    display: inline-block;
-    padding: var(--8) var(--36);
+    display: block;
+    width: 100%;
+    padding: var(--8) var(--40);
     background-color: #ffffff;
     border-radius: var(--16);
 }
 
-.container > input {
+.input {
     background-color: transparent;
     width: 100%;
     font-family: var(--font-lato);
-    font-size: var(--28);
+    font-size: var(--24);
     border: none;
+    line-height: 1.7;
+    letter-spacing: 0.025em;
+}
+
+.input::placeholder {
+    text-transform: uppercase;
+    color: #9A9A9A;
 }
