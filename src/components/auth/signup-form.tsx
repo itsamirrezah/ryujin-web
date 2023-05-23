@@ -7,24 +7,25 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 
 //FIXME: ui for validate error
-export default function SignUpForm(){
-    const {register, handleSubmit, formState: {errors}} = useForm<ISignUpSchema>({resolver: zodResolver(signUpSchema)})
-    function onSubmitHandler(data: ISignUpSchema){
+export default function SignUpForm() {
+    const { register, handleSubmit, formState: { errors } } = useForm<ISignUpSchema>({ resolver: zodResolver(signUpSchema) })
+
+    async function onSubmitHandler(data: ISignUpSchema) {
         console.log("sending request to server", data)
     }
     return (
-           <form className={styles.form} onSubmit={handleSubmit(onSubmitHandler)}>
-               <div className={styles.fields}>
-                   <Field placeholder="Username" {...register("username")} /> 
-                   <Field placeholder="Email" type="email" {...register("email")} />
-                   <Field placeholder="Password" type="password" {...register("password")} />
-               </div>
-               <p className={styles.terms}>By continuing, you agree to Ryujin’s <a href="#">Terms of Service</a><br/>and acknowledge you've read our <a href="#">Privacy Policy</a></p>
-               <div className={styles.join}>
-                   <RoundButton theme="red" type="submit">Join us</RoundButton>
-                   <small> or </small>
-                   <AuthWithButton>Sign Up with Google</AuthWithButton>
-               </div>
-           </form>
+        <form className={styles.form} onSubmit={handleSubmit(onSubmitHandler)}>
+            <div className={styles.fields}>
+                <Field placeholder="Username" {...register("username")} />
+                <Field placeholder="Email" type="email" {...register("email")} />
+                <Field placeholder="Password" type="password" {...register("password")} />
+            </div>
+            <p className={styles.terms}>By continuing, you agree to Ryujin’s <a href="#">Terms of Service</a><br />and acknowledge you've read our <a href="#">Privacy Policy</a></p>
+            <div className={styles.join}>
+                <RoundButton theme="red" type="submit">Join us</RoundButton>
+                <small> or </small>
+                <AuthWithButton>Sign Up with Google</AuthWithButton>
+            </div>
+        </form>
     )
 }

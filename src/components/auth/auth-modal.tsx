@@ -7,16 +7,16 @@ import SignUpForm from "./signup-form"
 
 interface IAuthModalType {
     signType?: "signin" | "signup"
-    onClose: ()=> void;
+    onClose: () => void;
 }
 
-export default function AuthModal({signType = "signin", onClose }: IAuthModalType){
+export default function AuthModal({ signType = "signup", onClose }: IAuthModalType) {
     return (
         <Modal>
             <div className={styles.container}>
-                <H2>{signType === "signup" ? "Sign Up" : "Sign In"}</H2> 
+                <H2>{signType === "signup" ? "Sign Up" : "Sign In"}</H2>
                 {signType === "signup" ? <SignUpForm /> : <SignInForm />}
-                <button className={styles.close} onClick={onClose}><Close/></button>
+                <button className={styles.close} onClick={onClose}><Close /></button>
             </div>
         </Modal>
     )
