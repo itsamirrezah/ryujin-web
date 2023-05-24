@@ -5,13 +5,16 @@ import styles from "./auth-modal.module.css"
 import { signUpSchema, ISignUpSchema } from "@/lib/validation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
+import useRegisterUser from "@/lib/service/use-register-user"
 
 //FIXME: ui for validate error
 export default function SignUpForm() {
     const { register, handleSubmit, formState: { errors } } = useForm<ISignUpSchema>({ resolver: zodResolver(signUpSchema) })
+    const { mutate, data: testData } = useRegisterUser()
 
     async function onSubmitHandler(data: ISignUpSchema) {
         console.log("sending request to server", data)
+        await mutate(data)
     }
     return (
         <form className={styles.form} onSubmit={handleSubmit(onSubmitHandler)}>
