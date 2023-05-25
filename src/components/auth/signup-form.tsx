@@ -10,7 +10,7 @@ import useRegisterUser from "@/lib/service/use-register-user"
 //FIXME: ui for validate error
 export default function SignUpForm() {
     const { register, handleSubmit, formState: { errors } } = useForm<ISignUpSchema>({ resolver: zodResolver(signUpSchema) })
-    const { mutate, data: testData } = useRegisterUser()
+    const { mutate } = useRegisterUser()
 
     async function onSubmitHandler(data: ISignUpSchema) {
         console.log("sending request to server", data)
