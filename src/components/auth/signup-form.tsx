@@ -13,7 +13,6 @@ export default function SignUpForm() {
     const { mutate } = useRegisterUser()
 
     async function onSubmitHandler(data: ISignUpSchema) {
-        console.log("sending request to server", data)
         await mutate(data)
     }
     return (
