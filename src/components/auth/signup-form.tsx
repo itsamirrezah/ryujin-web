@@ -6,15 +6,18 @@ import { signUpSchema, ISignUpSchema } from "@/lib/validation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import useRegisterUser from "@/lib/service/use-register-user"
+import { useGoogleAuth } from "@/lib/service/use-google-auth"
 
 //FIXME: ui for validate error
 export default function SignUpForm() {
     const { register, handleSubmit, formState: { errors } } = useForm<ISignUpSchema>({ resolver: zodResolver(signUpSchema) })
     const { mutate } = useRegisterUser()
+    const { isError, userInfo, googleAuthHandler } = useGoogleAuth()
 
     async function onSubmitHandler(data: ISignUpSchema) {
         await mutate(data)
     }
+
     return (
         <form className={styles.form} onSubmit={handleSubmit(onSubmitHandler)}>
             <div className={styles.fields}>
@@ -26,7 +29,7 @@ export default function SignUpForm() {
             <div className={styles.join}>
                 <RoundButton theme="red" type="submit">Join us</RoundButton>
                 <small> or </small>
-                <AuthWithButton>Sign Up with Google</AuthWithButton>
+                <AuthWithButton onClick={() => googleAuthHandler()}>Sign Up with Google</AuthWithButton>
             </div>
         </form>
     )
