@@ -1,7 +1,7 @@
 import axios from "axios";
 import useMutation from "./use-mutation";
+import { User } from "../types/users"
 
-type User = { id: string, email: string, createdAt: string, updatedAt: string, username: string, type: string }
 type Body = { usernameOrEmail: string, password: string };
 
 export default function useSignIn() {

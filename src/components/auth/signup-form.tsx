@@ -29,7 +29,7 @@ export default function SignUpForm() {
             <div className={styles.join}>
                 <RoundButton theme="red" type="submit">Join us</RoundButton>
                 <small> or </small>
-                <AuthWithButton onClick={() => googleAuthHandler()}>Sign Up with Google</AuthWithButton>
+                <AuthWithButton type="button" onClick={() => googleAuthHandler()}>Sign Up with Google</AuthWithButton>
             </div>
         </form>
     )
