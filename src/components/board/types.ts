@@ -9,3 +9,4 @@ export type Squares =
     "a1" | "b1" | "c1" | "d1" | "e1"
 
 export type Position = { [key in Squares]?: PieceType }
+export type PlayerView = "w" | "b";

@@ -6,7 +6,7 @@ type SquareProps = {
     children: ReactNode
 }
 
-export default function Square({ square, children}: SquareProps) {
+export default function Square({ square, children }: SquareProps) {
     return (
         <div style={{ width: 124, height: 124, border: "1px solid gray", display: "flex", justifyContent: "center", alignItems: "center" }}>
             {children}
