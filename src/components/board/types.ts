@@ -1,5 +1,5 @@
 
-export type Piece = "wP" | "wK" | "bP" | "bK";
+export type PieceType = "wP" | "wK" | "bP" | "bK";
 
 export type Squares =
     "a5" | "b5" | "c5" | "d5" | "e5" |
@@ -8,4 +8,4 @@ export type Squares =
     "a2" | "b2" | "c2" | "d2" | "e2" |
     "a1" | "b1" | "c1" | "d1" | "e1"
 
-export type Position = { [key in Squares]?: Piece }
+export type Position = { [key in Squares]?: PieceType }

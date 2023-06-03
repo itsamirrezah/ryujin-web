@@ -13,6 +13,7 @@ const BoardContext = createContext<BoardValues>({} as BoardValues)
 
 export function BoardContextProvider({ children }: BoardContextProviderProps) {
     const [position, setPosition] = useState<Position>(DEFAULT_POSITION)
+
     return (
         <BoardContext.Provider value={{ position }}>
             {children}
