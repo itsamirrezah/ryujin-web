@@ -12,3 +12,4 @@ export const DEFAULT_POSITION: Position = {
 export const BOARD_SIZE = 5;
 export const COLUMNS = "abcde";
 export const DEFAULT_PIECES = { "wP": StudentRedPiece, "wK": MasterRedPiece, "bP": StudentGreenPiece, "bK": MasterGreenPiece };
+export const DND_ITEM_TYPE = "piece";

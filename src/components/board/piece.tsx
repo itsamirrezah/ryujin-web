@@ -1,14 +1,22 @@
-import { PieceType } from "./types"
-import { DEFAULT_PIECES } from "./consts"
+import { PieceType, SquareType } from "./types"
+import { DEFAULT_PIECES, DND_ITEM_TYPE } from "./consts"
+import { useDrag } from "react-dnd";
 
 type PieceProps = {
-    piece: PieceType
+    piece: PieceType,
+    square: SquareType
 }
 
-export default function Piece({ piece }: PieceProps) {
+export default function Piece({ piece, square }: PieceProps) {
     const PieceComponent = DEFAULT_PIECES[piece];
+    const [{ isDragging }, ref] = useDrag(() => ({
+        type: DND_ITEM_TYPE,
+        item: { square, piece },
+        collect: (monitor) => ({ isDragging: monitor.isDragging() }),
+    }))
+
     return (
-        <div style={{ width: 124, height: 124, border: "1px solid gray", display: "flex", justifyContent: "center", alignItems: "center" }}>
+        <div ref={ref}>
             <PieceComponent />
         </div>
     )
