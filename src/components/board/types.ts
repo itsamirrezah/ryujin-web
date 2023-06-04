@@ -10,3 +10,4 @@ export type SquareType =
 
 export type Position = { [key in SquareType]?: PieceType }
 export type PlayerView = "w" | "b";
+export type DndItem = { from: SquareType };

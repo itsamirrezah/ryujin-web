@@ -11,7 +11,7 @@ export default function Piece({ piece, square }: PieceProps) {
     const PieceComponent = DEFAULT_PIECES[piece];
     const [{ isDragging }, ref] = useDrag(() => ({
         type: DND_ITEM_TYPE,
-        item: { square, piece },
+        item: { from: square },
         collect: (monitor) => ({ isDragging: monitor.isDragging() }),
     }))
 
