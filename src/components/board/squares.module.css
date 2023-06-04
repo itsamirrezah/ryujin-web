@@ -1,0 +1,5 @@
+.board {
+    padding: var(--14);
+    background-color: #D6C5AB;
+    border-radius: var(--10);
+}
