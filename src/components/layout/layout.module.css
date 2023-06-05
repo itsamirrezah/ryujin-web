@@ -12,3 +12,8 @@
     background-image: url("../../assets/bg-home.png");
     background-size: cover;
 }
+
+.play {
+    background-image: url("../../assets/bg-play.png");
+    background-size: cover;
+}
