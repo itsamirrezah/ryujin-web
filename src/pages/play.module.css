@@ -1,0 +1,23 @@
+.main {
+    padding-top: var(--176);
+}
+
+.game {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    gap: 6%;
+}
+
+
+.board {
+    width: 666px;
+    height: 666px;
+}
+
+.actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--16)
+}
