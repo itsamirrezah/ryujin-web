@@ -21,7 +21,7 @@ export default function Sqaures() {
                 const squareColor = row % 2 === col % 2 ? "white" : "black"
                 return (
                     <Square key={i} square={square} color={squareColor}>
-                        {piece && <Piece piece={piece} square={square} />}
+                        {/**{piece && <Piece piece={piece} square={square} />}**/}
                     </Square>
                 )
             })}

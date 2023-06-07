@@ -3,16 +3,16 @@
 }
 
 .game {
-    display: flex;
-    justify-content: space-evenly;
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: 1.5fr 1fr;
     align-items: center;
     gap: 6%;
+    margin: 0 6%;
 }
 
-
 .board {
-    width: 666px;
-    height: 666px;
+    max-width: 666px;
 }
 
 .actions {
