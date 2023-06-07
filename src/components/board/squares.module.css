@@ -1,5 +1,10 @@
 .board {
+    display: grid;
+    grid-template-rows: repeat(5, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     padding: var(--14);
-    background-color: #D6C5AB;
+    background-color: #EBD5B4EA;
     border-radius: var(--10);
+    opacity: 0.95;
+    gap: var(--4);
 }

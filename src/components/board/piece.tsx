@@ -1,6 +1,7 @@
 import { PieceType, SquareType } from "./types"
 import { DEFAULT_PIECES, DND_ITEM_TYPE } from "./consts"
 import { useDrag } from "react-dnd";
+import styles from "./piece.module.css"
 
 type PieceProps = {
     piece: PieceType,
@@ -16,7 +17,7 @@ export default function Piece({ piece, square }: PieceProps) {
     }))
 
     return (
-        <div ref={ref} style={{ display: "flex", justifyContent: "center", alignItems: "center" }} >
+        <div ref={ref} className={styles.piece}>
             <PieceComponent />
         </div>
     )

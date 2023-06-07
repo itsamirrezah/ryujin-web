@@ -1,6 +1,14 @@
 .bg-white {
-    background-color: #D6C5AB
+    background-color: #D6C5AB;
 }
+
 .bg-black {
-    background-color: #B0894F3D;
+    background-color: #B0894F42;
+}
+
+.sqaure {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    aspect-ratio: 1/1;
 }

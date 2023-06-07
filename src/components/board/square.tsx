@@ -23,7 +23,7 @@ export default function Square({ square, children, color }: SquareProps) {
     }))
 
     return (
-        <div ref={ref} className={styles[`bg-${color}`]} style={{ border: "1px solid gray", display: "flex", justifyContent: "center", alignItems: "center", aspectRatio: "1/1" }}>
+        <div ref={ref} className={`${styles.sqaure} ${styles[`bg-${color}`]}`} >
             {children}
         </div>
     )
