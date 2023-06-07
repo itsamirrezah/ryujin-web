@@ -16,7 +16,7 @@ export default function Piece({ piece, square }: PieceProps) {
     }))
 
     return (
-        <div ref={ref}>
+        <div ref={ref} style={{ display: "flex", justifyContent: "center", alignItems: "center" }} >
             <PieceComponent />
         </div>
     )
