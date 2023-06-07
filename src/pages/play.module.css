@@ -1,23 +1,24 @@
 .main {
-    padding-top: var(--176);
+    margin-top: var(--176);
 }
 
 .game {
     display: grid;
     grid-template-rows: 1fr;
-    grid-template-columns: 1.5fr 1fr;
+    grid-template-columns: 2fr 1fr;
     align-items: center;
+    justify-items: center;
     gap: 6%;
     margin: 0 6%;
 }
 
-.board {
+.boardlyt{
     max-width: 666px;
+    min-width: 333px;
 }
 
-.actions {
+.side{
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--16)
 }

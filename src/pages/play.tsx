@@ -6,12 +6,11 @@ export default function PlayPage() {
     return (
         <div className={styles.main}>
             <div className={styles.game}>
-                <div className={styles.board}>
+                <div className={styles.boardlyt}>
                     <Board />
                 </div>
-                <div className={styles.actions}>
+                <div className={styles.side}>
                     <RoundButton>New opponent</RoundButton>
-                    <RoundButton>Rematch</RoundButton>
                 </div>
             </div>
         </div >
