@@ -1,4 +1,5 @@
 import Layout from "@/components/layout/layout";
+import PlayContextProvider from "@/components/play/play-context";
 import HomePage from "@/pages/home";
 import PlayPage from "@/pages/play";
 import { RootRoute, Router, Route } from "@tanstack/router";
@@ -20,7 +21,7 @@ const indexRoute = new Route({
 const playRoute = new Route({
     getParentRoute: () => root,
     path: '/play',
-    component: PlayPage
+    component: WrappedPlay
 })
 
 const rulesRoute = new Route({
@@ -37,3 +38,6 @@ const routeTree = root.addChildren([indexRoute, playRoute, rulesRoute, aboutRout
 
 export const router = new Router({ routeTree })
 
+function WrappedPlay() {
+    return <PlayContextProvider><PlayPage /> </PlayContextProvider>
+}
