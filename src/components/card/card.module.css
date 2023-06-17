@@ -1,0 +1,38 @@
+.card {
+    background-color: #EBD5B4EA;
+    background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.3294) 11.45%, rgba(255, 214, 0, 0.1566) 139.13%);
+    padding: var(--20);
+    border-radius: var(--10);
+    display: flex;
+}
+
+.board {
+    height: 94px;
+    width: 94px;
+    background: red;
+}
+
+.title{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo {
+    height: var(--48);
+}
+.logo svg {
+    fill: #92887D;
+    height: 100%;
+}
+
+.title > h4 {
+    font-family: var(--font-lato);
+    font-size: var(--20);
+    color: #303456;
+    font-weight: 900 ;
+    line-height: var(--24);
+    text-transform: uppercase;
+    text-align: center;
+}
