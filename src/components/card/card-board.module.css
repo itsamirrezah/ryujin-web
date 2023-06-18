@@ -1,0 +1,23 @@
+.board {
+    display: grid;
+    grid-template-rows: repeat(5, 1fr);
+    grid-template-columns: repeat(5, 1fr);
+    padding: var(--2);
+    background-color: #F2EEE5;
+    opacity: 0.95;
+}
+
+.bg-white {
+    background-color: #F2EEE5;
+}
+
+.bg-black {
+    background-color: #DDCCAD;
+}
+
+.sqaure {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    aspect-ratio: 1/1;
+}
