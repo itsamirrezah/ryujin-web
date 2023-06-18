@@ -1,5 +1,6 @@
 import Board from "@/components/board/board";
 import Card from "@/components/card/card";
+import { cards } from "@/components/play/consts";
 import { usePlay } from "@/components/play/play-context";
 import RoundButton from "@/components/round-button/round-button";
 import styles from "./play.module.css";
@@ -15,7 +16,7 @@ export default function PlayPage() {
                 </div>
                 <div className={styles.side}>
                     <RoundButton onClick={joinRoom}>New opponent</RoundButton>
-                    <Card />
+                    {cards.map(card => <Card card={card} />)}
                 </div>
             </div>
         </div >
