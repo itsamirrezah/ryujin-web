@@ -5,7 +5,8 @@
     border-radius: var(--10);
     display: flex;
     width: 228px;
-    gap: 7%
+    gap: 7%;
+    cursor: pointer;
 }
 
 .board {

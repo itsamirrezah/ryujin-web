@@ -6,7 +6,7 @@ export default function Card() {
     return (
         <div className={styles.card}>
             <div className={styles.board}>
-                <CardBoard />
+                <CardBoard options={[2, 17]} />
             </div>
             <div className={styles.title}>
                 <div className={styles.logo}>

@@ -5,6 +5,7 @@
     padding: var(--2);
     background-color: #F2EEE5;
     opacity: 0.95;
+    gap: var(--1);
 }
 
 .bg-white {
