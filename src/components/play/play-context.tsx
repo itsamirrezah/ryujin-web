@@ -2,11 +2,18 @@ import { createContext, useState, ReactNode, useEffect, useContext } from "react
 import { socket } from "@/lib/socket";
 import { Room } from "./types";
 
-const PlayContext = createContext({ joinRoom: () => { } });
 
+type PlayValues = {
+    joinRoom: () => void,
+    hasRoom: boolean
+    roomId?: string
+}
+
+const PlayContext = createContext({} as PlayValues);
 export default function PlayContextProvider({ children }: { children: ReactNode }) {
     const [isConnected, setIsConnected] = useState<boolean>(socket.connected);
     const [room, setRoom] = useState<Room>()
+    console.log(room)
 
     useEffect(() => {
         if (!isConnected) {
@@ -37,7 +44,7 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
         socket.emit("CREATE_OR_JOIN_ROOM");
     }
     return (
-        <PlayContext.Provider value={{ joinRoom }}>
+        <PlayContext.Provider value={{ joinRoom, hasRoom: !!room?.id, roomId: room?.id }}>
             {children}
         </PlayContext.Provider>
     );
