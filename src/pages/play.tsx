@@ -1,5 +1,5 @@
 import Board from "@/components/board/board";
-import { usePlay } from "@/components/play/play-context";
+import { usePlay } from "@/lib/play/play-context";
 import RoundButton from "@/components/round-button/round-button";
 import styles from "./play.module.css";
 

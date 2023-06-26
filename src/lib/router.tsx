@@ -1,5 +1,5 @@
 import Layout from "@/components/layout/layout";
-import PlayContextProvider from "@/components/play/play-context";
+import PlayContextProvider from "./play/play-context";
 import HomePage from "@/pages/home";
 import PlayPage from "@/pages/play";
 import { RootRoute, Router, Route } from "@tanstack/router";
