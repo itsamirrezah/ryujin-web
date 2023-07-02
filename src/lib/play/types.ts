@@ -1,4 +1,9 @@
 export type Room = {
     id: string;
-    playerIds: string[];
+    players: string[];
+}
+export type Player = {
+    name: string,
+    socketId: string,
+    color: "w" | "b" | undefined
 }

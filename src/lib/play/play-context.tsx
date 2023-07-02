@@ -1,6 +1,9 @@
 import { createContext, useState, ReactNode, useEffect, useContext } from "react";
 import { socket } from "@/lib/socket";
-import { Room } from "./types";
+import { Player, Room } from "./types";
+import { createMachine } from "xstate";
+import { ryujinMachine } from "./ryujin-machine";
+import { useMachine } from "@xstate/react";
 
 
 type PlayValues = {
@@ -12,8 +15,7 @@ type PlayValues = {
 const PlayContext = createContext({} as PlayValues);
 export default function PlayContextProvider({ children }: { children: ReactNode }) {
     const [isConnected, setIsConnected] = useState<boolean>(socket.connected);
-    const [room, setRoom] = useState<Room>()
-    console.log(room)
+    const [state, send] = useMachine(ryujinMachine)
 
     useEffect(() => {
         if (!isConnected) {
@@ -25,9 +27,15 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
         socket.on("disconnect", () => {
             setIsConnected(false);
         })
-        socket.on("JOIN_ROOM", (room) => {
-            console.log({ room })
-            setRoom(room);
+        socket.on("JOIN_ROOM", (room: Room) => {
+            console.log({room})
+            let players: Player[] = room.players.map(id => (
+                {
+                    socketId: id,
+                    name: id === socket.id ? "You" : "Opponent",
+                    color: undefined
+                }))
+            send({ type: "PLAYER_JOIN", players, roomId: room.id })
         })
         socket.on("START_GAME", (game) => {
             console.log({ game })
