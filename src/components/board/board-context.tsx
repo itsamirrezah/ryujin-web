@@ -1,8 +1,9 @@
-import { createContext, ReactNode, useContext, useState } from "react";
+import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { DEFAULT_POSITION } from "./consts";
 import { PlayerView, Position, SquareType } from "./types";
 
 type BoardContextProviderProps = {
+    currentPosition?: Position
     children: ReactNode
 }
 type BoardValues = {
@@ -13,9 +14,14 @@ type BoardValues = {
 
 const BoardContext = createContext<BoardValues>({} as BoardValues)
 
-export function BoardContextProvider({ children }: BoardContextProviderProps) {
-    const [position, setPosition] = useState<Position>(DEFAULT_POSITION)
+export function BoardContextProvider({ children, currentPosition = DEFAULT_POSITION }: BoardContextProviderProps) {
+    const [position, setPosition] = useState<Position>(currentPosition)
     const [playerView, setPlayerView] = useState<PlayerView>("w")
+
+    useEffect(() => {
+        setPosition(currentPosition)
+
+    }, [currentPosition])
 
     function onMove(from: SquareType, to: SquareType) {
         if (from === to) return

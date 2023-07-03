@@ -1,15 +1,17 @@
 import { createContext, useState, ReactNode, useEffect, useContext } from "react";
 import { socket } from "@/lib/socket";
-import { Player, Room } from "./types";
-import { createMachine } from "xstate";
+import { Game, Player, Room } from "./types";
 import { ryujinMachine } from "./ryujin-machine";
 import { useMachine } from "@xstate/react";
+import { Position } from "@/components/board/types";
 
 
 type PlayValues = {
     joinRoom: () => void,
     hasRoom: boolean
     roomId?: string
+    turn?: "w" | "b",
+    boardPosition: Position | undefined
 }
 
 const PlayContext = createContext({} as PlayValues);
@@ -24,11 +26,12 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
         socket.on("connect", () => {
             setIsConnected(true);
         })
+
         socket.on("disconnect", () => {
             setIsConnected(false);
         })
+
         socket.on("JOIN_ROOM", (room: Room) => {
-            console.log({room})
             let players: Player[] = room.players.map(id => (
                 {
                     socketId: id,
@@ -37,9 +40,16 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
                 }))
             send({ type: "PLAYER_JOIN", players, roomId: room.id })
         })
-        socket.on("START_GAME", (game) => {
-            console.log({ game })
+
+        socket.on("START_GAME", (game: Game) => {
+            send({
+                type: "GAME_STARTED", boardPosition: game.boardPosition,
+                turn: game.turnColor,
+                blackPlayerId: game.playerB,
+                whitePlayerId: game.playerW
+            })
         })
+
         return () => {
             socket.off("connect");
             socket.off("disconnect");
@@ -51,8 +61,15 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
     function joinRoom() {
         socket.emit("CREATE_OR_JOIN_ROOM");
     }
+
     return (
-        <PlayContext.Provider value={{ joinRoom, hasRoom: !!room?.id, roomId: room?.id }}>
+        <PlayContext.Provider value={{
+            joinRoom,
+            hasRoom: !!state.context?.roomId,
+            roomId: state.context?.roomId,
+            turn: state.context.turn,
+            boardPosition: state.context.boardPosition
+        }}>
             {children}
         </PlayContext.Provider>
     );

@@ -2,10 +2,14 @@ import { DndProvider } from "react-dnd"
 import { HTML5Backend } from "react-dnd-html5-backend"
 import { BoardContextProvider } from "./board-context"
 import Sqaures from "./squares"
+import { Position } from "./types"
 
-export default function Board() {
+type IBoardProps = {
+    position: Position | undefined
+}
+export default function Board({ position }: IBoardProps) {
     return (
-        <BoardContextProvider>
+        <BoardContextProvider currentPosition={position}>
             <DndProvider backend={HTML5Backend}>
                 <Sqaures />
             </DndProvider>

@@ -1,4 +1,4 @@
-import { assign, createMachine } from "xstate";
+import { actions, assign, createMachine } from "xstate";
 import { Position } from "@/components/board/types";
 import { DEFAULT_POSITION } from "@/components/board/consts";
 import { Player } from "./types";
@@ -8,11 +8,15 @@ type Context = {
     boardPosition: Position | undefined;
     roomId: string | undefined,
     players: Player[] | undefined
+    turn: "w" | "b" | undefined
+    whitePlayerId: string | undefined,
+    blackPlayerId: string | undefined
 }
 
-type Events = { type: "START"; }
+type Events =
     | { type: "MOVE", payload: string }
     | { type: "PLAYER_JOIN", players: Player[], roomId: string }
+    | { type: "GAME_STARTED", boardPosition: Position, turn: "w" | "b", blackPlayerId: string, whitePlayerId: string }
 
 type StateOptions = "pregame" | "idle" | "proposed_action" | "moved" | "game_over"
 
@@ -22,7 +26,10 @@ export const ryujinMachine = createMachine<Context, Events, State>({
     context: {
         boardPosition: undefined,
         roomId: undefined,
-        players: undefined
+        players: undefined,
+        turn: undefined,
+        whitePlayerId: undefined,
+        blackPlayerId: undefined
     },
     initial: "pregame",
     states: {
@@ -35,8 +42,14 @@ export const ryujinMachine = createMachine<Context, Events, State>({
                         roomId: (_, e) => e.roomId
                     })
                 },
-                START: {
-                    target: "idle"
+                GAME_STARTED: {
+                    target: "idle",
+                    actions: assign({
+                        boardPosition: (_, e) => e.boardPosition,
+                        turn: (_, e) => e.turn,
+                        blackPlayerId: (_, e) => e.blackPlayerId,
+                        whitePlayerId: (_, e) => e.whitePlayerId
+                    })
                 }
             }
         },
