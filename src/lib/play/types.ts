@@ -1,4 +1,5 @@
 import { Position } from "@/components/board/types";
+import { Card } from "./consts";
 
 export type Room = {
     id: string;
@@ -16,5 +17,8 @@ export type Game = {
     turnId: string,
     whiteId: string,
     blackId: string,
-    boardPosition: Position
+    boardPosition: Position,
+    whiteCards: [Card, Card],
+    blackCards: [Card, Card],
+    reserveCards: Card[]
 }

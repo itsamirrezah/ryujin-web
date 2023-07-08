@@ -2,19 +2,22 @@ import { assign, createMachine } from "xstate";
 import { Position } from "@/components/board/types";
 import { DEFAULT_POSITION } from "@/components/board/consts";
 import { Player } from "./types";
+import { Card } from "./consts";
 
 type Context = {
-    boardPosition: Position | undefined;
+    boardPosition: Position | undefined,
     roomId: string | undefined,
     playersInfo: Record<"self" | "opponent", Player> | undefined
     selfColor: "w" | "b" | undefined
-    hasTurn: boolean
+    hasTurn: boolean,
+    selfCards: [Card, Card] | undefined,
+    opponentCards: [Card, Card] | undefined,
+    reserveCards: Card[] | undefined
 }
 
 type Events =
-    | { type: "MOVE", payload: string }
     | { type: "PLAYER_JOIN", players: Record<"self" | "opponent", Player>, roomId: string }
-    | { type: "GAME_STARTED", boardPosition: Position, selfColor: "w" | "b", hasTurn: boolean }
+    | { type: "GAME_STARTED", boardPosition: Position, selfColor: "w" | "b", hasTurn: boolean, selfCards: [Card, Card], opponentCard: [Card, Card], reserveCards: Card[] };
 
 type StateOptions = "pregame" | "idle" | "proposed_action" | "moved" | "game_over"
 
@@ -27,6 +30,9 @@ export const ryujinMachine = createMachine<Context, Events, State>({
         playersInfo: undefined,
         selfColor: undefined,
         hasTurn: false,
+        selfCards: undefined,
+        opponentCards: undefined,
+        reserveCards: undefined
     },
     initial: "pregame",
     states: {
@@ -44,7 +50,10 @@ export const ryujinMachine = createMachine<Context, Events, State>({
                     actions: assign({
                         boardPosition: (_, e) => e.boardPosition,
                         selfColor: (_, e) => e.selfColor,
-                        hasTurn: (_, e) => e.hasTurn
+                        hasTurn: (_, e) => e.hasTurn,
+                        selfCards: (_, e) => e.selfCards,
+                        opponentCards: (_, e) => e.opponentCard,
+                        reserveCards: (_, e) => e.reserveCards
                     })
                 }
             }

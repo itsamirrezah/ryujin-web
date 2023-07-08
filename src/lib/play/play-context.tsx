@@ -46,11 +46,15 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
         })
 
         socket.on("START_GAME", (game: Game) => {
-            console.log({ game })
+            const [selfCards, opponentCards] = socket.id === game.whiteId ? [game.whiteCards, game.blackCards] : [game.blackCards, game.whiteCards]
             send({
-                type: "GAME_STARTED", boardPosition: game.boardPosition,
+                type: "GAME_STARTED",
+                boardPosition: game.boardPosition,
                 selfColor: socket.id === game.whiteId ? "w" : "b",
-                hasTurn: socket.id === game.turnId
+                hasTurn: socket.id === game.turnId,
+                selfCards: selfCards,
+                opponentCard: opponentCards,
+                reserveCards: game.reserveCards
             })
         })
 
@@ -66,7 +70,6 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
         socket.emit("CREATE_OR_JOIN_ROOM");
     }
 
-    console.log(state.context)
     return (
         <PlayContext.Provider value={{
             joinRoom,
