@@ -7,14 +7,14 @@ export type Room = {
 export type Player = {
     name: string,
     socketId: string,
-    color: "w" | "b" | undefined
 }
 
 export type Game = {
     id: string,
     roomId: string,
     turnColor: "w" | "b",
-    playerW: string,
-    playerB: string,
+    turnId: string,
+    whiteId: string,
+    blackId: string,
     boardPosition: Position
 }

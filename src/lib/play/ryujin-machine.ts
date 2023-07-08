@@ -1,22 +1,20 @@
-import { actions, assign, createMachine } from "xstate";
+import { assign, createMachine } from "xstate";
 import { Position } from "@/components/board/types";
 import { DEFAULT_POSITION } from "@/components/board/consts";
 import { Player } from "./types";
 
-
 type Context = {
     boardPosition: Position | undefined;
     roomId: string | undefined,
-    players: Player[] | undefined
-    turn: "w" | "b" | undefined
-    whitePlayerId: string | undefined,
-    blackPlayerId: string | undefined
+    playersInfo: Record<"self" | "opponent", Player> | undefined
+    selfColor: "w" | "b" | undefined
+    hasTurn: boolean
 }
 
 type Events =
     | { type: "MOVE", payload: string }
-    | { type: "PLAYER_JOIN", players: Player[], roomId: string }
-    | { type: "GAME_STARTED", boardPosition: Position, turn: "w" | "b", blackPlayerId: string, whitePlayerId: string }
+    | { type: "PLAYER_JOIN", players: Record<"self" | "opponent", Player>, roomId: string }
+    | { type: "GAME_STARTED", boardPosition: Position, selfColor: "w" | "b", hasTurn: boolean }
 
 type StateOptions = "pregame" | "idle" | "proposed_action" | "moved" | "game_over"
 
@@ -26,10 +24,9 @@ export const ryujinMachine = createMachine<Context, Events, State>({
     context: {
         boardPosition: undefined,
         roomId: undefined,
-        players: undefined,
-        turn: undefined,
-        whitePlayerId: undefined,
-        blackPlayerId: undefined
+        playersInfo: undefined,
+        selfColor: undefined,
+        hasTurn: false,
     },
     initial: "pregame",
     states: {
@@ -38,7 +35,7 @@ export const ryujinMachine = createMachine<Context, Events, State>({
             on: {
                 PLAYER_JOIN: {
                     actions: assign({
-                        players: (_, e) => e.players,
+                        playersInfo: (_, e) => e.players,
                         roomId: (_, e) => e.roomId
                     })
                 },
@@ -46,9 +43,8 @@ export const ryujinMachine = createMachine<Context, Events, State>({
                     target: "idle",
                     actions: assign({
                         boardPosition: (_, e) => e.boardPosition,
-                        turn: (_, e) => e.turn,
-                        blackPlayerId: (_, e) => e.blackPlayerId,
-                        whitePlayerId: (_, e) => e.whitePlayerId
+                        selfColor: (_, e) => e.selfColor,
+                        hasTurn: (_, e) => e.hasTurn
                     })
                 }
             }
@@ -59,7 +55,6 @@ export const ryujinMachine = createMachine<Context, Events, State>({
                     target: "game_over",
                     cond: () => false
                 },
-                { target: "proposed_action" }
             ],
         },
         proposed_action: {

@@ -10,8 +10,10 @@ type PlayValues = {
     joinRoom: () => void,
     hasRoom: boolean
     roomId?: string
-    turn?: "w" | "b",
+    playersInfo?: Record<"self" | "opponent", Player>
+    hasTurn: boolean,
     boardPosition: Position | undefined
+    selfColor?: "w" | "b"
 }
 
 const PlayContext = createContext({} as PlayValues);
@@ -32,21 +34,23 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
         })
 
         socket.on("JOIN_ROOM", (room: Room) => {
-            let players: Player[] = room.players.map(id => (
-                {
-                    socketId: id,
-                    name: id === socket.id ? "You" : "Opponent",
-                    color: undefined
-                }))
-            send({ type: "PLAYER_JOIN", players, roomId: room.id })
+            let playersInfo = {} as Record<"self" | "opponent", Player>
+            for (let i = 0; i < room.players.length; i++) {
+                if (room.players[i] === socket.id) {
+                    playersInfo.self = { socketId: room.players[i], name: "You" }
+                    continue
+                }
+                playersInfo.opponent = { socketId: room.players[i], name: "Opponent" }
+            }
+            send({ type: "PLAYER_JOIN", players: playersInfo, roomId: room.id })
         })
 
         socket.on("START_GAME", (game: Game) => {
+            console.log({ game })
             send({
                 type: "GAME_STARTED", boardPosition: game.boardPosition,
-                turn: game.turnColor,
-                blackPlayerId: game.playerB,
-                whitePlayerId: game.playerW
+                selfColor: socket.id === game.whiteId ? "w" : "b",
+                hasTurn: socket.id === game.turnId
             })
         })
 
@@ -62,12 +66,15 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
         socket.emit("CREATE_OR_JOIN_ROOM");
     }
 
+    console.log(state.context)
     return (
         <PlayContext.Provider value={{
             joinRoom,
             hasRoom: !!state.context?.roomId,
             roomId: state.context?.roomId,
-            turn: state.context.turn,
+            selfColor: state.context.selfColor,
+            hasTurn: state.context.hasTurn,
+            playersInfo: state.context.playersInfo,
             boardPosition: state.context.boardPosition
         }}>
             {children}
