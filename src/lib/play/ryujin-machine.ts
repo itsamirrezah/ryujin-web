@@ -5,6 +5,7 @@ import { Player } from "./types";
 import { Card } from "./consts";
 
 type Context = {
+    gameStarted: boolean,
     boardPosition: Position | undefined,
     roomId: string | undefined,
     playersInfo: Record<"self" | "opponent", Player> | undefined
@@ -25,6 +26,7 @@ type State = { value: StateOptions, context: Context }
 
 export const ryujinMachine = createMachine<Context, Events, State>({
     context: {
+        gameStarted: false,
         boardPosition: undefined,
         roomId: undefined,
         playersInfo: undefined,
@@ -53,7 +55,8 @@ export const ryujinMachine = createMachine<Context, Events, State>({
                         hasTurn: (_, e) => e.hasTurn,
                         selfCards: (_, e) => e.selfCards,
                         opponentCards: (_, e) => e.opponentCard,
-                        reserveCards: (_, e) => e.reserveCards
+                        reserveCards: (_, e) => e.reserveCards,
+                        gameStarted: true
                     })
                 }
             }
@@ -68,7 +71,7 @@ export const ryujinMachine = createMachine<Context, Events, State>({
         },
         proposed_action: {
             on: {
-                MOVE: { actions: assign({ boardPosition: (ctx, e) => undefined }) }
+                // MOVE: { actions: assign({ boardPosition: (ctx, e) => undefined }) }
             }
         },
         moved: {

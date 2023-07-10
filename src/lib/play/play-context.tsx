@@ -4,6 +4,7 @@ import { Game, Player, Room } from "./types";
 import { ryujinMachine } from "./ryujin-machine";
 import { useMachine } from "@xstate/react";
 import { Position } from "@/components/board/types";
+import { Card } from "./consts";
 
 
 type PlayValues = {
@@ -13,7 +14,11 @@ type PlayValues = {
     playersInfo?: Record<"self" | "opponent", Player>
     hasTurn: boolean,
     boardPosition: Position | undefined
-    selfColor?: "w" | "b"
+    selfColor?: "w" | "b",
+    isGameStarted: boolean,
+    selfCards: [Card, Card] | undefined,
+    opponentCards: [Card, Card] | undefined,
+    reserveCards: Card[] | undefined
 }
 
 const PlayContext = createContext({} as PlayValues);
@@ -78,7 +83,11 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
             selfColor: state.context.selfColor,
             hasTurn: state.context.hasTurn,
             playersInfo: state.context.playersInfo,
-            boardPosition: state.context.boardPosition
+            boardPosition: state.context.boardPosition,
+            isGameStarted: state.context.gameStarted,
+            selfCards: state.context.selfCards,
+            opponentCards: state.context.opponentCards,
+            reserveCards: state.context.reserveCards
         }}>
             {children}
         </PlayContext.Provider>
