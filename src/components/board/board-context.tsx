@@ -6,6 +6,7 @@ type BoardContextProviderProps = {
     currentPosition?: Position
     children: ReactNode
     isAllowedToMove: (piece: PieceType) => boolean
+    currentView?: PlayerView
 }
 type BoardValues = {
     position: Position,
@@ -16,13 +17,17 @@ type BoardValues = {
 
 const BoardContext = createContext<BoardValues>({} as BoardValues)
 
-export function BoardContextProvider({ children, currentPosition = DEFAULT_POSITION, isAllowedToMove }: BoardContextProviderProps) {
+export function BoardContextProvider({ children, currentPosition = DEFAULT_POSITION, currentView = "w", isAllowedToMove }: BoardContextProviderProps) {
     const [position, setPosition] = useState<Position>(currentPosition)
-    const [playerView, setPlayerView] = useState<PlayerView>("w")
+    const [playerView, setPlayerView] = useState<PlayerView>(currentView)
 
     useEffect(() => {
         setPosition(currentPosition)
     }, [currentPosition])
+
+    useEffect(() => {
+        setPlayerView(currentView)
+    }, [currentView])
 
     function onMove(from: SquareType, to: SquareType) {
         if (from === to) return

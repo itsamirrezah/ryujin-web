@@ -16,7 +16,7 @@ export default function PlayPage() {
         <div className={styles.main}>
             <div className={styles.game}>
                 <div className={styles.boardlyt}>
-                    <Board position={boardPosition} isAllowedToMove={isAllowedToMove} />
+                    <Board position={boardPosition} isAllowedToMove={isAllowedToMove} currentView={selfColor} />
                 </div>
                 <div className={styles.side}>
                     {!hasRoom && !isGameStarted && <RoundButton onClick={joinRoom}>New opponent</RoundButton>}

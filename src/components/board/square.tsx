@@ -20,7 +20,7 @@ export default function Square({ square, children, color }: SquareProps) {
             isOver: monitor.isOver(),
             canDrop: monitor.canDrop(),
         }),
-    }))
+    }), [square])
 
     return (
         <div ref={ref} className={`${styles.sqaure} ${styles[`bg-${color}`]}`} >
