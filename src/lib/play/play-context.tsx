@@ -19,6 +19,8 @@ type PlayValues = {
     selfCards: [Card, Card] | undefined,
     opponentCards: [Card, Card] | undefined,
     reserveCards: Card[] | undefined
+    selectedCard: Card | undefined,
+    selectCard: (card: Card) => void
 }
 
 const PlayContext = createContext({} as PlayValues);
@@ -75,6 +77,10 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
         socket.emit("CREATE_OR_JOIN_ROOM");
     }
 
+    function selectCard(card: Card) {
+        send({ type: "SELECT_CARD", selectedCard: card })
+    }
+
     return (
         <PlayContext.Provider value={{
             joinRoom,
@@ -87,7 +93,9 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
             isGameStarted: state.context.gameStarted,
             selfCards: state.context.selfCards,
             opponentCards: state.context.opponentCards,
-            reserveCards: state.context.reserveCards
+            reserveCards: state.context.reserveCards,
+            selectedCard: state.context.selectedCard,
+            selectCard,
         }}>
             {children}
         </PlayContext.Provider>

@@ -3,6 +3,7 @@ import { Position } from "@/components/board/types";
 import { DEFAULT_POSITION } from "@/components/board/consts";
 import { Player } from "./types";
 import { Card } from "./consts";
+import { on } from "events";
 
 type Context = {
     gameStarted: boolean,
@@ -13,12 +14,14 @@ type Context = {
     hasTurn: boolean,
     selfCards: [Card, Card] | undefined,
     opponentCards: [Card, Card] | undefined,
-    reserveCards: Card[] | undefined
+    reserveCards: Card[] | undefined,
+    selectedCard: Card | undefined,
 }
 
 type Events =
     | { type: "PLAYER_JOIN", players: Record<"self" | "opponent", Player>, roomId: string }
-    | { type: "GAME_STARTED", boardPosition: Position, selfColor: "w" | "b", hasTurn: boolean, selfCards: [Card, Card], opponentCard: [Card, Card], reserveCards: Card[] };
+    | { type: "GAME_STARTED", boardPosition: Position, selfColor: "w" | "b", hasTurn: boolean, selfCards: [Card, Card], opponentCard: [Card, Card], reserveCards: Card[] }
+    | { type: "SELECT_CARD", selectedCard: Card }
 
 type StateOptions = "pregame" | "idle" | "proposed_action" | "moved" | "game_over"
 
@@ -34,7 +37,8 @@ export const ryujinMachine = createMachine<Context, Events, State>({
         hasTurn: false,
         selfCards: undefined,
         opponentCards: undefined,
-        reserveCards: undefined
+        reserveCards: undefined,
+        selectedCard: undefined
     },
     initial: "pregame",
     states: {
@@ -68,6 +72,16 @@ export const ryujinMachine = createMachine<Context, Events, State>({
                     cond: () => false
                 },
             ],
+            on: {
+                SELECT_CARD: {
+                    actions: assign({
+                        selectedCard: (ctx, e) => {
+                            if (ctx.selfCards?.find(c => c.name === e.selectedCard.name)) return e.selectedCard
+                            return ctx.selectedCard
+                        }
+                    })
+                }
+            },
         },
         proposed_action: {
             on: {

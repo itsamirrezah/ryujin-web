@@ -4,11 +4,15 @@ import CardBoard from "./card-board"
 import { Card as CardType } from "@/lib/play/consts"
 
 type CardProps = {
-    card?: CardType
+    card?: CardType,
+    isSelected?: boolean,
+    onSelected?: (card: CardType) => void
 }
-export default function Card({ card }: CardProps) {
+
+export default function Card({ card, isSelected, onSelected }: CardProps) {
     return (
-        <div className={styles.card}>
+        <div onClick={onSelected && card ? () => onSelected(card) : undefined}
+            className={`${styles.card} ${isSelected ? styles.selected : ""}`}>
             {card && <div className={styles.board}>
                 <CardBoard options={card.options} />
             </div>}

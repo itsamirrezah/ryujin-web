@@ -6,7 +6,19 @@ import { PieceType } from "@/components/board/types";
 import Card from "@/components/card/card";
 
 export default function PlayPage() {
-    const { joinRoom, hasRoom, roomId, boardPosition, selfColor, hasTurn, isGameStarted, selfCards, opponentCards } = usePlay()
+    const {
+        joinRoom,
+        hasRoom,
+        roomId,
+        boardPosition,
+        selfColor,
+        hasTurn,
+        isGameStarted,
+        selfCards,
+        opponentCards,
+        selectedCard,
+        selectCard
+    } = usePlay()
 
     function isAllowedToMove(piece: PieceType) {
         return hasTurn && piece[0] === selfColor;
@@ -22,11 +34,11 @@ export default function PlayPage() {
                     {!hasRoom && !isGameStarted && <RoundButton onClick={joinRoom}>New opponent</RoundButton>}
                     {isGameStarted && <div className={styles.cards}>
                         <div className={styles.cardsuser}>
-                            {opponentCards?.map(c => <Card card={c} />)}
+                            {opponentCards?.map(c => <Card card={c} onSelected={(card) => selectCard(card)} isSelected={selectedCard?.name === c.name} />)}
                         </div>
                         <Card />
                         <div className={styles.cardsuser}>
-                            {selfCards?.map(c => <Card card={c} />)}
+                            {selfCards?.map(c => <Card card={c} onSelected={(card) => selectCard(card)} isSelected={selectedCard?.name === c.name} />)}
                         </div>
                     </div>}
                 </div>
