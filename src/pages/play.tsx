@@ -19,16 +19,17 @@ export default function PlayPage() {
         selectedCard,
         selectCard,
         selectPiece,
-        selectedPiece
+        selectedPiece,
+        moveOptions
     } = usePlay()
 
-    console.log({ selectedPiece })
+    console.log({ moveOptions })
     function isAllowedToMove(piece: PieceType) {
         return hasTurn && piece[0] === selfColor;
     }
 
-    function onPieceSelectedHandler(square: SquareType) {
-        selectPiece(square)
+    function onPieceSelectedHandler(piece: PieceType, square: SquareType) {
+        selectPiece(piece, square)
     }
 
     return (

@@ -8,7 +8,7 @@ type IBoardProps = {
     position?: Position
     isAllowedToMove: (piece: PieceType) => boolean
     currentView?: PlayerView,
-    onPieceSelected: (square: SquareType) => void
+    onPieceSelected: (piece: PieceType, square: SquareType) => void
 }
 export default function Board({ position, isAllowedToMove, currentView, onPieceSelected }: IBoardProps) {
     return (

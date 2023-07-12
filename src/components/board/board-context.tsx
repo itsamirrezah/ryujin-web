@@ -7,14 +7,14 @@ type BoardContextProviderProps = {
     children: ReactNode
     isAllowedToMove: (piece: PieceType) => boolean
     currentView?: PlayerView,
-    onPieceSelected: (square: SquareType) => void
+    onPieceSelected: (piece: PieceType, square: SquareType) => void
 }
 type BoardValues = {
     position: Position,
     playerView: PlayerView
     onMove: (from: SquareType, to: SquareType) => void
     isAllowedToMove: (piece: PieceType) => boolean
-    onPieceSelected: (square: SquareType) => void
+    onPieceSelected: (piece: PieceType, square: SquareType) => void
 }
 
 const BoardContext = createContext<BoardValues>({} as BoardValues)

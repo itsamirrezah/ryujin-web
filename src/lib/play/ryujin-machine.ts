@@ -4,6 +4,7 @@ import { DEFAULT_POSITION } from "@/components/board/consts";
 import { Player } from "./types";
 import { Card } from "./consts";
 
+
 type Context = {
     gameStarted: boolean,
     boardPosition: Position | undefined,
@@ -15,14 +16,15 @@ type Context = {
     opponentCards: [Card, Card] | undefined,
     reserveCards: Card[] | undefined,
     selectedCard: Card | undefined,
-    selectedPiece: SquareType | undefined
+    selectedPiece: { piece: PieceType, square: SquareType } | undefined,
+    moveOptions: SquareType[] | undefined
 }
 
 type Events =
     | { type: "PLAYER_JOIN", players: Record<"self" | "opponent", Player>, roomId: string }
     | { type: "GAME_STARTED", boardPosition: Position, selfColor: "w" | "b", hasTurn: boolean, selfCards: [Card, Card], opponentCard: [Card, Card], reserveCards: Card[] }
     | { type: "SELECT_CARD", selectedCard: Card }
-    | { type: "SELECT_PIECE", selectedPiece: SquareType }
+    | { type: "SELECT_PIECE", selectedPiece: PieceType, square: SquareType }
 
 type StateOptions = "pregame" | "idle" | "proposed_action" | "moved" | "game_over"
 
@@ -40,7 +42,8 @@ export const ryujinMachine = createMachine<Context, Events, State>({
         opponentCards: undefined,
         reserveCards: undefined,
         selectedCard: undefined,
-        selectedPiece: undefined
+        selectedPiece: undefined,
+        moveOptions: undefined
     },
     initial: "pregame",
     states: {
@@ -86,7 +89,25 @@ export const ryujinMachine = createMachine<Context, Events, State>({
                 SELECT_PIECE: {
                     actions: assign({
                         selectedPiece: (ctx, e) => {
-                            return e.selectedPiece
+                            if (e.selectedPiece[0] !== ctx.selfColor) return
+                            return { piece: e.selectedPiece, square: e.square }
+                        },
+                        moveOptions: (ctx, e) => {
+                            const { selectedCard, selfColor } = ctx
+                            if (!selectedCard) return;
+                            const SQUARES = "abcde".split("")
+                            const options = [] as SquareType[]
+                            for (let i = 0; i < selectedCard.delta.length; i++) {
+                                const delta = selectedCard.delta[i]
+                                const currentCol = SQUARES.findIndex(sqr => sqr === e.square[0])
+                                const currentRow = parseInt(e.square[1])
+                                const destCol = SQUARES[currentCol + (selfColor === "w" ? delta.x : delta.x * -1)]
+                                const destRow = currentRow + (selfColor === "w" ? delta.y * -1 : delta.y);
+                                if (!destCol || !destRow || destRow < 1 || destRow > 5) continue
+                                const dest = destCol + destRow as SquareType
+                                options.push(dest)
+                            }
+                            return options
                         }
                     })
                 }

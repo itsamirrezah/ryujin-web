@@ -21,8 +21,9 @@ type PlayValues = {
     reserveCards: Card[] | undefined
     selectedCard: Card | undefined,
     selectCard: (card: Card) => void,
-    selectPiece: (piece: SquareType) => void,
-    selectedPiece: PieceType | undefined
+    selectPiece: (piece: PieceType, square: SquareType) => void,
+    selectedPiece: { piece: PieceType, square: SquareType } | undefined,
+    moveOptions: SquareType[] | undefined
 }
 
 const PlayContext = createContext({} as PlayValues);
@@ -83,8 +84,8 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
         send({ type: "SELECT_CARD", selectedCard: card })
     }
 
-    function selectPiece(square: SquareType) {
-        send({ type: "SELECT_PIECE", selectedPiece: square })
+    function selectPiece(piece: PieceType, square: SquareType) {
+        send({ type: "SELECT_PIECE", selectedPiece: piece, square })
     }
 
     return (
@@ -103,7 +104,8 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
             selectedCard: state.context.selectedCard,
             selectCard,
             selectPiece,
-            selectedPiece: state.context.selectedPiece
+            selectedPiece: state.context.selectedPiece,
+            moveOptions: state.context.moveOptions
         }}>
             {children}
         </PlayContext.Provider>
