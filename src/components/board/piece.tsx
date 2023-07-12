@@ -10,17 +10,20 @@ type PieceProps = {
 }
 
 export default function Piece({ piece, square }: PieceProps) {
-    const { isAllowedToMove } = useBoard()
+    const { isAllowedToMove, onPieceSelected } = useBoard()
     const PieceComponent = DEFAULT_PIECES[piece];
 
     const [{ isDragging, canDrag }, ref] = useDrag(() => ({
         type: DND_ITEM_TYPE,
-        item: { from: square },
+        item: () => {
+            onPieceSelected(square)
+            return { from: square }
+        },
         collect: (monitor) => ({
             isDragging: monitor.isDragging(),
             canDrag: isAllowedToMove(piece)
         }),
-    }), [piece, isAllowedToMove])
+    }), [piece, isAllowedToMove, onPieceSelected])
 
     return (
         <div ref={canDrag ? ref : undefined} className={styles.piece}>

@@ -1,9 +1,8 @@
 import { assign, createMachine } from "xstate";
-import { Position } from "@/components/board/types";
+import { PieceType, Position, SquareType } from "@/components/board/types";
 import { DEFAULT_POSITION } from "@/components/board/consts";
 import { Player } from "./types";
 import { Card } from "./consts";
-import { on } from "events";
 
 type Context = {
     gameStarted: boolean,
@@ -16,12 +15,14 @@ type Context = {
     opponentCards: [Card, Card] | undefined,
     reserveCards: Card[] | undefined,
     selectedCard: Card | undefined,
+    selectedPiece: SquareType | undefined
 }
 
 type Events =
     | { type: "PLAYER_JOIN", players: Record<"self" | "opponent", Player>, roomId: string }
     | { type: "GAME_STARTED", boardPosition: Position, selfColor: "w" | "b", hasTurn: boolean, selfCards: [Card, Card], opponentCard: [Card, Card], reserveCards: Card[] }
     | { type: "SELECT_CARD", selectedCard: Card }
+    | { type: "SELECT_PIECE", selectedPiece: SquareType }
 
 type StateOptions = "pregame" | "idle" | "proposed_action" | "moved" | "game_over"
 
@@ -38,7 +39,8 @@ export const ryujinMachine = createMachine<Context, Events, State>({
         selfCards: undefined,
         opponentCards: undefined,
         reserveCards: undefined,
-        selectedCard: undefined
+        selectedCard: undefined,
+        selectedPiece: undefined
     },
     initial: "pregame",
     states: {
@@ -78,6 +80,13 @@ export const ryujinMachine = createMachine<Context, Events, State>({
                         selectedCard: (ctx, e) => {
                             if (ctx.selfCards?.find(c => c.name === e.selectedCard.name)) return e.selectedCard
                             return ctx.selectedCard
+                        }
+                    })
+                },
+                SELECT_PIECE: {
+                    actions: assign({
+                        selectedPiece: (ctx, e) => {
+                            return e.selectedPiece
                         }
                     })
                 }

@@ -2,7 +2,7 @@ import Board from "@/components/board/board";
 import { usePlay } from "@/lib/play/play-context";
 import RoundButton from "@/components/round-button/round-button";
 import styles from "./play.module.css";
-import { PieceType } from "@/components/board/types";
+import { PieceType, SquareType } from "@/components/board/types";
 import Card from "@/components/card/card";
 
 export default function PlayPage() {
@@ -17,18 +17,25 @@ export default function PlayPage() {
         selfCards,
         opponentCards,
         selectedCard,
-        selectCard
+        selectCard,
+        selectPiece,
+        selectedPiece
     } = usePlay()
 
+    console.log({ selectedPiece })
     function isAllowedToMove(piece: PieceType) {
         return hasTurn && piece[0] === selfColor;
+    }
+
+    function onPieceSelectedHandler(square: SquareType) {
+        selectPiece(square)
     }
 
     return (
         <div className={styles.main}>
             <div className={styles.game}>
                 <div className={styles.boardlyt}>
-                    <Board position={boardPosition} isAllowedToMove={isAllowedToMove} currentView={selfColor} />
+                    <Board position={boardPosition} isAllowedToMove={isAllowedToMove} currentView={selfColor} onPieceSelected={onPieceSelectedHandler} />
                 </div>
                 <div className={styles.side}>
                     {!hasRoom && !isGameStarted && <RoundButton onClick={joinRoom}>New opponent</RoundButton>}

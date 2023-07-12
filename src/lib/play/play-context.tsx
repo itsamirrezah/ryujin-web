@@ -3,7 +3,7 @@ import { socket } from "@/lib/socket";
 import { Game, Player, Room } from "./types";
 import { ryujinMachine } from "./ryujin-machine";
 import { useMachine } from "@xstate/react";
-import { Position } from "@/components/board/types";
+import { PieceType, Position, SquareType } from "@/components/board/types";
 import { Card } from "./consts";
 
 
@@ -20,7 +20,9 @@ type PlayValues = {
     opponentCards: [Card, Card] | undefined,
     reserveCards: Card[] | undefined
     selectedCard: Card | undefined,
-    selectCard: (card: Card) => void
+    selectCard: (card: Card) => void,
+    selectPiece: (piece: SquareType) => void,
+    selectedPiece: PieceType | undefined
 }
 
 const PlayContext = createContext({} as PlayValues);
@@ -81,6 +83,10 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
         send({ type: "SELECT_CARD", selectedCard: card })
     }
 
+    function selectPiece(square: SquareType) {
+        send({ type: "SELECT_PIECE", selectedPiece: square })
+    }
+
     return (
         <PlayContext.Provider value={{
             joinRoom,
@@ -96,6 +102,8 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
             reserveCards: state.context.reserveCards,
             selectedCard: state.context.selectedCard,
             selectCard,
+            selectPiece,
+            selectedPiece: state.context.selectedPiece
         }}>
             {children}
         </PlayContext.Provider>
