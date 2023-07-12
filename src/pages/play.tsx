@@ -23,7 +23,6 @@ export default function PlayPage() {
         moveOptions
     } = usePlay()
 
-    console.log({ moveOptions })
     function isAllowedToMove(piece: PieceType) {
         return hasTurn && piece[0] === selfColor;
     }
@@ -36,7 +35,13 @@ export default function PlayPage() {
         <div className={styles.main}>
             <div className={styles.game}>
                 <div className={styles.boardlyt}>
-                    <Board position={boardPosition} isAllowedToMove={isAllowedToMove} currentView={selfColor} onPieceSelected={onPieceSelectedHandler} />
+                    <Board
+                        position={boardPosition}
+                        isAllowedToMove={isAllowedToMove}
+                        currentView={selfColor}
+                        onPieceSelected={onPieceSelectedHandler}
+                        moveOptions={moveOptions}
+                    />
                 </div>
                 <div className={styles.side}>
                     {!hasRoom && !isGameStarted && <RoundButton onClick={joinRoom}>New opponent</RoundButton>}
