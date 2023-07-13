@@ -20,7 +20,8 @@ export default function PlayPage() {
         selectCard,
         selectPiece,
         selectedPiece,
-        moveOptions
+        moveOptions,
+        movePiece
     } = usePlay()
 
     function isAllowedToMove(piece: PieceType) {
@@ -41,6 +42,7 @@ export default function PlayPage() {
                         currentView={selfColor}
                         onPieceSelected={onPieceSelectedHandler}
                         moveOptions={moveOptions}
+                        movePiece={movePiece}
                     />
                 </div>
                 <div className={styles.side}>

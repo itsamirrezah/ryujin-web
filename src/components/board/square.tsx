@@ -12,15 +12,18 @@ type SquareProps = {
 }
 
 export default function Square({ square, children, color }: SquareProps) {
-    const { onMove, moveOptions } = useBoard()
+    const { movePiece, moveOptions } = useBoard()
     const [{ canDrop, isOver }, ref] = useDrop(() => ({
         accept: DND_ITEM_TYPE,
-        drop: (item: DndItem) => onMove(item.from, square),
+        drop: (item: DndItem) => {
+            if (!moveOptions?.includes(square)) return;
+            movePiece(item.from, square)
+        },
         collect: (monitor) => ({
             isOver: monitor.isOver(),
             canDrop: monitor.canDrop(),
         }),
-    }), [square])
+    }), [square, movePiece])
 
     return (
         <div ref={ref} className={`${styles.sqaure} ${styles[`bg-${color}`]}`} style={{ position: "relative" }}>

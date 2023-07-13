@@ -9,11 +9,12 @@ type BoardContextProviderProps = {
     currentView?: PlayerView,
     onPieceSelected: (piece: PieceType, square: SquareType) => void
     moveOptions: SquareType[] | undefined
+    movePiece: (from: SquareType, to: SquareType) => void
 }
 type BoardValues = {
     position: Position,
     playerView: PlayerView
-    onMove: (from: SquareType, to: SquareType) => void
+    movePiece: (from: SquareType, to: SquareType) => void
     isAllowedToMove: (piece: PieceType) => boolean
     onPieceSelected: (piece: PieceType, square: SquareType) => void
     moveOptions: SquareType[] | undefined
@@ -27,7 +28,8 @@ export function BoardContextProvider({
     currentView = "w",
     isAllowedToMove,
     onPieceSelected,
-    moveOptions
+    moveOptions,
+    movePiece
 }: BoardContextProviderProps) {
     const [position, setPosition] = useState<Position>(currentPosition)
     const [playerView, setPlayerView] = useState<PlayerView>(currentView)
@@ -40,23 +42,12 @@ export function BoardContextProvider({
         setPlayerView(currentView)
     }, [currentView])
 
-    function onMove(from: SquareType, to: SquareType) {
-        if (from === to) return
-
-        setPosition(prev => {
-            const next = { ...prev }
-            next[to] = next[from]
-            delete next[from]
-            return next
-        })
-    }
-
     return (
         <BoardContext.Provider
             value={{
                 position,
                 playerView,
-                onMove,
+                movePiece,
                 isAllowedToMove,
                 onPieceSelected,
                 moveOptions

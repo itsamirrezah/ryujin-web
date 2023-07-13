@@ -10,8 +10,9 @@ type IBoardProps = {
     currentView?: PlayerView,
     onPieceSelected: (piece: PieceType, square: SquareType) => void,
     moveOptions: SquareType[] | undefined
+    movePiece: (from: SquareType, to: SquareType) => void
 }
-export default function Board({ position, isAllowedToMove, currentView, onPieceSelected, moveOptions }: IBoardProps) {
+export default function Board({ position, isAllowedToMove, currentView, onPieceSelected, moveOptions, movePiece }: IBoardProps) {
     return (
         <BoardContextProvider
             currentPosition={position}
@@ -19,6 +20,7 @@ export default function Board({ position, isAllowedToMove, currentView, onPieceS
             currentView={currentView}
             onPieceSelected={onPieceSelected}
             moveOptions={moveOptions}
+            movePiece={movePiece}
         >
             <DndProvider backend={HTML5Backend}>
                 <Sqaures />

@@ -23,7 +23,8 @@ type PlayValues = {
     selectCard: (card: Card) => void,
     selectPiece: (piece: PieceType, square: SquareType) => void,
     selectedPiece: { piece: PieceType, square: SquareType } | undefined,
-    moveOptions: SquareType[] | undefined
+    moveOptions: SquareType[] | undefined,
+    movePiece: (from: SquareType, to: SquareType) => void
 }
 
 const PlayContext = createContext({} as PlayValues);
@@ -88,6 +89,11 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
         send({ type: "SELECT_PIECE", selectedPiece: piece, square })
     }
 
+    function movePiece(from: SquareType, to: SquareType) {
+        send({ type: "MOVE", from, to })
+    }
+
+
     return (
         <PlayContext.Provider value={{
             joinRoom,
@@ -105,7 +111,8 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
             selectCard,
             selectPiece,
             selectedPiece: state.context.selectedPiece,
-            moveOptions: state.context.moveOptions
+            moveOptions: state.context.moveOptions,
+            movePiece
         }}>
             {children}
         </PlayContext.Provider>

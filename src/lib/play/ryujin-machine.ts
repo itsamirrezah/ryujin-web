@@ -25,6 +25,7 @@ type Events =
     | { type: "GAME_STARTED", boardPosition: Position, selfColor: "w" | "b", hasTurn: boolean, selfCards: [Card, Card], opponentCard: [Card, Card], reserveCards: Card[] }
     | { type: "SELECT_CARD", selectedCard: Card }
     | { type: "SELECT_PIECE", selectedPiece: PieceType, square: SquareType }
+    | { type: "MOVE", from: SquareType, to: SquareType }
 
 type StateOptions = "pregame" | "idle" | "proposed_action" | "moved" | "game_over"
 
@@ -103,20 +104,33 @@ export const ryujinMachine = createMachine<Context, Events, State>({
                                 const currentRow = parseInt(e.square[1])
                                 const destCol = SQUARES[currentCol + (selfColor === "w" ? delta.x : delta.x * -1)]
                                 const destRow = currentRow + (selfColor === "w" ? delta.y * -1 : delta.y);
-                                if (!destCol || !destRow || destRow < 1 || destRow > 5) continue
+                                const outOfBound = !destCol || !destRow || destRow < 1 || destRow > 5
+                                if (outOfBound) continue
                                 const dest = destCol + destRow as SquareType
+                                const piece = ctx.boardPosition!![dest]
+                                const friendlyFire = !!piece && piece[0] === selfColor
+                                if (friendlyFire) continue
                                 options.push(dest)
                             }
                             return options
+                        }
+                    })
+                },
+                MOVE: {
+                    actions: assign({
+                        boardPosition: (ctx, e) => {
+                            const { to, from } = e
+                            if (from === to) ctx.boardPosition
+                            const next = { ...ctx.boardPosition }
+                            next[to] = next[from]
+                            delete next[from]
+                            return next
                         }
                     })
                 }
             },
         },
         proposed_action: {
-            on: {
-                // MOVE: { actions: assign({ boardPosition: (ctx, e) => undefined }) }
-            }
         },
         moved: {
             after: {
