@@ -22,3 +22,13 @@
     align-items: center;
     aspect-ratio: 1/1;
 }
+
+.option {
+    width: 100%;
+    height: 100%;
+    background-color: #C00C0CD1;
+}
+
+.center {
+    background-color: #303456;
+}
