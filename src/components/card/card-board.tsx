@@ -1,5 +1,4 @@
 import { BOARD_SIZE, COLUMNS } from "../board/consts"
-import { SquareType } from "../board/types"
 import styles from "./card-board.module.css"
 
 type CardBoardProps = {
@@ -13,7 +12,7 @@ export default function CardBoard({ options }: CardBoardProps) {
                 [...Array(BOARD_SIZE * BOARD_SIZE)].map((_, i) => {
                     const row = Math.floor(i / BOARD_SIZE)
                     const col = i % BOARD_SIZE
-                    const square = COLUMNS[col] + (BOARD_SIZE - row) as SquareType
+                    // const square = COLUMNS[col] + (BOARD_SIZE - row) as SquareType
                     const squareColor = row % 2 === col % 2 ? "white" : "black"
                     const isCenter = row === 2 && col === 2;
                     return (

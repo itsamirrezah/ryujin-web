@@ -2,7 +2,7 @@ import Board from "@/components/board/board";
 import { usePlay } from "@/lib/play/play-context";
 import RoundButton from "@/components/round-button/round-button";
 import styles from "./play.module.css";
-import { PieceType, SquareType } from "@/components/board/types";
+import { PieceType, SquareType } from "@/lib/play/types";
 import Card from "@/components/card/card";
 
 export default function PlayPage() {
@@ -37,12 +37,12 @@ export default function PlayPage() {
             <div className={styles.game}>
                 <div className={styles.boardlyt}>
                     <Board
-                        position={boardPosition}
-                        isAllowedToMove={isAllowedToMove}
+                        currentPosition={boardPosition}
+                        isPieceDraggable={isAllowedToMove}
                         currentView={selfColor}
-                        onPieceSelected={onPieceSelectedHandler}
+                        onPieceDrag={onPieceSelectedHandler}
                         moveOptions={moveOptions}
-                        movePiece={movePiece}
+                        onPieceDrop={movePiece}
                     />
                 </div>
                 <div className={styles.side}>

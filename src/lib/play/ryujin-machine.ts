@@ -1,6 +1,6 @@
 import { assign, createMachine } from "xstate";
-import { PieceType, Position, SquareType } from "@/components/board/types";
-import { DEFAULT_POSITION } from "@/components/board/consts";
+import { PieceType, Position, SquareType } from "./types";
+import { DEFAULT_POSITION } from "./consts";
 import { Player } from "./types";
 import { Card } from "./consts";
 

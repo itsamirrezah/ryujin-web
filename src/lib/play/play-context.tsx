@@ -3,7 +3,7 @@ import { socket } from "@/lib/socket";
 import { Game, Player, Room } from "./types";
 import { ryujinMachine } from "./ryujin-machine";
 import { useMachine } from "@xstate/react";
-import { PieceType, Position, SquareType } from "@/components/board/types";
+import { PieceType, Position, SquareType } from "./types";
 import { Card } from "./consts";
 
 

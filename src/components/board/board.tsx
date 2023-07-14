@@ -2,26 +2,11 @@ import { DndProvider } from "react-dnd"
 import { HTML5Backend } from "react-dnd-html5-backend"
 import { BoardContextProvider } from "./board-context"
 import Sqaures from "./squares"
-import { PieceType, PlayerView, Position, SquareType } from "./types"
+import { BoardProps } from "./board-context"
 
-type IBoardProps = {
-    position?: Position
-    isAllowedToMove: (piece: PieceType) => boolean
-    currentView?: PlayerView,
-    onPieceSelected: (piece: PieceType, square: SquareType) => void,
-    moveOptions: SquareType[] | undefined
-    movePiece: (from: SquareType, to: SquareType) => void
-}
-export default function Board({ position, isAllowedToMove, currentView, onPieceSelected, moveOptions, movePiece }: IBoardProps) {
+export default function Board(props: Omit<BoardProps, "children">) {
     return (
-        <BoardContextProvider
-            currentPosition={position}
-            isAllowedToMove={isAllowedToMove}
-            currentView={currentView}
-            onPieceSelected={onPieceSelected}
-            moveOptions={moveOptions}
-            movePiece={movePiece}
-        >
+        <BoardContextProvider {...props}>
             <DndProvider backend={HTML5Backend}>
                 <Sqaures />
             </DndProvider>

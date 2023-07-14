@@ -1,4 +1,4 @@
-import { PieceType, SquareType } from "./types"
+import { PieceType, SquareType } from "@/lib/play/types";
 import { DEFAULT_PIECES, DND_ITEM_TYPE } from "./consts"
 import { useDrag } from "react-dnd";
 import styles from "./piece.module.css"
@@ -10,20 +10,20 @@ type PieceProps = {
 }
 
 export default function Piece({ piece, square }: PieceProps) {
-    const { isAllowedToMove, onPieceSelected } = useBoard()
+    const { isPieceDraggable, onPieceDrag } = useBoard()
     const PieceComponent = DEFAULT_PIECES[piece];
 
     const [{ isDragging, canDrag }, ref] = useDrag(() => ({
         type: DND_ITEM_TYPE,
         item: () => {
-            onPieceSelected(piece, square)
+            onPieceDrag(piece, square)
             return { from: square }
         },
         collect: (monitor) => ({
             isDragging: monitor.isDragging(),
-            canDrag: isAllowedToMove(piece)
+            canDrag: isPieceDraggable(piece)
         }),
-    }), [piece, isAllowedToMove, onPieceSelected])
+    }), [piece, isPieceDraggable, onPieceDrag])
 
     return (
         <div ref={canDrag ? ref : undefined} className={styles.piece}>

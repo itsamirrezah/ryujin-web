@@ -1,23 +1,26 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
-import { DEFAULT_POSITION } from "./consts";
-import { PieceType, PlayerView, Position, SquareType } from "./types";
+import { DEFAULT_POSITION } from "@/lib/play/consts";
+import { PieceType, BlackOrWhite, Position, SquareType } from "@/lib/play/types";
 
-type BoardContextProviderProps = {
+export type BoardProps = {
     currentPosition?: Position
+    currentView?: BlackOrWhite,
+    isPieceDraggable?: (piece: PieceType) => boolean
+    onPieceDrag?: (piece: PieceType, square: SquareType) => void
+    onPieceDrop?: (from: SquareType, to: SquareType) => void
+    moveOptions?: SquareType[]
     children: ReactNode
-    isAllowedToMove: (piece: PieceType) => boolean
-    currentView?: PlayerView,
-    onPieceSelected: (piece: PieceType, square: SquareType) => void
-    moveOptions: SquareType[] | undefined
-    movePiece: (from: SquareType, to: SquareType) => void
 }
+
+type RequiredBoardProps = Required<BoardProps>
+
 type BoardValues = {
-    position: Position,
-    playerView: PlayerView
-    movePiece: (from: SquareType, to: SquareType) => void
-    isAllowedToMove: (piece: PieceType) => boolean
-    onPieceSelected: (piece: PieceType, square: SquareType) => void
-    moveOptions: SquareType[] | undefined
+    currentPosition: RequiredBoardProps["currentPosition"],
+    currentView: RequiredBoardProps["currentView"]
+    isPieceDraggable: RequiredBoardProps["isPieceDraggable"]
+    onPieceDrag: RequiredBoardProps["onPieceDrag"]
+    onPieceDrop: RequiredBoardProps["onPieceDrop"]
+    moveOptions: RequiredBoardProps["moveOptions"]
 }
 
 const BoardContext = createContext<BoardValues>({} as BoardValues)
@@ -26,17 +29,12 @@ export function BoardContextProvider({
     children,
     currentPosition = DEFAULT_POSITION,
     currentView = "w",
-    isAllowedToMove,
-    onPieceSelected,
-    moveOptions,
-    movePiece
-}: BoardContextProviderProps) {
-    const [position, setPosition] = useState<Position>(currentPosition)
-    const [playerView, setPlayerView] = useState<PlayerView>(currentView)
-
-    useEffect(() => {
-        setPosition(currentPosition)
-    }, [currentPosition])
+    isPieceDraggable = () => true,
+    onPieceDrag = () => { },
+    onPieceDrop = () => { },
+    moveOptions = [],
+}: BoardProps) {
+    const [playerView, setPlayerView] = useState<BlackOrWhite>(currentView)
 
     useEffect(() => {
         setPlayerView(currentView)
@@ -45,11 +43,11 @@ export function BoardContextProvider({
     return (
         <BoardContext.Provider
             value={{
-                position,
-                playerView,
-                movePiece,
-                isAllowedToMove,
-                onPieceSelected,
+                currentPosition,
+                currentView: playerView,
+                isPieceDraggable,
+                onPieceDrag,
+                onPieceDrop,
                 moveOptions
             }}>
             {children}
