@@ -1,40 +1,53 @@
 import { assign, createMachine } from "xstate";
-import { PieceType, Position, SquareType } from "./types";
+import { BlackOrWhite, PieceType, Position, SquareType } from "./types";
 import { DEFAULT_POSITION } from "./consts";
-import { Player } from "./types";
-import { Card } from "./consts";
+import { PlayerResponse } from "./types";
+import { CardType } from "./types";
 
 
-type Context = {
+
+export type GameContext = {
     gameStarted: boolean,
-    boardPosition: Position | undefined,
-    roomId: string | undefined,
-    playersInfo: Record<"self" | "opponent", Player> | undefined
-    selfColor: "w" | "b" | undefined
+    boardPosition: Position,
+    roomId?: string,
+    playersInfo?: Record<"self" | "opponent", PlayerResponse>
+    selfColor?: BlackOrWhite
     hasTurn: boolean,
-    selfCards: [Card, Card] | undefined,
-    opponentCards: [Card, Card] | undefined,
-    reserveCards: Card[] | undefined,
-    selectedCard: Card | undefined,
-    selectedPiece: { piece: PieceType, square: SquareType } | undefined,
-    moveOptions: SquareType[] | undefined
+    selfCards?: [CardType, CardType],
+    opponentCards?: [CardType, CardType],
+    reserveCards?: CardType[],
+    selectedCard?: CardType
+    selectedPiece?: { piece: PieceType, square: SquareType },
+    moveOptions?: SquareType[]
 }
 
 type Events =
-    | { type: "PLAYER_JOIN", players: Record<"self" | "opponent", Player>, roomId: string }
-    | { type: "GAME_STARTED", boardPosition: Position, selfColor: "w" | "b", hasTurn: boolean, selfCards: [Card, Card], opponentCard: [Card, Card], reserveCards: Card[] }
-    | { type: "SELECT_CARD", selectedCard: Card }
-    | { type: "SELECT_PIECE", selectedPiece: PieceType, square: SquareType }
+    | {
+        type: "PLAYER_JOIN",
+        players: Record<"self" | "opponent", PlayerResponse>,
+        roomId: string
+    }
+    | {
+        type: "GAME_STARTED",
+        boardPosition: Position,
+        selfColor: BlackOrWhite,
+        hasTurn: boolean,
+        selfCards: [CardType, CardType],
+        opponentCard: [CardType, CardType],
+        reserveCards: CardType[]
+    }
+    | { type: "SELECT_CARD", card: CardType }
+    | { type: "SELECT_PIECE", piece: PieceType, square: SquareType }
     | { type: "MOVE", from: SquareType, to: SquareType }
 
-type StateOptions = "pregame" | "idle" | "proposed_action" | "moved" | "game_over"
+type StateOptions = "pregame" | "idle" | "game_over"
 
-type State = { value: StateOptions, context: Context }
+type State = { value: StateOptions, context: GameContext }
 
-export const ryujinMachine = createMachine<Context, Events, State>({
+export const ryujinMachine = createMachine<GameContext, Events, State>({
     context: {
         gameStarted: false,
-        boardPosition: undefined,
+        boardPosition: DEFAULT_POSITION,
         roomId: undefined,
         playersInfo: undefined,
         selfColor: undefined,
@@ -44,12 +57,11 @@ export const ryujinMachine = createMachine<Context, Events, State>({
         reserveCards: undefined,
         selectedCard: undefined,
         selectedPiece: undefined,
-        moveOptions: undefined
+        moveOptions: []
     },
     initial: "pregame",
     states: {
         pregame: {
-            entry: assign({ boardPosition: DEFAULT_POSITION }),
             on: {
                 PLAYER_JOIN: {
                     actions: assign({
@@ -82,7 +94,7 @@ export const ryujinMachine = createMachine<Context, Events, State>({
                 SELECT_CARD: {
                     actions: assign({
                         selectedCard: (ctx, e) => {
-                            if (ctx.selfCards?.find(c => c.name === e.selectedCard.name)) return e.selectedCard
+                            if (ctx.selfCards?.find(c => c.name === e.card.name)) return e.card
                             return ctx.selectedCard
                         }
                     })
@@ -90,8 +102,9 @@ export const ryujinMachine = createMachine<Context, Events, State>({
                 SELECT_PIECE: {
                     actions: assign({
                         selectedPiece: (ctx, e) => {
-                            if (e.selectedPiece[0] !== ctx.selfColor) return
-                            return { piece: e.selectedPiece, square: e.square }
+                            if (e.piece[0] !== ctx.selfColor) return
+                            const { piece, square } = e;
+                            return { piece, square }
                         },
                         moveOptions: (ctx, e) => {
                             const { selectedCard, selfColor } = ctx
@@ -107,7 +120,7 @@ export const ryujinMachine = createMachine<Context, Events, State>({
                                 const outOfBound = !destCol || !destRow || destRow < 1 || destRow > 5
                                 if (outOfBound) continue
                                 const dest = destCol + destRow as SquareType
-                                const piece = ctx.boardPosition!![dest]
+                                const piece = ctx.boardPosition[dest]
                                 const friendlyFire = !!piece && piece[0] === selfColor
                                 if (friendlyFire) continue
                                 options.push(dest)
@@ -129,13 +142,6 @@ export const ryujinMachine = createMachine<Context, Events, State>({
                     })
                 }
             },
-        },
-        proposed_action: {
-        },
-        moved: {
-            after: {
-                200: 'proposed_action'
-            }
         },
         game_over: {}
     }

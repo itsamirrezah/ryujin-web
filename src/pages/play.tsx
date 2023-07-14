@@ -8,20 +8,19 @@ import Card from "@/components/card/card";
 export default function PlayPage() {
     const {
         joinRoom,
-        hasRoom,
         roomId,
         boardPosition,
         selfColor,
         hasTurn,
-        isGameStarted,
+        gameStarted,
         selfCards,
         opponentCards,
         selectedCard,
-        selectCard,
-        selectPiece,
+        onCardSelected,
+        onPieceSelected,
         selectedPiece,
         moveOptions,
-        movePiece
+        onMove
     } = usePlay()
 
     function isAllowedToMove(piece: PieceType) {
@@ -29,7 +28,7 @@ export default function PlayPage() {
     }
 
     function onPieceSelectedHandler(piece: PieceType, square: SquareType) {
-        selectPiece(piece, square)
+        onPieceSelected(piece, square)
     }
 
     return (
@@ -42,18 +41,18 @@ export default function PlayPage() {
                         currentView={selfColor}
                         onPieceDrag={onPieceSelectedHandler}
                         moveOptions={moveOptions}
-                        onPieceDrop={movePiece}
+                        onPieceDrop={onMove}
                     />
                 </div>
                 <div className={styles.side}>
-                    {!hasRoom && !isGameStarted && <RoundButton onClick={joinRoom}>New opponent</RoundButton>}
-                    {isGameStarted && <div className={styles.cards}>
+                    {!roomId && !gameStarted && <RoundButton onClick={joinRoom}>New opponent</RoundButton>}
+                    {gameStarted && <div className={styles.cards}>
                         <div className={styles.cardsuser}>
-                            {opponentCards?.map(c => <Card card={c} onSelected={(card) => selectCard(card)} isSelected={selectedCard?.name === c.name} />)}
+                            {opponentCards?.map(c => <Card card={c} onSelected={(card) => onCardSelected(card)} isSelected={selectedCard?.name === c.name} />)}
                         </div>
                         <Card />
                         <div className={styles.cardsuser}>
-                            {selfCards?.map(c => <Card card={c} onSelected={(card) => selectCard(card)} isSelected={selectedCard?.name === c.name} />)}
+                            {selfCards?.map(c => <Card card={c} onSelected={(card) => onCardSelected(card)} isSelected={selectedCard?.name === c.name} />)}
                         </div>
                     </div>}
                 </div>

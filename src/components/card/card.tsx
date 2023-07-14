@@ -1,7 +1,7 @@
 import styles from "./card.module.css"
 import LogoSecondary from "../icons/logo-secondary"
 import CardBoard from "./card-board"
-import { Card as CardType } from "@/lib/play/consts"
+import { CardType } from "@/lib/play/types"
 
 type CardProps = {
     card?: CardType,

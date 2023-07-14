@@ -1,30 +1,15 @@
 import { createContext, useState, ReactNode, useEffect, useContext } from "react";
 import { socket } from "@/lib/socket";
-import { Game, Player, Room } from "./types";
 import { ryujinMachine } from "./ryujin-machine";
 import { useMachine } from "@xstate/react";
-import { PieceType, Position, SquareType } from "./types";
-import { Card } from "./consts";
+import { GameResponse, PlayerResponse, RoomResponse, PieceType, SquareType, CardType } from "./types";
+import { GameContext } from "./ryujin-machine";
 
-
-type PlayValues = {
+type PlayValues = GameContext & {
     joinRoom: () => void,
-    hasRoom: boolean
-    roomId?: string
-    playersInfo?: Record<"self" | "opponent", Player>
-    hasTurn: boolean,
-    boardPosition: Position | undefined
-    selfColor?: "w" | "b",
-    isGameStarted: boolean,
-    selfCards: [Card, Card] | undefined,
-    opponentCards: [Card, Card] | undefined,
-    reserveCards: Card[] | undefined
-    selectedCard: Card | undefined,
-    selectCard: (card: Card) => void,
-    selectPiece: (piece: PieceType, square: SquareType) => void,
-    selectedPiece: { piece: PieceType, square: SquareType } | undefined,
-    moveOptions: SquareType[] | undefined,
-    movePiece: (from: SquareType, to: SquareType) => void
+    onCardSelected: (card: CardType) => void,
+    onPieceSelected: (piece: PieceType, square: SquareType) => void,
+    onMove: (from: SquareType, to: SquareType) => void,
 }
 
 const PlayContext = createContext({} as PlayValues);
@@ -44,8 +29,8 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
             setIsConnected(false);
         })
 
-        socket.on("JOIN_ROOM", (room: Room) => {
-            let playersInfo = {} as Record<"self" | "opponent", Player>
+        socket.on("JOIN_ROOM", (room: RoomResponse) => {
+            let playersInfo = {} as Record<"self" | "opponent", PlayerResponse>
             for (let i = 0; i < room.players.length; i++) {
                 if (room.players[i] === socket.id) {
                     playersInfo.self = { socketId: room.players[i], name: "You" }
@@ -56,7 +41,7 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
             send({ type: "PLAYER_JOIN", players: playersInfo, roomId: room.id })
         })
 
-        socket.on("START_GAME", (game: Game) => {
+        socket.on("START_GAME", (game: GameResponse) => {
             const [selfCards, opponentCards] = socket.id === game.whiteId ? [game.whiteCards, game.blackCards] : [game.blackCards, game.whiteCards]
             send({
                 type: "GAME_STARTED",
@@ -81,15 +66,15 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
         socket.emit("CREATE_OR_JOIN_ROOM");
     }
 
-    function selectCard(card: Card) {
-        send({ type: "SELECT_CARD", selectedCard: card })
+    function onCardSelected(card: CardType) {
+        send({ type: "SELECT_CARD", card })
     }
 
-    function selectPiece(piece: PieceType, square: SquareType) {
-        send({ type: "SELECT_PIECE", selectedPiece: piece, square })
+    function onPieceSelected(piece: PieceType, square: SquareType) {
+        send({ type: "SELECT_PIECE", piece, square })
     }
 
-    function movePiece(from: SquareType, to: SquareType) {
+    function onMove(from: SquareType, to: SquareType) {
         send({ type: "MOVE", from, to })
     }
 
@@ -97,22 +82,10 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
     return (
         <PlayContext.Provider value={{
             joinRoom,
-            hasRoom: !!state.context?.roomId,
-            roomId: state.context?.roomId,
-            selfColor: state.context.selfColor,
-            hasTurn: state.context.hasTurn,
-            playersInfo: state.context.playersInfo,
-            boardPosition: state.context.boardPosition,
-            isGameStarted: state.context.gameStarted,
-            selfCards: state.context.selfCards,
-            opponentCards: state.context.opponentCards,
-            reserveCards: state.context.reserveCards,
-            selectedCard: state.context.selectedCard,
-            selectCard,
-            selectPiece,
-            selectedPiece: state.context.selectedPiece,
-            moveOptions: state.context.moveOptions,
-            movePiece
+            onCardSelected,
+            onPieceSelected,
+            onMove,
+            ...state.context
         }}>
             {children}
         </PlayContext.Provider>
