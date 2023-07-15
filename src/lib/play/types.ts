@@ -31,6 +31,7 @@ export type MoveResponse = {
     playerId: string,
     from: SquareType,
     to: SquareType
+    selectedCard: CardType
 }
 export type CardType = {
     name: string,

@@ -17,8 +17,6 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
     const [isConnected, setIsConnected] = useState<boolean>(socket.connected);
     const [state, send] = useMachine(ryujinMachine)
 
-    console.log(state.context.reserveCards)
-    console.log(state.context.selfCards)
     useEffect(() => {
         if (!isConnected) {
             socket.connect();
@@ -57,12 +55,12 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
         })
 
         socket.on("OPPONENT_MOVE", (move: MoveResponse) => {
-            const { playerId, from, to } = move
+            const { playerId, from, to, selectedCard } = move
             if (socket.id === playerId) {
                 send({ type: "MOVE_CONFIRMED" })
                 return;
             }
-            send({ type: "OPPONENT_MOVED", playerId, from, to })
+            send({ type: "OPPONENT_MOVED", playerId, from, to, selectedCard })
         })
 
         return () => {
@@ -88,7 +86,8 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
 
     function onMove(from: SquareType, to: SquareType) {
         send({ type: "MOVE", from, to })
-        socket.emit("MOVE", { playerId: socket.id, roomId: state.context.roomId, from, to })
+        const { roomId, selectedCard } = state.context
+        socket.emit("MOVE", { playerId: socket.id, roomId, from, to, selectedCard })
     }
 
     return (

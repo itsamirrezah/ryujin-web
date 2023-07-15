@@ -39,7 +39,7 @@ type Events =
     | { type: "SELECT_CARD", card: CardType }
     | { type: "SELECT_PIECE", piece: PieceType, square: SquareType }
     | { type: "MOVE", from: SquareType, to: SquareType }
-    | { type: "OPPONENT_MOVED", playerId: string, from: SquareType, to: SquareType }
+    | { type: "OPPONENT_MOVED", playerId: string, from: SquareType, to: SquareType, selectedCard: CardType }
     | { type: "MOVE_CONFIRMED" }
 
 type StateOptions = "pregame" | "idle" | "proposed_move" | "game_over"
@@ -159,7 +159,9 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
                             selfCardsMutable.splice(idx, 1)
                             selfCardsMutable.push(reserveCards[0])
                             return selfCardsMutable
-                        }
+                        },
+                        selectedCard: undefined,
+                        selectedPiece: undefined
                     }),
                     target: "proposed_move"
                 },
@@ -174,6 +176,27 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
                             return next
                         },
                         hasTurn: (ctx, _) => !ctx.hasTurn,
+                        reserveCards: (ctx, e) => {
+                            const { selectedCard } = e
+                            const { reserveCards, opponentCards } = ctx
+                            if (!opponentCards || !reserveCards || !selectedCard) return ctx.reserveCards
+                            const mutableReserveCards = [...reserveCards]
+                            mutableReserveCards.splice(0, 1)
+                            mutableReserveCards.push(selectedCard)
+                            return mutableReserveCards
+
+                        },
+                        opponentCards: (ctx, e) => {
+                            const { selectedCard } = e
+                            const { reserveCards, opponentCards } = ctx
+                            if (!opponentCards || !reserveCards || !selectedCard) return ctx.opponentCards
+                            const opponentCardsMutable = [...opponentCards] as [CardType, CardType]
+                            const idx = opponentCardsMutable.findIndex(c => c.name === selectedCard.name)
+                            if (idx < 0) return ctx.opponentCards
+                            opponentCardsMutable.splice(idx, 1)
+                            opponentCardsMutable.push(reserveCards[0])
+                            return opponentCardsMutable
+                        }
                     })
                 }
             },
