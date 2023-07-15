@@ -15,7 +15,7 @@ export type GameContext = {
     hasTurn: boolean,
     selfCards?: [CardType, CardType],
     opponentCards?: [CardType, CardType],
-    reserveCards?: CardType[],
+    reserveCards: CardType[],
     selectedCard?: CardType
     selectedPiece?: { piece: PieceType, square: SquareType },
     moveOptions?: SquareType[]
@@ -56,7 +56,7 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
         hasTurn: false,
         selfCards: undefined,
         opponentCards: undefined,
-        reserveCards: undefined,
+        reserveCards: [],
         selectedCard: undefined,
         selectedPiece: undefined,
         moveOptions: []
@@ -141,7 +141,25 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
                             delete next[from]
                             return next
                         },
-                        hasTurn: (ctx, _) => !ctx.hasTurn
+                        hasTurn: (ctx, _) => !ctx.hasTurn,
+                        reserveCards: (ctx, _) => {
+                            const { reserveCards, selectedCard, selfCards } = ctx
+                            if (!selfCards || !reserveCards || !selectedCard) return ctx.reserveCards
+                            const mutableReserveCards = [...reserveCards]
+                            mutableReserveCards.splice(0, 1)
+                            mutableReserveCards.push(selectedCard)
+                            return mutableReserveCards
+                        },
+                        selfCards: (ctx, _) => {
+                            const { reserveCards, selectedCard, selfCards } = ctx
+                            if (!selfCards || !reserveCards || !selectedCard) return ctx.selfCards
+                            const selfCardsMutable = [...selfCards] as [CardType, CardType]
+                            const idx = selfCardsMutable.findIndex(c => c.name === selectedCard.name)
+                            if (idx < 0) return ctx.selfCards
+                            selfCardsMutable.splice(idx, 1)
+                            selfCardsMutable.push(reserveCards[0])
+                            return selfCardsMutable
+                        }
                     }),
                     target: "proposed_move"
                 },
@@ -155,7 +173,7 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
                             delete next[from]
                             return next
                         },
-                        hasTurn: (ctx, _) => !ctx.hasTurn
+                        hasTurn: (ctx, _) => !ctx.hasTurn,
                     })
                 }
             },

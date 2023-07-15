@@ -17,6 +17,8 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
     const [isConnected, setIsConnected] = useState<boolean>(socket.connected);
     const [state, send] = useMachine(ryujinMachine)
 
+    console.log(state.context.reserveCards)
+    console.log(state.context.selfCards)
     useEffect(() => {
         if (!isConnected) {
             socket.connect();
