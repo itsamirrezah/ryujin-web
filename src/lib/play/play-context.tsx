@@ -54,11 +54,17 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
             })
         })
 
+        socket.on("OPPONENT_MOVE", (data: any) => {
+            if (socket.id === data.playerId) { console.log("confirmed by server, now change state to idle"); return; }
+            console.log("send a opponent move")
+        })
+
         return () => {
             socket.off("connect");
             socket.off("disconnect");
             socket.off("JOIN_ROOM");
             socket.off("START_GAME")
+            socket.off("OPPONENT_MOVE")
         }
     }, [])
 
@@ -76,8 +82,8 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
 
     function onMove(from: SquareType, to: SquareType) {
         send({ type: "MOVE", from, to })
+        socket.emit("MOVE", { playerId: socket.id, roomId: state.context.roomId, from, to })
     }
-
 
     return (
         <PlayContext.Provider value={{

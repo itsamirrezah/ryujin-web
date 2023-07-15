@@ -39,8 +39,10 @@ type Events =
     | { type: "SELECT_CARD", card: CardType }
     | { type: "SELECT_PIECE", piece: PieceType, square: SquareType }
     | { type: "MOVE", from: SquareType, to: SquareType }
+    | { type: "OPPONENT_MOVED", from: SquareType, to: SquareType }
+    | { type: "MOVE_CONFIRMED" }
 
-type StateOptions = "pregame" | "idle" | "game_over"
+type StateOptions = "pregame" | "idle" | "proposed_move" | "game_over"
 
 type State = { value: StateOptions, context: GameContext }
 
@@ -109,13 +111,13 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
                         moveOptions: (ctx, e) => {
                             const { selectedCard, selfColor } = ctx
                             if (!selectedCard) return;
-                            const SQUARES = "abcde".split("")
+                            const COLUMNS = "abcde".split("")
                             const options = [] as SquareType[]
                             for (let i = 0; i < selectedCard.delta.length; i++) {
                                 const delta = selectedCard.delta[i]
-                                const currentCol = SQUARES.findIndex(sqr => sqr === e.square[0])
+                                const currentCol = COLUMNS.findIndex(col => col === e.square[0])
                                 const currentRow = parseInt(e.square[1])
-                                const destCol = SQUARES[currentCol + (selfColor === "w" ? delta.x : delta.x * -1)]
+                                const destCol = COLUMNS[currentCol + (selfColor === "w" ? delta.x : delta.x * -1)]
                                 const destRow = currentRow + (selfColor === "w" ? delta.y * -1 : delta.y);
                                 const outOfBound = !destCol || !destRow || destRow < 1 || destRow > 5
                                 if (outOfBound) continue
@@ -139,9 +141,15 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
                             delete next[from]
                             return next
                         }
-                    })
+                    }),
+                    target: "proposed_move"
                 }
             },
+        },
+        proposed_move: {
+            on: {
+                MOVE_CONFIRMED: []
+            }
         },
         game_over: {}
     }
