@@ -27,6 +27,11 @@ export type GameResponse = {
     blackCards: [CardType, CardType],
     reserveCards: CardType[]
 }
+export type MoveResponse = {
+    playerId: string,
+    from: SquareType,
+    to: SquareType
+}
 export type CardType = {
     name: string,
     options: number[],

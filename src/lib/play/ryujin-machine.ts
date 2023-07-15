@@ -39,7 +39,7 @@ type Events =
     | { type: "SELECT_CARD", card: CardType }
     | { type: "SELECT_PIECE", piece: PieceType, square: SquareType }
     | { type: "MOVE", from: SquareType, to: SquareType }
-    | { type: "OPPONENT_MOVED", from: SquareType, to: SquareType }
+    | { type: "OPPONENT_MOVED", playerId: string, from: SquareType, to: SquareType }
     | { type: "MOVE_CONFIRMED" }
 
 type StateOptions = "pregame" | "idle" | "proposed_move" | "game_over"
@@ -140,15 +140,29 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
                             next[to] = next[from]
                             delete next[from]
                             return next
-                        }
+                        },
+                        hasTurn: (ctx, _) => !ctx.hasTurn
                     }),
                     target: "proposed_move"
+                },
+                OPPONENT_MOVED: {
+                    actions: assign({
+                        boardPosition: (ctx, e) => {
+                            const { from, to } = e
+                            if (from === to) ctx.boardPosition
+                            const next = { ...ctx.boardPosition }
+                            next[to] = next[from]
+                            delete next[from]
+                            return next
+                        },
+                        hasTurn: (ctx, _) => !ctx.hasTurn
+                    })
                 }
             },
         },
         proposed_move: {
             on: {
-                MOVE_CONFIRMED: []
+                MOVE_CONFIRMED: 'idle'
             }
         },
         game_over: {}

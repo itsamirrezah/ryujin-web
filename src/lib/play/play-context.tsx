@@ -2,7 +2,7 @@ import { createContext, useState, ReactNode, useEffect, useContext } from "react
 import { socket } from "@/lib/socket";
 import { ryujinMachine } from "./ryujin-machine";
 import { useMachine } from "@xstate/react";
-import { GameResponse, PlayerResponse, RoomResponse, PieceType, SquareType, CardType } from "./types";
+import { GameResponse, PlayerResponse, RoomResponse, PieceType, SquareType, CardType, MoveResponse } from "./types";
 import { GameContext } from "./ryujin-machine";
 
 type PlayValues = GameContext & {
@@ -54,9 +54,13 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
             })
         })
 
-        socket.on("OPPONENT_MOVE", (data: any) => {
-            if (socket.id === data.playerId) { console.log("confirmed by server, now change state to idle"); return; }
-            console.log("send a opponent move")
+        socket.on("OPPONENT_MOVE", (move: MoveResponse) => {
+            const { playerId, from, to } = move
+            if (socket.id === playerId) {
+                send({ type: "MOVE_CONFIRMED" })
+                return;
+            }
+            send({ type: "OPPONENT_MOVED", playerId, from, to })
         })
 
         return () => {
