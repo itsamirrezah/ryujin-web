@@ -15,6 +15,7 @@
 .boardlyt{
     max-width: 666px;
     min-width: 333px;
+    width: 100%;
 }
 
 .side{

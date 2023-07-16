@@ -6,7 +6,7 @@ import { SquareType } from "@/lib/play/types"
 import styles from "./squares.module.css"
 
 export default function Sqaures() {
-    const { currentPosition, currentView } = useBoard()
+    const { currentPosition, currentView, moveOptions } = useBoard()
     return (
         <div className={styles.board}>
             {
@@ -19,7 +19,7 @@ export default function Sqaures() {
                     const piece = currentPosition[square]
                     const squareColor = row % 2 === col % 2 ? "white" : "black"
                     return (
-                        <Square key={i} square={square} color={squareColor}>
+                        <Square key={i} square={square} color={squareColor} hasPiece={!!piece}>
                             {piece && <Piece piece={piece} square={square} />}
                         </Square>
                     )

@@ -169,6 +169,7 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
                             selfCardsMutable.push(reserveCards[0])
                             return selfCardsMutable
                         },
+                        moveOptions: [],
                         selectedCard: undefined,
                         selectedPiece: undefined
                     }),
