@@ -25,7 +25,8 @@ export type GameResponse = {
     boardPosition: Position,
     whiteCards: [CardType, CardType],
     blackCards: [CardType, CardType],
-    reserveCards: CardType[]
+    reserveCards: CardType[],
+    gameTime: number
 }
 export type MoveResponse = {
     playerId: string,

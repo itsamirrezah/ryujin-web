@@ -45,6 +45,7 @@ type Events =
     | { type: "OPPONENT_MOVED", playerId: string, from: SquareType, to: SquareType, selectedCard: CardType }
     | { type: "MOVE_CONFIRMED" }
     | { type: "TICK", interval: number }
+    | { type: "UPDATE_TIME", white: number, black: number }
 
 type StateOptions = "pregame" | "idle" | "proposed_move" | "game_over"
 
@@ -220,6 +221,20 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
                             const { interval } = e
                             if (hasTurn) return opponentRemainingTime
                             return opponentRemainingTime - interval
+                        }
+                    })
+                },
+                UPDATE_TIME: {
+                    actions: assign({
+                        selfRemainingTime: (ctx, e) => {
+                            const { selfColor } = ctx
+                            if (selfColor === "w") return e.white
+                            return e.black
+                        },
+                        opponentRemainingTime: (ctx, e) => {
+                            const { selfColor } = ctx
+                            if (selfColor === "w") return e.black
+                            return e.white
                         }
                     })
                 }

@@ -51,7 +51,7 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
                 selfCards: selfCards,
                 opponentCard: opponentCards,
                 reserveCards: game.reserveCards,
-                time: 10000
+                time: game.gameTime
             })
         })
 
@@ -62,6 +62,11 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
                 return;
             }
             send({ type: "OPPONENT_MOVED", playerId, from, to, selectedCard })
+        })
+
+        socket.on("UPDATE_TIME", (data: any) => {
+            const { white, black } = data
+            send({ type: "UPDATE_TIME", white, black })
         })
 
         return () => {
