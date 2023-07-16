@@ -50,7 +50,8 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
                 hasTurn: socket.id === game.turnId,
                 selfCards: selfCards,
                 opponentCard: opponentCards,
-                reserveCards: game.reserveCards
+                reserveCards: game.reserveCards,
+                time: 10000
             })
         })
 
@@ -71,6 +72,17 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
             socket.off("OPPONENT_MOVE")
         }
     }, [])
+
+    const { hasTurn, gameStarted } = state.context
+    useEffect(() => {
+        if (!gameStarted) return;
+        const interval = 100
+        const i = setInterval(() => {
+            send({ type: "TICK", interval })
+        }, interval)
+        return () => clearTimeout(i)
+
+    }, [hasTurn, gameStarted])
 
     function joinRoom() {
         socket.emit("CREATE_OR_JOIN_ROOM");

@@ -20,6 +20,8 @@ export default function PlayPage() {
         onPieceSelected,
         selectedPiece,
         moveOptions,
+        selfRemainingTime,
+        opponentRemainingTime,
         onMove
     } = usePlay()
 
@@ -33,6 +35,7 @@ export default function PlayPage() {
 
     return (
         <div className={styles.main}>
+            <div style={{ color: "white" }}>opponentTime: {Math.ceil(opponentRemainingTime / 1000)}s</div>
             <div className={styles.game}>
                 <div className={styles.boardlyt}>
                     <Board
@@ -57,6 +60,7 @@ export default function PlayPage() {
                     </div>}
                 </div>
             </div>
+            <div style={{ color: "white" }}>selfTime: {Math.ceil(selfRemainingTime / 1000)}s</div>
         </div >
     )
 }

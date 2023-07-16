@@ -16,6 +16,8 @@ export type GameContext = {
     selfCards?: [CardType, CardType],
     opponentCards?: [CardType, CardType],
     reserveCards: CardType[],
+    selfRemainingTime: number,
+    opponentRemainingTime: number,
     selectedCard?: CardType
     selectedPiece?: { piece: PieceType, square: SquareType },
     moveOptions?: SquareType[]
@@ -34,13 +36,15 @@ type Events =
         hasTurn: boolean,
         selfCards: [CardType, CardType],
         opponentCard: [CardType, CardType],
-        reserveCards: CardType[]
+        reserveCards: CardType[],
+        time: number
     }
     | { type: "SELECT_CARD", card: CardType }
     | { type: "SELECT_PIECE", piece: PieceType, square: SquareType }
     | { type: "MOVE", from: SquareType, to: SquareType }
     | { type: "OPPONENT_MOVED", playerId: string, from: SquareType, to: SquareType, selectedCard: CardType }
     | { type: "MOVE_CONFIRMED" }
+    | { type: "TICK", interval: number }
 
 type StateOptions = "pregame" | "idle" | "proposed_move" | "game_over"
 
@@ -57,6 +61,8 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
         selfCards: undefined,
         opponentCards: undefined,
         reserveCards: [],
+        selfRemainingTime: 0,
+        opponentRemainingTime: 0,
         selectedCard: undefined,
         selectedPiece: undefined,
         moveOptions: []
@@ -80,6 +86,8 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
                         selfCards: (_, e) => e.selfCards,
                         opponentCards: (_, e) => e.opponentCard,
                         reserveCards: (_, e) => e.reserveCards,
+                        selfRemainingTime: (_, e) => e.time,
+                        opponentRemainingTime: (_, e) => e.time,
                         gameStarted: true
                     })
                 }
@@ -196,6 +204,22 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
                             opponentCardsMutable.splice(idx, 1)
                             opponentCardsMutable.push(reserveCards[0])
                             return opponentCardsMutable
+                        }
+                    })
+                },
+                TICK: {
+                    actions: assign({
+                        selfRemainingTime: (ctx, e) => {
+                            const { hasTurn, selfRemainingTime } = ctx
+                            const { interval } = e
+                            if (!hasTurn) return selfRemainingTime
+                            return selfRemainingTime - interval
+                        },
+                        opponentRemainingTime: (ctx, e) => {
+                            const { hasTurn, opponentRemainingTime } = ctx
+                            const { interval } = e
+                            if (hasTurn) return opponentRemainingTime
+                            return opponentRemainingTime - interval
                         }
                     })
                 }
