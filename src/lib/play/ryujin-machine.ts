@@ -107,6 +107,28 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
                         selectedCard: (ctx, e) => {
                             if (ctx.selfCards?.find(c => c.name === e.card.name)) return e.card
                             return ctx.selectedCard
+                        },
+                        moveOptions: (ctx, e) => {
+                            const { selectedPiece, selfColor } = ctx
+                            const { card: selectedCard } = e
+                            if (!selectedPiece) return []
+                            const COLUMNS = "abcde".split("")
+                            const options = [] as SquareType[]
+                            for (let i = 0; i < selectedCard.delta.length; i++) {
+                                const delta = selectedCard.delta[i]
+                                const currentCol = COLUMNS.findIndex(col => col === selectedPiece.square[0])
+                                const currentRow = parseInt(selectedPiece.square[1])
+                                const destCol = COLUMNS[currentCol + (selfColor === "w" ? delta.x : delta.x * -1)]
+                                const destRow = currentRow + (selfColor === "w" ? delta.y * -1 : delta.y);
+                                const outOfBound = !destCol || !destRow || destRow < 1 || destRow > 5
+                                if (outOfBound) continue
+                                const dest = destCol + destRow as SquareType
+                                const piece = ctx.boardPosition[dest]
+                                const friendlyFire = !!piece && piece[0] === selfColor
+                                if (friendlyFire) continue
+                                options.push(dest)
+                            }
+                            return options
                         }
                     })
                 },

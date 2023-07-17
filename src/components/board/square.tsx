@@ -33,7 +33,7 @@ export default function Square({ square, hasPiece, hasOption, color, children }:
     }), [square, onPieceDrop])
 
     return (
-        <div ref={ref} className={`${styles.sqaure} ${styles[`bg-${color}`]}`}>
+        <div ref={ref} onClick={() => hasOption ? onPieceDrop(square) : null} className={`${styles.sqaure} ${styles[`bg-${color}`]}`}>
             {hasOption && (
                 <span className={`${styles.option} ${hasPiece ? styles.hit : ""}`}>
                     {hasPiece ? <HitOption /> : <MoveOption />}
