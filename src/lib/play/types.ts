@@ -39,7 +39,7 @@ export type CardType = {
     options: number[],
     delta: Delta[];
 }
-type Delta = {
+export type Delta = {
     x: number,
     y: number
 }

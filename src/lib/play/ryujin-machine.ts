@@ -1,10 +1,8 @@
 import { assign, createMachine } from "xstate";
 import { BlackOrWhite, PieceType, Position, SquareType } from "./types";
-import { DEFAULT_POSITION } from "./consts";
+import { DEFAULT_POSITION, getCardOptions, swapWithDeck, updateBoard } from "./consts";
 import { PlayerResponse } from "./types";
 import { CardType } from "./types";
-
-
 
 export type GameContext = {
     gameStarted: boolean,
@@ -109,26 +107,10 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
                             return ctx.selectedCard
                         },
                         moveOptions: (ctx, e) => {
-                            const { selectedPiece, selfColor } = ctx
+                            const { selectedPiece, selfColor, boardPosition } = ctx
                             const { card: selectedCard } = e
-                            if (!selectedPiece) return []
-                            const COLUMNS = "abcde".split("")
-                            const options = [] as SquareType[]
-                            for (let i = 0; i < selectedCard.delta.length; i++) {
-                                const delta = selectedCard.delta[i]
-                                const currentCol = COLUMNS.findIndex(col => col === selectedPiece.square[0])
-                                const currentRow = parseInt(selectedPiece.square[1])
-                                const destCol = COLUMNS[currentCol + (selfColor === "w" ? delta.x : delta.x * -1)]
-                                const destRow = currentRow + (selfColor === "w" ? delta.y * -1 : delta.y);
-                                const outOfBound = !destCol || !destRow || destRow < 1 || destRow > 5
-                                if (outOfBound) continue
-                                const dest = destCol + destRow as SquareType
-                                const piece = ctx.boardPosition[dest]
-                                const friendlyFire = !!piece && piece[0] === selfColor
-                                if (friendlyFire) continue
-                                options.push(dest)
-                            }
-                            return options
+                            if (!selectedPiece || !selfColor) return []
+                            return getCardOptions(selectedPiece.square, selectedCard.delta, selfColor, boardPosition)
                         }
                     })
                 },
@@ -140,124 +122,64 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
                             return { piece, square }
                         },
                         moveOptions: (ctx, e) => {
-                            const { selectedCard, selfColor } = ctx
-                            if (!selectedCard) return;
-                            const COLUMNS = "abcde".split("")
-                            const options = [] as SquareType[]
-                            for (let i = 0; i < selectedCard.delta.length; i++) {
-                                const delta = selectedCard.delta[i]
-                                const currentCol = COLUMNS.findIndex(col => col === e.square[0])
-                                const currentRow = parseInt(e.square[1])
-                                const destCol = COLUMNS[currentCol + (selfColor === "w" ? delta.x : delta.x * -1)]
-                                const destRow = currentRow + (selfColor === "w" ? delta.y * -1 : delta.y);
-                                const outOfBound = !destCol || !destRow || destRow < 1 || destRow > 5
-                                if (outOfBound) continue
-                                const dest = destCol + destRow as SquareType
-                                const piece = ctx.boardPosition[dest]
-                                const friendlyFire = !!piece && piece[0] === selfColor
-                                if (friendlyFire) continue
-                                options.push(dest)
-                            }
-                            return options
+                            const { selectedCard, selfColor, boardPosition } = ctx
+                            const { square } = e
+                            if (!selectedCard || !selfColor) return [];
+                            return getCardOptions(square, selectedCard.delta, selfColor, boardPosition)
                         }
                     })
                 },
                 MOVE: {
-                    actions: assign({
-                        boardPosition: (ctx, e) => {
-                            const { to, from } = e
-                            if (from === to) ctx.boardPosition
-                            const next = { ...ctx.boardPosition }
-                            next[to] = next[from]
-                            delete next[from]
-                            return next
-                        },
-                        hasTurn: (ctx, _) => !ctx.hasTurn,
-                        reserveCards: (ctx, _) => {
-                            const { reserveCards, selectedCard, selfCards } = ctx
-                            if (!selfCards || !reserveCards || !selectedCard) return ctx.reserveCards
-                            const mutableReserveCards = [...reserveCards]
-                            mutableReserveCards.splice(0, 1)
-                            mutableReserveCards.push(selectedCard)
-                            return mutableReserveCards
-                        },
-                        selfCards: (ctx, _) => {
-                            const { reserveCards, selectedCard, selfCards } = ctx
-                            if (!selfCards || !reserveCards || !selectedCard) return ctx.selfCards
-                            const selfCardsMutable = [...selfCards] as [CardType, CardType]
-                            const idx = selfCardsMutable.findIndex(c => c.name === selectedCard.name)
-                            if (idx < 0) return ctx.selfCards
-                            selfCardsMutable.splice(idx, 1)
-                            selfCardsMutable.push(reserveCards[0])
-                            return selfCardsMutable
-                        },
-                        moveOptions: [],
-                        selectedCard: undefined,
-                        selectedPiece: undefined
+                    actions: assign((ctx, e) => {
+                        const { from, to } = e
+                        const { selfCards, reserveCards, selectedCard, boardPosition } = ctx
+                        if (!selfCards || !reserveCards || !selectedCard || from === to) return ctx
+
+                        const [updatedSelfCards, updatedReserveCards] = swapWithDeck(selectedCard, reserveCards, selfCards)
+
+                        return {
+                            boardPosition: updateBoard(boardPosition, from, to),
+                            hasTurn: false,
+                            reserveCards: updatedReserveCards,
+                            selfCards: updatedSelfCards,
+                            moveOptions: [],
+                            selectedCard: undefined,
+                            selectedPiece: undefined
+                        }
                     }),
                     target: "proposed_move"
                 },
                 OPPONENT_MOVED: {
-                    actions: assign({
-                        boardPosition: (ctx, e) => {
-                            const { from, to } = e
-                            if (from === to) ctx.boardPosition
-                            const next = { ...ctx.boardPosition }
-                            next[to] = next[from]
-                            delete next[from]
-                            return next
-                        },
-                        hasTurn: (ctx, _) => !ctx.hasTurn,
-                        reserveCards: (ctx, e) => {
-                            const { selectedCard } = e
-                            const { reserveCards, opponentCards } = ctx
-                            if (!opponentCards || !reserveCards || !selectedCard) return ctx.reserveCards
-                            const mutableReserveCards = [...reserveCards]
-                            mutableReserveCards.splice(0, 1)
-                            mutableReserveCards.push(selectedCard)
-                            return mutableReserveCards
+                    actions: assign((ctx, e) => {
+                        const { from, to, selectedCard, } = e
+                        const { opponentCards, reserveCards, boardPosition } = ctx
+                        if (!opponentCards || !reserveCards || !selectedCard || from === to) return ctx
 
-                        },
-                        opponentCards: (ctx, e) => {
-                            const { selectedCard } = e
-                            const { reserveCards, opponentCards } = ctx
-                            if (!opponentCards || !reserveCards || !selectedCard) return ctx.opponentCards
-                            const opponentCardsMutable = [...opponentCards] as [CardType, CardType]
-                            const idx = opponentCardsMutable.findIndex(c => c.name === selectedCard.name)
-                            if (idx < 0) return ctx.opponentCards
-                            opponentCardsMutable.splice(idx, 1)
-                            opponentCardsMutable.push(reserveCards[0])
-                            return opponentCardsMutable
+                        const [updatedOpponentCards, updatedReserveCards] = swapWithDeck(selectedCard, reserveCards, opponentCards)
+                        return {
+                            boardPosition: updateBoard(boardPosition, from, to),
+                            hasTurn: true,
+                            reserveCards: updatedReserveCards,
+                            opponentCards: updatedOpponentCards,
                         }
                     })
                 },
                 TICK: {
-                    actions: assign({
-                        selfRemainingTime: (ctx, e) => {
-                            const { hasTurn, selfRemainingTime } = ctx
-                            const { interval } = e
-                            if (!hasTurn) return selfRemainingTime
-                            return selfRemainingTime - interval
-                        },
-                        opponentRemainingTime: (ctx, e) => {
-                            const { hasTurn, opponentRemainingTime } = ctx
-                            const { interval } = e
-                            if (hasTurn) return opponentRemainingTime
-                            return opponentRemainingTime - interval
+                    actions: assign((ctx, e) => {
+                        const { hasTurn, selfRemainingTime, opponentRemainingTime } = ctx
+                        const { interval } = e
+                        return {
+                            selfRemainingTime: hasTurn ? selfRemainingTime - interval : selfRemainingTime,
+                            opponentRemainingTime: hasTurn ? opponentRemainingTime : opponentRemainingTime - interval
                         }
                     })
                 },
                 UPDATE_TIME: {
-                    actions: assign({
-                        selfRemainingTime: (ctx, e) => {
-                            const { selfColor } = ctx
-                            if (selfColor === "w") return e.white
-                            return e.black
-                        },
-                        opponentRemainingTime: (ctx, e) => {
-                            const { selfColor } = ctx
-                            if (selfColor === "w") return e.black
-                            return e.white
+                    actions: assign((ctx, e) => {
+                        const { selfColor } = ctx;
+                        return {
+                            selfRemainingTime: selfColor === "w" ? e.white : e.black,
+                            opponentRemainingTime: selfColor === "w" ? e.black : e.white
                         }
                     })
                 }
