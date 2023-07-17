@@ -18,13 +18,14 @@ export default function Sqaures() {
                         COLUMNS[BOARD_SIZE - 1 - col] + (row + 1) as SquareType
                     const piece = currentPosition[square]
                     const squareColor = row % 2 === col % 2 ? "white" : "black"
+                    const hasOption = moveOptions?.includes(square)
                     return (
-                        <Square key={i} square={square} color={squareColor} hasPiece={!!piece}>
+                        <Square key={i} square={square} color={squareColor} hasPiece={!!piece} hasOption={hasOption}>
                             {piece && <Piece piece={piece} square={square} />}
                         </Square>
                     )
                 })
             }
-        </div >
+        </div>
     )
 }

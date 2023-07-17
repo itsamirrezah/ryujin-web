@@ -7,7 +7,7 @@ export type BoardProps = {
     currentView?: BlackOrWhite,
     isPieceDraggable?: (piece: PieceType) => boolean
     onPieceDrag?: (piece: PieceType, square: SquareType) => void
-    onPieceDrop?: (from: SquareType, to: SquareType) => void
+    onPieceDrop?: (square: SquareType) => void
     moveOptions?: SquareType[]
     children: ReactNode
 }
@@ -51,7 +51,7 @@ export function BoardContextProvider({
                 moveOptions
             }}>
             {children}
-        </BoardContext.Provider >
+        </BoardContext.Provider>
     )
 }
 

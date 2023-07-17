@@ -26,7 +26,7 @@ export default function Piece({ piece, square }: PieceProps) {
     }), [piece, isPieceDraggable, onPieceDrag])
 
     return (
-        <div ref={canDrag ? ref : undefined} className={styles.piece}>
+        <div ref={canDrag ? ref : undefined} className={`${styles.piece} ${isDragging ? styles.dragging : ""}`}>
             <PieceComponent />
         </div>
     )

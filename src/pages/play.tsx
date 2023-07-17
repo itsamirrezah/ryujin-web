@@ -30,6 +30,7 @@ export default function PlayPage() {
     }
 
     function onPieceSelectedHandler(piece: PieceType, square: SquareType) {
+        if (piece[0] !== selfColor) return
         onPieceSelected(piece, square)
     }
 

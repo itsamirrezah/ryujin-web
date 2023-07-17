@@ -9,7 +9,7 @@ type PlayValues = GameContext & {
     joinRoom: () => void,
     onCardSelected: (card: CardType) => void,
     onPieceSelected: (piece: PieceType, square: SquareType) => void,
-    onMove: (from: SquareType, to: SquareType) => void,
+    onMove: (to: SquareType) => void,
 }
 
 const PlayContext = createContext({} as PlayValues);
@@ -101,10 +101,12 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
         send({ type: "SELECT_PIECE", piece, square })
     }
 
-    function onMove(from: SquareType, to: SquareType) {
-        send({ type: "MOVE", from, to })
+    function onMove(to: SquareType) {
+        const { selectedPiece } = state.context
+        if (!selectedPiece) return;
+        send({ type: "MOVE", from: selectedPiece.square, to })
         const { roomId, selectedCard } = state.context
-        socket.emit("MOVE", { playerId: socket.id, roomId, from, to, selectedCard })
+        socket.emit("MOVE", { playerId: socket.id, roomId, from: selectedPiece.square, to, selectedCard })
     }
 
     return (

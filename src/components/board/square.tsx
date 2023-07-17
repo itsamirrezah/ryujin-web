@@ -13,17 +13,18 @@ type SquareProps = {
     square: SquareType,
     color: "black" | "white",
     hasPiece: boolean,
+    hasOption: boolean,
     children: ReactNode,
 
 }
 
-export default function Square({ square, hasPiece, color, children }: SquareProps) {
+export default function Square({ square, hasPiece, hasOption, color, children }: SquareProps) {
     const { onPieceDrop, moveOptions } = useBoard()
     const [{ canDrop, isOver }, ref] = useDrop(() => ({
         accept: DND_ITEM_TYPE,
         drop: (item: DndItem) => {
             if (!moveOptions?.includes(square)) return;
-            onPieceDrop(item.from, square)
+            onPieceDrop(square)
         },
         collect: (monitor) => ({
             isOver: monitor.isOver(),
@@ -33,7 +34,7 @@ export default function Square({ square, hasPiece, color, children }: SquareProp
 
     return (
         <div ref={ref} className={`${styles.sqaure} ${styles[`bg-${color}`]}`}>
-            {moveOptions?.includes(square) && (
+            {hasOption && (
                 <span className={`${styles.option} ${hasPiece ? styles.hit : ""}`}>
                     {hasPiece ? <HitOption /> : <MoveOption />}
                 </span>
