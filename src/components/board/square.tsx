@@ -32,6 +32,10 @@ export default function Square({ square, hasPiece, hasOption, color, children }:
         }),
     }), [square, onPieceDrop])
 
+    const hasWhiteTemple = square === "c1"
+    const hasBlackTemple = square === "c5"
+    const templeStyle = hasWhiteTemple ? styles['temple-w'] : styles['temple-b']
+
     return (
         <div ref={ref} onClick={() => hasOption ? onPieceDrop(square) : null} className={`${styles.sqaure} ${styles[`bg-${color}`]}`}>
             {hasOption && (
@@ -39,6 +43,7 @@ export default function Square({ square, hasPiece, hasOption, color, children }:
                     {hasPiece ? <HitOption /> : <MoveOption />}
                 </span>
             )}
+            {(hasWhiteTemple || hasBlackTemple) && <span className={`${styles.temple} ${templeStyle}`}></span>}
             {children}
         </div>
     )

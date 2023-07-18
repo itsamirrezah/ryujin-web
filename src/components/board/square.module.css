@@ -23,6 +23,22 @@
     height: 50%;
 }
 
+.temple {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.temple-w {
+    background-color: #FF414149;
+}
+
+.temple-b {
+    background-color: #01C1AA5E;
+}
+
 .hit {
     width: 75%;
     height: 75%;

@@ -16,6 +16,8 @@ export type GameContext = {
     reserveCards: CardType[],
     selfRemainingTime: number,
     opponentRemainingTime: number,
+    selfTemple?: SquareType,
+    opponentTemple?: SquareType
     selectedCard?: CardType
     selectedPiece?: { piece: PieceType, square: SquareType },
     moveOptions?: SquareType[]
@@ -62,6 +64,8 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
         reserveCards: [],
         selfRemainingTime: 0,
         opponentRemainingTime: 0,
+        selfTemple: undefined,
+        opponentTemple: undefined,
         selectedCard: undefined,
         selectedPiece: undefined,
         moveOptions: []
@@ -87,6 +91,8 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
                         reserveCards: (_, e) => e.reserveCards,
                         selfRemainingTime: (_, e) => e.time,
                         opponentRemainingTime: (_, e) => e.time,
+                        selfTemple: (_, e) => e.selfColor === "w" ? "c1" : "c5",
+                        opponentTemple: (_, e) => e.selfColor === "w" ? "c5" : "c1",
                         gameStarted: true
                     })
                 }

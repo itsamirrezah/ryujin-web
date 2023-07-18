@@ -1,5 +1,6 @@
 .piece {
     display: flex;
+    position: relative;
     justify-content: center;
     align-items: center;
     opacity: 1;
