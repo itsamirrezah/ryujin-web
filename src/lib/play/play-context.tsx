@@ -2,7 +2,7 @@ import { createContext, useState, ReactNode, useEffect, useContext } from "react
 import { socket } from "@/lib/socket";
 import { ryujinMachine } from "./ryujin-machine";
 import { useMachine } from "@xstate/react";
-import { GameResponse, PlayerResponse, RoomResponse, PieceType, SquareType, CardType, MoveResponse } from "./types";
+import { GameResponse, PlayerResponse, RoomResponse, PieceType, SquareType, CardType, MoveResponse, InvalidMoveResponse } from "./types";
 import { GameContext } from "./ryujin-machine";
 
 type PlayValues = GameContext & {
@@ -29,6 +29,20 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
             setIsConnected(false);
         })
 
+        socket.on("INVALID_MOVE", (data: InvalidMoveResponse) => {
+            const { payload } = data
+            const [selfCards, opponentCards] = socket.id === payload.whiteId ? [payload.whiteCards, payload.blackCards] : [payload.blackCards, payload.whiteCards]
+            send({
+                type: "INVALID_MOVE",
+                boardPosition: payload.boardPosition,
+                selfColor: socket.id === payload.whiteId ? "w" : "b",
+                hasTurn: socket.id === payload.turnId,
+                selfCards: selfCards,
+                opponentCards: opponentCards,
+                reserveCards: payload.reserveCards,
+
+            })
+        })
         socket.on("JOIN_ROOM", (room: RoomResponse) => {
             let playersInfo = {} as Record<"self" | "opponent", PlayerResponse>
             for (let i = 0; i < room.players.length; i++) {
@@ -75,6 +89,7 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
             socket.off("JOIN_ROOM");
             socket.off("START_GAME")
             socket.off("OPPONENT_MOVE")
+            socket.off("INVALID_MOVE")
         }
     }, [])
 

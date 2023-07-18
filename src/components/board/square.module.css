@@ -42,4 +42,5 @@
 .hit {
     width: 75%;
     height: 75%;
+    z-index: 10;
 }

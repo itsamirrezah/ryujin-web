@@ -46,6 +46,15 @@ type Events =
     | { type: "MOVE_CONFIRMED" }
     | { type: "TICK", interval: number }
     | { type: "UPDATE_TIME", white: number, black: number }
+    | {
+        type: "INVALID_MOVE",
+        boardPosition: Position,
+        selfColor: BlackOrWhite,
+        hasTurn: boolean,
+        selfCards: [CardType, CardType],
+        opponentCards: [CardType, CardType],
+        reserveCards: CardType[]
+    }
 
 type StateOptions = "pregame" | "idle" | "proposed_move" | "game_over"
 
@@ -193,7 +202,14 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
         },
         proposed_move: {
             on: {
-                MOVE_CONFIRMED: 'idle'
+                MOVE_CONFIRMED: 'idle',
+                INVALID_MOVE: {
+                    actions: assign((_, e) => {
+                        const { boardPosition, selfColor, hasTurn, selfCards, opponentCards, reserveCards, } = e
+                        return { boardPosition, selfCards, hasTurn, opponentCards, reserveCards }
+                    }),
+                    target: 'idle'
+                }
             }
         },
         game_over: {}
