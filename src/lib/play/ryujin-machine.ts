@@ -20,7 +20,8 @@ export type GameContext = {
     opponentTemple?: SquareType
     selectedCard?: CardType
     selectedPiece?: { piece: PieceType, square: SquareType },
-    moveOptions?: SquareType[]
+    moveOptions?: SquareType[],
+    lastTracked: number
 }
 
 type Events =
@@ -77,7 +78,8 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
         opponentTemple: undefined,
         selectedCard: undefined,
         selectedPiece: undefined,
-        moveOptions: []
+        moveOptions: [],
+        lastTracked: 0
     },
     initial: "pregame",
     states: {
@@ -114,6 +116,16 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
                     cond: () => false
                 },
             ],
+            invoke: {
+                id: 'invoke-tick',
+                src: () => (sendBack) => {
+                    const interval = 100;
+                    const i = setInterval(() => {
+                        sendBack({ type: "TICK", interval })
+                    }, interval)
+                    return () => clearInterval(i)
+                }
+            },
             on: {
                 SELECT_CARD: {
                     actions: assign({
@@ -159,7 +171,7 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
                             selfCards: updatedSelfCards,
                             moveOptions: [],
                             selectedCard: undefined,
-                            selectedPiece: undefined
+                            selectedPiece: undefined,
                         }
                     }),
                     target: "proposed_move"
@@ -181,11 +193,14 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
                 },
                 TICK: {
                     actions: assign((ctx, e) => {
-                        const { hasTurn, selfRemainingTime, opponentRemainingTime } = ctx
+                        const { hasTurn, selfRemainingTime, opponentRemainingTime, lastTracked } = ctx
                         const { interval } = e
+                        const now = new Date().getTime()
+                        const diff = !lastTracked ? interval : now - lastTracked
                         return {
-                            selfRemainingTime: hasTurn ? selfRemainingTime - interval : selfRemainingTime,
-                            opponentRemainingTime: hasTurn ? opponentRemainingTime : opponentRemainingTime - interval
+                            selfRemainingTime: hasTurn ? selfRemainingTime - diff : selfRemainingTime,
+                            opponentRemainingTime: hasTurn ? opponentRemainingTime : opponentRemainingTime - diff,
+                            lastTracked: now
                         }
                     })
                 },

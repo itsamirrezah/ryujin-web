@@ -94,15 +94,6 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
     }, [])
 
     const { hasTurn, gameStarted } = state.context
-    useEffect(() => {
-        if (!gameStarted) return;
-        const interval = 100
-        const i = setInterval(() => {
-            send({ type: "TICK", interval })
-        }, interval)
-        return () => clearTimeout(i)
-
-    }, [hasTurn, gameStarted])
 
     function joinRoom() {
         socket.emit("CREATE_OR_JOIN_ROOM");
