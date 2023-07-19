@@ -52,11 +52,24 @@ export default function PlayPage() {
                     {!roomId && !gameStarted && <RoundButton onClick={joinRoom}>New opponent</RoundButton>}
                     {gameStarted && <div className={styles.cards}>
                         <div className={styles.cardsuser}>
-                            {opponentCards?.map(c => <Card card={c} onSelected={(card) => onCardSelected(card)} isSelected={selectedCard?.name === c.name} />)}
+                            {opponentCards?.map(c => (
+                                <Card
+                                    card={c}
+                                    onSelected={(card) => onCardSelected(card)}
+                                    isSelected={selectedCard?.name === c.name}
+                                    optionColor={selfColor === "w" ? "b" : "w"}
+                                />)
+                            )}
                         </div>
                         <Card />
                         <div className={styles.cardsuser}>
-                            {selfCards?.map(c => <Card card={c} onSelected={(card) => onCardSelected(card)} isSelected={selectedCard?.name === c.name} />)}
+                            {selfCards?.map(c => (
+                                <Card card={c}
+                                    onSelected={(card) => onCardSelected(card)}
+                                    isSelected={selectedCard?.name === c.name}
+                                    optionColor={selfColor}
+                                />)
+                            )}
                         </div>
                     </div>}
                 </div>
