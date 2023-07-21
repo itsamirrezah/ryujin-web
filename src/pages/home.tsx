@@ -6,29 +6,29 @@ import H2 from "@/components/home/h2"
 import AuthModal from "@/components/auth/auth-modal"
 import { useState } from "react"
 
-export default function HomePage(){
+export default function HomePage() {
     const [isAuthModalShown, setAuthModalShown] = useState<boolean>(false);
 
-    function onCloseAuthModalHandler(): void{
+    function onCloseAuthModalHandler(): void {
         setAuthModalShown(false)
     }
 
     return (
-    <>
-        <div className={styles.main}>
-            <div className={styles.logo}>
-                <Ryujin />
-                <H2>Play online and challenge your friends</H2>
+        <>
+            <div className={styles.main}>
+                <div className={styles.logo}>
+                    <Ryujin />
+                    <H2>Play online and challenge your friends</H2>
+                </div>
+                <div className={styles.get_started}>
+                    <Masters />
+                    <RoundButton onClick={() => setAuthModalShown(state => !state)}>Play Now</RoundButton>
+                </div>
             </div>
-            <div className={styles.get_started}>
-                <Masters />
-                <RoundButton onClick={()=> setAuthModalShown(state=> !state)}>Play Now</RoundButton>
+            <div>
+                <h1>Section 2</h1>
+                {isAuthModalShown && <AuthModal onClose={onCloseAuthModalHandler} />}
             </div>
-            </div>
-        <div>
-            <h1>Section 2</h1>
-            {isAuthModalShown && <AuthModal onClose={onCloseAuthModalHandler}/> }
-        </div>
-    </>
-  )
+        </>
+    )
 }

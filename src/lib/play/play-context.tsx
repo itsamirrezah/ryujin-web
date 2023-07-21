@@ -3,7 +3,7 @@ import { socket } from "@/lib/socket";
 import { ryujinMachine } from "./ryujin-machine";
 import { useMachine } from "@xstate/react";
 import { GameResponse, PlayerResponse, RoomResponse, PieceType, SquareType, CardType, MoveResponse, InvalidMoveResponse } from "./types";
-import { GameContext } from "./ryujin-machine";
+import { GameContext } from "./consts";
 
 type PlayValues = GameContext & {
     joinRoom: () => void,
@@ -92,8 +92,6 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
             socket.off("INVALID_MOVE")
         }
     }, [])
-
-    const { hasTurn, gameStarted } = state.context
 
     function joinRoom() {
         socket.emit("CREATE_OR_JOIN_ROOM");

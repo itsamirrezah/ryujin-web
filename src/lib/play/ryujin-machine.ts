@@ -1,65 +1,5 @@
 import { assign, createMachine } from "xstate";
-import { BlackOrWhite, PieceType, Position, SquareType } from "./types";
-import { DEFAULT_POSITION, getCardOptions, swapWithDeck, updateBoard } from "./consts";
-import { PlayerResponse } from "./types";
-import { CardType } from "./types";
-
-export type GameContext = {
-    gameStarted: boolean,
-    boardPosition: Position,
-    roomId?: string,
-    playersInfo?: Record<"self" | "opponent", PlayerResponse>
-    selfColor?: BlackOrWhite
-    hasTurn: boolean,
-    selfCards?: [CardType, CardType],
-    opponentCards?: [CardType, CardType],
-    reserveCards: CardType[],
-    selfRemainingTime: number,
-    opponentRemainingTime: number,
-    selfTemple?: SquareType,
-    opponentTemple?: SquareType
-    selectedCard?: CardType
-    selectedPiece?: { piece: PieceType, square: SquareType },
-    moveOptions?: SquareType[],
-    lastTracked: number
-}
-
-type Events =
-    | {
-        type: "PLAYER_JOIN",
-        players: Record<"self" | "opponent", PlayerResponse>,
-        roomId: string
-    }
-    | {
-        type: "GAME_STARTED",
-        boardPosition: Position,
-        selfColor: BlackOrWhite,
-        hasTurn: boolean,
-        selfCards: [CardType, CardType],
-        opponentCard: [CardType, CardType],
-        reserveCards: CardType[],
-        time: number
-    }
-    | { type: "SELECT_CARD", card: CardType }
-    | { type: "SELECT_PIECE", piece: PieceType, square: SquareType }
-    | { type: "MOVE", from: SquareType, to: SquareType }
-    | { type: "OPPONENT_MOVED", playerId: string, from: SquareType, to: SquareType, selectedCard: CardType }
-    | { type: "MOVE_CONFIRMED" }
-    | { type: "TICK", interval: number }
-    | { type: "UPDATE_TIME", white: number, black: number }
-    | {
-        type: "INVALID_MOVE",
-        boardPosition: Position,
-        selfColor: BlackOrWhite,
-        hasTurn: boolean,
-        selfCards: [CardType, CardType],
-        opponentCards: [CardType, CardType],
-        reserveCards: CardType[]
-    }
-
-type StateOptions = "pregame" | "idle" | "proposed_move" | "game_over"
-
-type State = { value: StateOptions, context: GameContext }
+import { DEFAULT_POSITION, Events, GameContext, getCardOptions, State, swapWithDeck, updateBoard } from "./consts";
 
 export const ryujinMachine = createMachine<GameContext, Events, State>({
     context: {
@@ -221,7 +161,7 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
                 INVALID_MOVE: {
                     actions: assign((_, e) => {
                         const { boardPosition, selfColor, hasTurn, selfCards, opponentCards, reserveCards, } = e
-                        return { boardPosition, selfCards, hasTurn, opponentCards, reserveCards }
+                        return { boardPosition, selfColor, selfCards, hasTurn, opponentCards, reserveCards }
                     }),
                     target: 'idle'
                 }
