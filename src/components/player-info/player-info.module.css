@@ -1,0 +1,33 @@
+.info {
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--18);
+    align-items: center;
+    color: #fff;
+    font-family: var(--font-marker);
+    padding: 0 var(--8);
+}
+
+.clock {
+    border-radius: 4px;
+    padding: var(--4) var(--8);
+    font-size: 24px;
+    font-weight: 600;
+    display: flex;
+    gap: 8px;
+    font-family: var(--font-lato);
+    align-items: center;
+    opacity: 1;
+}
+
+.clock-w {
+    background-color: #FF414149;
+}
+
+.clock-b {
+    background-color: #01C1AA5E;
+}
+
+.clocknotactive {
+    opacity: 0.5;
+}
