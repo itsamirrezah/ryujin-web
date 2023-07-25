@@ -10,13 +10,18 @@ type PieceProps = {
 }
 
 export default function Piece({ piece, square }: PieceProps) {
-    const { isPieceDraggable, onPieceDrag } = useBoard()
+    const { isPieceDraggable, onPieceDrag, setSelectedSquare } = useBoard()
     const PieceComponent = DEFAULT_PIECES[piece];
+
+    function onPieceSelected(piece: PieceType, square: SquareType) {
+        setSelectedSquare(square)
+        onPieceDrag(piece, square)
+    }
 
     const [{ isDragging, canDrag }, ref] = useDrag(() => ({
         type: DND_ITEM_TYPE,
         item: () => {
-            onPieceDrag(piece, square)
+            onPieceSelected(piece, square)
             return { from: square }
         },
         collect: (monitor) => ({
@@ -27,9 +32,9 @@ export default function Piece({ piece, square }: PieceProps) {
 
     return (
         <div ref={canDrag ? ref : undefined} className={`${styles.piece} ${isDragging ? styles.dragging : ""}`}
-            onClick={() => canDrag ? onPieceDrag(piece, square) : null}>
+            onClick={() => canDrag ? onPieceSelected(piece, square) : null}>
             <PieceComponent />
-        </div >
+        </div>
     )
 
 }

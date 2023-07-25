@@ -19,12 +19,18 @@ type SquareProps = {
 }
 
 export default function Square({ square, hasPiece, hasOption, color, children }: SquareProps) {
-    const { onPieceDrop, moveOptions } = useBoard()
+    const { onPieceDrop, moveOptions, selectedSquare, setSelectedSquare } = useBoard()
+    function onSquareSelectHandler(square: SquareType) {
+        if (!moveOptions?.includes(square) || !hasOption) return
+        setSelectedSquare(undefined)
+        onPieceDrop(square)
+
+
+    }
     const [{ canDrop, isOver }, ref] = useDrop(() => ({
         accept: DND_ITEM_TYPE,
         drop: (item: DndItem) => {
-            if (!moveOptions?.includes(square)) return;
-            onPieceDrop(square)
+            onSquareSelectHandler(square)
         },
         collect: (monitor) => ({
             isOver: monitor.isOver(),
@@ -35,15 +41,17 @@ export default function Square({ square, hasPiece, hasOption, color, children }:
     const hasWhiteTemple = square === "c1"
     const hasBlackTemple = square === "c5"
     const templeStyle = hasWhiteTemple ? styles['temple-w'] : styles['temple-b']
+    const squareStyle = `${styles.sqaure} ${styles[`bg-${color}`]}`
 
     return (
-        <div ref={ref} onClick={() => hasOption ? onPieceDrop(square) : null} className={`${styles.sqaure} ${styles[`bg-${color}`]}`}>
+        <div ref={ref} onClick={() => onSquareSelectHandler(square)} className={squareStyle} >
             {hasOption && (
                 <span className={`${styles.option} ${hasPiece ? styles.hit : ""}`}>
                     {hasPiece ? <HitOption /> : <MoveOption />}
                 </span>
             )}
             {(hasWhiteTemple || hasBlackTemple) && <span className={`${styles.temple} ${templeStyle}`}></span>}
+            {selectedSquare && selectedSquare === square && <span className={styles.selected}></span>}
             {children}
         </div>
     )

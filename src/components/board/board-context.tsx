@@ -21,6 +21,8 @@ type BoardValues = {
     onPieceDrag: RequiredBoardProps["onPieceDrag"]
     onPieceDrop: RequiredBoardProps["onPieceDrop"]
     moveOptions: RequiredBoardProps["moveOptions"]
+    selectedSquare?: SquareType,
+    setSelectedSquare: (square?: SquareType) => void
 }
 
 const BoardContext = createContext<BoardValues>({} as BoardValues)
@@ -35,6 +37,11 @@ export function BoardContextProvider({
     moveOptions = [],
 }: BoardProps) {
     const [playerView, setPlayerView] = useState<BlackOrWhite>(currentView)
+    const [selectedSquare, setSelectedSquare] = useState<SquareType>()
+
+    function setSelectedSquareHandler(square?: SquareType) {
+        setSelectedSquare(prev => prev === square ? prev : square)
+    }
 
     useEffect(() => {
         setPlayerView(currentView)
@@ -48,7 +55,9 @@ export function BoardContextProvider({
                 isPieceDraggable,
                 onPieceDrag,
                 onPieceDrop,
-                moveOptions
+                moveOptions,
+                setSelectedSquare: setSelectedSquareHandler,
+                selectedSquare
             }}>
             {children}
         </BoardContext.Provider>
