@@ -41,7 +41,7 @@ export default function PlayPage() {
             <div className={styles.game}>
                 <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
                     <PlayerInfo
-                        name={playersInfo?.opponent?.name}
+                        name={playersInfo?.opponent?.username}
                         remainingTime={opponentRemainingTime}
                         hasTurn={!hasTurn}
                         isClockActive={gameStarted}
@@ -58,7 +58,7 @@ export default function PlayPage() {
                         />
                     </div>
                     <PlayerInfo
-                        name={playersInfo?.self?.name}
+                        name={playersInfo?.self?.username}
                         remainingTime={selfRemainingTime}
                         hasTurn={hasTurn}
                         isClockActive={gameStarted}

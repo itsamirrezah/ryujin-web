@@ -46,11 +46,11 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
         socket.on("JOIN_ROOM", (room: RoomResponse) => {
             let playersInfo = {} as Record<"self" | "opponent", PlayerResponse>
             for (let i = 0; i < room.players.length; i++) {
-                if (room.players[i] === socket.id) {
-                    playersInfo.self = { socketId: room.players[i], name: "You" }
-                    continue
-                }
-                playersInfo.opponent = { socketId: room.players[i], name: "Opponent" }
+                const player = room.players[i]
+                if (player.socketId === socket.id)
+                    playersInfo.self = player
+                else
+                    playersInfo.opponent = player
             }
             send({ type: "PLAYER_JOIN", players: playersInfo, roomId: room.id })
         })

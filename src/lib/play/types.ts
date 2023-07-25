@@ -9,11 +9,12 @@ export type Position = { [key in SquareType]?: PieceType }
 export type BlackOrWhite = "w" | "b";
 export type RoomResponse = {
     id: string;
-    players: string[];
+    players: PlayerResponse[];
 }
 export type PlayerResponse = {
-    name: string,
     socketId: string,
+    userId: string,
+    username: string
 }
 export type GameResponse = {
     id: string,
