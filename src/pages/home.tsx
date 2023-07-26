@@ -5,7 +5,6 @@ import Ryujin from "@/components/home/ryujin"
 import H2 from "@/components/home/h2"
 import AuthModal from "@/components/auth/auth-modal"
 import { useState } from "react"
-import { useAuthContext } from "@/lib/auth"
 
 export default function HomePage() {
     const [isAuthModalShown, setAuthModalShown] = useState<boolean>(false);

@@ -47,6 +47,21 @@
     font-size: var(--12);
 }
 
+.switch {
+    font-size: var(--14);
+    text-transform: uppercase;
+    line-height: 1.2;
+    align-self: flex-start;
+    font-family: var(--font-lato);
+    font-weight: 700;
+    color: #0000008A;
+    margin: 0 auto;
+}
+
+.switch > b {
+    color: #00A3FF;
+}
+
 .terms {
     font-size: var(--14);
     font-family: var(--font-lato);
@@ -58,21 +73,6 @@
     color: #7B7979;
 }
 
-.terms > a{
+.terms > a {
     color: #000000
-}
-
-.forgot {
-    font-size: var(--14);
-    text-transform: uppercase;
-    line-height: 1.2;
-    align-self: flex-start;
-    font-family: var(--font-lato);
-    font-weight: 700;
-    color: #0000008A;
-    margin-left: var(--28);
-}
-
-.forgot > span { 
-    color: #00A3FF;
 }

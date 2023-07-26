@@ -6,8 +6,12 @@ import { signInSchema, ISignSchema } from "@/lib/validation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import useSignIn from "@/lib/service/use-signin"
+import { SignOption } from "./auth-modal"
 
-export default function SignInForm() {
+type SignInFormProps = {
+    setSignType: (option: SignOption) => void
+}
+export default function SignInForm({ setSignType }: SignInFormProps) {
     const { register, handleSubmit, formState: { errors } } = useForm<ISignSchema>({ resolver: zodResolver(signInSchema) })
     const { mutate, isLoading, isSuccess, isError, error } = useSignIn()
 
@@ -20,7 +24,7 @@ export default function SignInForm() {
                 <Field placeholder="Username or Email" {...register("username")} />
                 <Field placeholder="Password" type="password" {...register("password")} />
             </div>
-            <button className={styles.forgot}>Forgot your <span>password</span> ?</button>
+            <button className={styles.switch} onClick={() => setSignType("signup")}>No account? <b>Join us</b></button>
             <div className={styles.join}>
                 <RoundButton theme="red" type="submit">Login</RoundButton>
                 <small> or </small>

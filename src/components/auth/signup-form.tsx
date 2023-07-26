@@ -7,9 +7,14 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import useRegisterUser from "@/lib/service/use-register-user"
 import { useGoogleAuth } from "@/lib/service/use-google-auth"
+import { SignOption } from "./auth-modal"
+
+type SignUpFormProps = {
+    setSignType: (option: SignOption) => void
+}
 
 //FIXME: ui for validate error
-export default function SignUpForm() {
+export default function SignUpForm({ setSignType }: SignUpFormProps) {
     const { register, handleSubmit, formState: { errors } } = useForm<ISignUpSchema>({ resolver: zodResolver(signUpSchema) })
     const { mutate } = useRegisterUser()
     const { isError, userInfo, googleAuthHandler } = useGoogleAuth()
@@ -25,6 +30,7 @@ export default function SignUpForm() {
                 <Field placeholder="Email" type="email" {...register("email")} />
                 <Field placeholder="Password" type="password" {...register("password")} />
             </div>
+            <button className={styles.switch} onClick={() => setSignType("signin")}>Already have an account? <b>Sign in</b></button>
             <p className={styles.terms}>By continuing, you agree to Ryujin’s <a href="#">Terms of Service</a><br />and acknowledge you've read our <a href="#">Privacy Policy</a></p>
             <div className={styles.join}>
                 <RoundButton theme="red" type="submit">Join us</RoundButton>
