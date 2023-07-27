@@ -12,9 +12,6 @@ export default function HomePage() {
     const navigate = useNavigate()
     const { isAuth } = useAuthContext()
     const [isAuthModalShown, setAuthModalShown] = useState<boolean>(false);
-    // useEffect(() => {
-    //     navigate({ to: '/play' })
-    // }, [])
 
     function onCloseAuthModalHandler(): void {
         setAuthModalShown(false)

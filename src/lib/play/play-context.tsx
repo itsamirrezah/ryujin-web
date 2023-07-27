@@ -1,16 +1,15 @@
 import { createContext, useState, ReactNode, useEffect, useContext } from "react";
 import { socket } from "@/lib/socket";
 import { ryujinMachine } from "./ryujin-machine";
-import { useActor, useInterpret, useMachine } from "@xstate/react";
+import { useInterpret, useSelector } from "@xstate/react";
 import { GameResponse, PlayerResponse, RoomResponse, PieceType, SquareType, CardType, MoveResponse, InvalidMoveResponse } from "./types";
-import { GameContext } from "./consts";
 import { InterpreterFrom } from "xstate";
 
-type PlayValues = GameContext & {
+type PlayValues = {
     joinRoom: () => void,
     onCardSelected: (card: CardType) => void,
     onPieceSelected: (piece: PieceType, square: SquareType) => void,
-    onMove: (to: SquareType) => void,
+    onMove: (from: SquareType, to: SquareType, selectedCard: CardType) => void,
     ryujinService: InterpreterFrom<typeof ryujinMachine>
 }
 
@@ -18,7 +17,7 @@ const PlayContext = createContext({} as PlayValues);
 export default function PlayContextProvider({ children }: { children: ReactNode }) {
     const [isConnected, setIsConnected] = useState<boolean>(socket.connected);
     const ryujinService = useInterpret(ryujinMachine)
-    const [state] = useActor(ryujinService)
+    const roomId = useSelector(ryujinService, (state) => state.context.roomId)
     const { send } = ryujinService
 
     useEffect(() => {
@@ -109,12 +108,9 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
         send({ type: "SELECT_PIECE", piece, square })
     }
 
-    function onMove(to: SquareType) {
-        const { selectedPiece } = state.context
-        if (!selectedPiece) return;
-        send({ type: "MOVE", from: selectedPiece.square, to })
-        const { roomId, selectedCard } = state.context
-        socket.emit("MOVE", { playerId: socket.id, roomId, from: selectedPiece.square, to, selectedCard })
+    function onMove(from: SquareType, to: SquareType, selectedCard: CardType) {
+        send({ type: "MOVE", from, to })
+        socket.emit("MOVE", { playerId: socket.id, roomId, from, to, selectedCard })
     }
 
     return (
@@ -123,7 +119,6 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
             onCardSelected,
             onPieceSelected,
             onMove,
-            ...state.context,
             ryujinService
         }}>
             {children}

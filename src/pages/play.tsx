@@ -1,38 +1,21 @@
-import Board from "@/components/board/board";
 import { usePlay } from "@/lib/play/play-context";
 import RoundButton from "@/components/round-button/round-button";
 import styles from "./play.module.css";
-import { PieceType, SquareType } from "@/lib/play/types";
 import Card from "@/components/card/card";
 import SelfPlayerInfo from "@/components/play/self-player-info";
 import OpponentPlayerInfo from "@/components/play/opponent-player-info";
+import PlayBoard from "@/components/play/play-board";
+import { useSelector } from "@xstate/react";
+import SelfCards from "@/components/play/selfCards";
+import OpponentCards from "@/components/play/opponentCards";
 
 export default function PlayPage() {
     const {
         joinRoom,
-        roomId,
-        boardPosition,
-        selfColor,
-        hasTurn,
-        gameStarted,
-        selfCards,
-        opponentCards,
-        selectedCard,
-        onCardSelected,
-        onPieceSelected,
-        selectedPiece,
-        moveOptions,
-        onMove,
+        ryujinService
     } = usePlay()
-
-    function isAllowedToMove(piece: PieceType) {
-        return hasTurn && piece[0] === selfColor;
-    }
-
-    function onPieceSelectedHandler(piece: PieceType, square: SquareType) {
-        if (piece[0] !== selfColor) return
-        onPieceSelected(piece, square)
-    }
+    const isGameStarted = useSelector(ryujinService, (state) => state.context.gameStarted)
+    const hasRoom = useSelector(ryujinService, (state) => !!state.context.roomId)
 
     return (
         <div className={styles.main}>
@@ -40,39 +23,19 @@ export default function PlayPage() {
                 <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
                     <OpponentPlayerInfo />
                     <div className={styles.boardlyt}>
-                        <Board
-                            currentPosition={boardPosition}
-                            isPieceDraggable={isAllowedToMove}
-                            currentView={selfColor}
-                            onPieceDrag={onPieceSelectedHandler}
-                            moveOptions={moveOptions}
-                            onPieceDrop={onMove}
-                        />
+                        <PlayBoard />
                     </div>
                     <SelfPlayerInfo />
                 </div>
                 <div className={styles.side}>
-                    {!roomId && !gameStarted && <RoundButton onClick={joinRoom}>New opponent</RoundButton>}
-                    {gameStarted && <div className={styles.cards}>
+                    {!hasRoom && !isGameStarted && <RoundButton onClick={joinRoom}>New opponent</RoundButton>}
+                    {isGameStarted && <div className={styles.cards}>
                         <div className={styles.cardsuser}>
-                            {opponentCards?.map(c => (
-                                <Card
-                                    card={c}
-                                    onSelected={(card) => onCardSelected(card)}
-                                    isSelected={selectedCard?.name === c.name}
-                                    optionColor={selfColor === "w" ? "b" : "w"}
-                                />)
-                            )}
+                            <OpponentCards />
                         </div>
                         <Card />
                         <div className={styles.cardsuser}>
-                            {selfCards?.map(c => (
-                                <Card card={c}
-                                    onSelected={(card) => onCardSelected(card)}
-                                    isSelected={selectedCard?.name === c.name}
-                                    optionColor={selfColor}
-                                />)
-                            )}
+                            <SelfCards />
                         </div>
                     </div>}
                 </div>
