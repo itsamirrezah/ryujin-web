@@ -1,21 +1,25 @@
 import { createContext, useState, ReactNode, useEffect, useContext } from "react";
 import { socket } from "@/lib/socket";
 import { ryujinMachine } from "./ryujin-machine";
-import { useMachine } from "@xstate/react";
+import { useActor, useInterpret, useMachine } from "@xstate/react";
 import { GameResponse, PlayerResponse, RoomResponse, PieceType, SquareType, CardType, MoveResponse, InvalidMoveResponse } from "./types";
 import { GameContext } from "./consts";
+import { InterpreterFrom } from "xstate";
 
 type PlayValues = GameContext & {
     joinRoom: () => void,
     onCardSelected: (card: CardType) => void,
     onPieceSelected: (piece: PieceType, square: SquareType) => void,
     onMove: (to: SquareType) => void,
+    ryujinService: InterpreterFrom<typeof ryujinMachine>
 }
 
 const PlayContext = createContext({} as PlayValues);
 export default function PlayContextProvider({ children }: { children: ReactNode }) {
     const [isConnected, setIsConnected] = useState<boolean>(socket.connected);
-    const [state, send] = useMachine(ryujinMachine)
+    const ryujinService = useInterpret(ryujinMachine)
+    const [state] = useActor(ryujinService)
+    const { send } = ryujinService
 
     useEffect(() => {
         if (!isConnected) {
@@ -119,7 +123,8 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
             onCardSelected,
             onPieceSelected,
             onMove,
-            ...state.context
+            ...state.context,
+            ryujinService
         }}>
             {children}
         </PlayContext.Provider>

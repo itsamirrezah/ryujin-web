@@ -1,4 +1,4 @@
-import { assign, createMachine } from "xstate";
+import { assign, createMachine, StateFrom } from "xstate";
 import { DEFAULT_POSITION, Events, GameContext, getCardOptions, State, swapWithDeck, updateBoard } from "./consts";
 
 export const ryujinMachine = createMachine<GameContext, Events, State>({

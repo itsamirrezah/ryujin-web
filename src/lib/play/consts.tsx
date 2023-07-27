@@ -1,3 +1,5 @@
+import { StateFrom } from "xstate";
+import { ryujinMachine } from "./ryujin-machine";
 import { BlackOrWhite, CardType, Delta, PieceType, PlayerResponse, Position, SquareType } from "./types";
 
 export const DEFAULT_POSITION: Position = {
@@ -61,6 +63,8 @@ export type Events =
 type StateOptions = "pregame" | "idle" | "proposed_move" | "game_over"
 
 export type State = { value: StateOptions, context: GameContext }
+
+export type RyujinState = StateFrom<typeof ryujinMachine>
 
 
 export function updateBoard(board: Position, from: SquareType, to: SquareType) {

@@ -4,12 +4,12 @@ import RoundButton from "@/components/round-button/round-button";
 import styles from "./play.module.css";
 import { PieceType, SquareType } from "@/lib/play/types";
 import Card from "@/components/card/card";
-import PlayerInfo from "@/components/player-info/player-info";
+import SelfPlayerInfo from "@/components/play/self-player-info";
+import OpponentPlayerInfo from "@/components/play/opponent-player-info";
 
 export default function PlayPage() {
     const {
         joinRoom,
-        playersInfo,
         roomId,
         boardPosition,
         selfColor,
@@ -22,9 +22,7 @@ export default function PlayPage() {
         onPieceSelected,
         selectedPiece,
         moveOptions,
-        selfRemainingTime,
-        opponentRemainingTime,
-        onMove
+        onMove,
     } = usePlay()
 
     function isAllowedToMove(piece: PieceType) {
@@ -40,13 +38,7 @@ export default function PlayPage() {
         <div className={styles.main}>
             <div className={styles.game}>
                 <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                    <PlayerInfo
-                        name={playersInfo?.opponent?.username}
-                        remainingTime={opponentRemainingTime}
-                        hasTurn={!hasTurn}
-                        isClockActive={gameStarted}
-                        color={selfColor === "w" ? "b" : "w"}
-                    />
+                    <OpponentPlayerInfo />
                     <div className={styles.boardlyt}>
                         <Board
                             currentPosition={boardPosition}
@@ -57,13 +49,7 @@ export default function PlayPage() {
                             onPieceDrop={onMove}
                         />
                     </div>
-                    <PlayerInfo
-                        name={playersInfo?.self?.username}
-                        remainingTime={selfRemainingTime}
-                        hasTurn={hasTurn}
-                        isClockActive={gameStarted}
-                        color={selfColor === "w" ? "w" : "b"}
-                    />
+                    <SelfPlayerInfo />
                 </div>
                 <div className={styles.side}>
                     {!roomId && !gameStarted && <RoundButton onClick={joinRoom}>New opponent</RoundButton>}
