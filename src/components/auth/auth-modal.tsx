@@ -23,8 +23,13 @@ export default function AuthModal({ onClose }: IAuthModalType) {
         <Modal>
             <div className={styles.container}>
                 <H2>{signType === "signup" ? "Sign Up" : "Sign In"}</H2>
-                {signType === "signup" ? <SignUpForm setSignType={setSignTypeHandler} /> : <SignInForm setSignType={setSignTypeHandler} />}
-                <button className={styles.close} onClick={onClose}><Close /></button>
+                {signType === "signup" ?
+                    <SignUpForm setSignType={setSignTypeHandler} onClose={onClose} /> :
+                    <SignInForm setSignType={setSignTypeHandler} onClose={onClose} />
+                }
+                <button className={styles.close} onClick={onClose}>
+                    <Close />
+                </button>
             </div>
         </Modal>
     )

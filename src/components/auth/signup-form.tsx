@@ -8,20 +8,26 @@ import { useForm } from "react-hook-form"
 import useRegisterUser from "@/lib/service/use-register-user"
 import { useGoogleAuth } from "@/lib/service/use-google-auth"
 import { SignOption } from "./auth-modal"
+import { useEffect } from "react"
 
 type SignUpFormProps = {
     setSignType: (option: SignOption) => void
+    onClose: () => void
 }
 
 //FIXME: ui for validate error
-export default function SignUpForm({ setSignType }: SignUpFormProps) {
+export default function SignUpForm({ setSignType, onClose }: SignUpFormProps) {
     const { register, handleSubmit, formState: { errors } } = useForm<ISignUpSchema>({ resolver: zodResolver(signUpSchema) })
-    const { mutate } = useRegisterUser()
-    const { isError, userInfo, googleAuthHandler } = useGoogleAuth()
+    const { mutate, isSuccess } = useRegisterUser()
+    const { isError, userInfo, googleAuthHandler, isSuccess: googleSuccess } = useGoogleAuth()
 
     async function onSubmitHandler(data: ISignUpSchema) {
         await mutate(data)
     }
+
+    useEffect(() => {
+        if (isSuccess || googleSuccess) onClose()
+    }, [isSuccess, googleSuccess])
 
     return (
         <form className={styles.form} onSubmit={handleSubmit(onSubmitHandler)}>

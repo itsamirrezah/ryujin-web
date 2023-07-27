@@ -22,5 +22,5 @@ export function useGoogleAuth() {
             }
         }
     })
-    return { isError, userInfo, googleAuthHandler }
+    return { isError, userInfo, googleAuthHandler, isSuccess: !!userInfo }
 }

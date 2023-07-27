@@ -7,17 +7,27 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import useSignIn from "@/lib/service/use-signin"
 import { SignOption } from "./auth-modal"
+import { useGoogleAuth } from "@/lib/service/use-google-auth"
+import { useEffect } from "react"
 
 type SignInFormProps = {
     setSignType: (option: SignOption) => void
+    onClose: () => void
 }
-export default function SignInForm({ setSignType }: SignInFormProps) {
+export default function SignInForm({ setSignType, onClose }: SignInFormProps) {
     const { register, handleSubmit, formState: { errors } } = useForm<ISignSchema>({ resolver: zodResolver(signInSchema) })
     const { mutate, isLoading, isSuccess, isError, error } = useSignIn()
+    const { userInfo, googleAuthHandler, isSuccess: googleSuccess } = useGoogleAuth()
 
     async function onSubmitHandler(data: ISignSchema) {
         await mutate({ ...data, usernameOrEmail: data.username })
     }
+
+    useEffect(() => {
+        if (isSuccess || googleSuccess) onClose()
+
+    }, [isSuccess, googleSuccess])
+
     return (
         <form className={styles.form} onSubmit={handleSubmit(onSubmitHandler)}>
             <div className={styles.fields}>
@@ -28,8 +38,8 @@ export default function SignInForm({ setSignType }: SignInFormProps) {
             <div className={styles.join}>
                 <RoundButton theme="red" type="submit">Login</RoundButton>
                 <small> or </small>
-                <AuthWithButton>Sign In with Google</AuthWithButton>
+                <AuthWithButton type="button" onClick={() => googleAuthHandler()}>Sign In with Google</AuthWithButton>
             </div>
-        </form>
+        </form >
     )
 }
