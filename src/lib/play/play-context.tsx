@@ -10,6 +10,7 @@ type PlayValues = {
     onCardSelected: (card: CardType) => void,
     onPieceSelected: (piece: PieceType, square: SquareType) => void,
     onMove: (from: SquareType, to: SquareType, selectedCard: CardType) => void,
+    onFlag: () => void
     ryujinService: InterpreterFrom<typeof ryujinMachine>
 }
 
@@ -86,6 +87,10 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
             send({ type: "UPDATE_TIME", white, black })
         })
 
+        socket.on("END_GAME", (data: any) => {
+            send("GAME_OVER")
+        })
+
         return () => {
             socket.off("connect");
             socket.off("disconnect");
@@ -93,6 +98,7 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
             socket.off("START_GAME")
             socket.off("OPPONENT_MOVE")
             socket.off("INVALID_MOVE")
+            socket.off("UPDATE_TIME")
         }
     }, [])
 
@@ -113,12 +119,17 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
         socket.emit("MOVE", { playerId: socket.id, roomId, from, to, selectedCard })
     }
 
+    function onFlag() {
+        socket.emit("PLAYER_FLAG", roomId)
+    }
+
     return (
         <PlayContext.Provider value={{
             joinRoom,
             onCardSelected,
             onPieceSelected,
             onMove,
+            onFlag,
             ryujinService
         }}>
             {children}

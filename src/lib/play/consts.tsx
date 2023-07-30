@@ -59,6 +59,7 @@ export type Events =
         opponentCards: [CardType, CardType],
         reserveCards: CardType[]
     }
+    | { type: "GAME_OVER" }
 
 type StateOptions = "pregame" | "idle" | "proposed_move" | "game_over"
 

@@ -138,8 +138,8 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
                         const now = new Date().getTime()
                         const diff = !lastTracked ? interval : now - lastTracked
                         return {
-                            selfRemainingTime: hasTurn ? selfRemainingTime - diff : selfRemainingTime,
-                            opponentRemainingTime: hasTurn ? opponentRemainingTime : opponentRemainingTime - diff,
+                            selfRemainingTime: hasTurn && selfRemainingTime > 0 ? selfRemainingTime - diff : selfRemainingTime,
+                            opponentRemainingTime: !hasTurn && opponentRemainingTime > 0 ? opponentRemainingTime - diff : opponentRemainingTime,
                             lastTracked: now
                         }
                     })
@@ -152,7 +152,8 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
                             opponentRemainingTime: selfColor === "w" ? e.black : e.white
                         }
                     })
-                }
+                },
+                GAME_OVER: "game_over"
             },
         },
         proposed_move: {
