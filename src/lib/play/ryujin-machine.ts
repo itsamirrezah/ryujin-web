@@ -1,4 +1,4 @@
-import { assign, createMachine, StateFrom } from "xstate";
+import { assign, createMachine } from "xstate";
 import { DEFAULT_POSITION, Events, GameContext, getCardOptions, State, swapWithDeck, updateBoard } from "./consts";
 
 export const ryujinMachine = createMachine<GameContext, Events, State>({
@@ -19,7 +19,8 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
         selectedCard: undefined,
         selectedPiece: undefined,
         moveOptions: [],
-        lastTracked: 0
+        lastTracked: 0,
+        endGame: undefined
     },
     initial: "pregame",
     states: {
@@ -50,12 +51,6 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
             }
         },
         idle: {
-            always: [
-                {
-                    target: "game_over",
-                    cond: () => false
-                },
-            ],
             invoke: {
                 id: 'invoke-tick',
                 src: () => (sendBack) => {
@@ -153,7 +148,31 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
                         }
                     })
                 },
-                GAME_OVER: "game_over"
+                GAME_OVER: {
+                    actions: assign((_, e) => {
+                        const {
+                            boardPosition,
+                            endGame,
+                            selfColor,
+                            selfCards,
+                            reserveCards,
+                            opponentCards,
+                            whiteRemainingTime,
+                            blackRemainingTime
+                        } = e
+                        return {
+                            boardPosition,
+                            selfColor,
+                            selfCards,
+                            reserveCards,
+                            opponentCards,
+                            endGame,
+                            selfRemainingTime: selfColor === "w" ? whiteRemainingTime : blackRemainingTime,
+                            opponentRemainingTime: selfColor === "w" ? blackRemainingTime : whiteRemainingTime
+                        }
+                    }),
+                    target: "game_over"
+                }
             },
         },
         proposed_move: {
@@ -165,6 +184,32 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
                         return { boardPosition, selfColor, selfCards, hasTurn, opponentCards, reserveCards }
                     }),
                     target: 'idle'
+                },
+
+                GAME_OVER: {
+                    actions: assign((_, e) => {
+                        const {
+                            boardPosition,
+                            endGame,
+                            selfColor,
+                            selfCards,
+                            reserveCards,
+                            opponentCards,
+                            whiteRemainingTime,
+                            blackRemainingTime
+                        } = e
+                        return {
+                            boardPosition,
+                            selfColor,
+                            selfCards,
+                            reserveCards,
+                            opponentCards,
+                            endGame,
+                            selfRemainingTime: selfColor === "w" ? whiteRemainingTime : blackRemainingTime,
+                            opponentRemainingTime: selfColor === "w" ? blackRemainingTime : whiteRemainingTime
+                        }
+                    }),
+                    target: "game_over"
                 }
             }
         },

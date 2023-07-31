@@ -16,6 +16,16 @@ export type PlayerResponse = {
     userId: string,
     username: string
 }
+
+export type EndGame = {
+    result: "draw",
+    by: "insufficent material" | "agreement"
+} | ({
+    result: "won",
+    playerWon: string,
+    by: "conquer temple" | "time"
+})
+
 export type GameResponse = {
     id: string,
     roomId: string,
@@ -27,7 +37,10 @@ export type GameResponse = {
     whiteCards: [CardType, CardType],
     blackCards: [CardType, CardType],
     reserveCards: CardType[],
-    gameTime: number
+    gameTime: number,
+    endGame: EndGame,
+    whiteRemainingTime: number,
+    blackRemainingTime: number
 }
 export type MoveResponse = {
     playerId: string,

@@ -1,6 +1,6 @@
 import { StateFrom } from "xstate";
 import { ryujinMachine } from "./ryujin-machine";
-import { BlackOrWhite, CardType, Delta, PieceType, PlayerResponse, Position, SquareType } from "./types";
+import { BlackOrWhite, CardType, Delta, EndGame, PieceType, PlayerResponse, Position, SquareType } from "./types";
 
 export const DEFAULT_POSITION: Position = {
     a1: "wP", b1: "wP", c1: "wK", d1: "wP", e1: "wP",
@@ -24,7 +24,8 @@ export type GameContext = {
     selectedCard?: CardType
     selectedPiece?: { piece: PieceType, square: SquareType },
     moveOptions?: SquareType[],
-    lastTracked: number
+    lastTracked: number,
+    endGame?: EndGame
 }
 
 export type Events =
@@ -59,7 +60,17 @@ export type Events =
         opponentCards: [CardType, CardType],
         reserveCards: CardType[]
     }
-    | { type: "GAME_OVER" }
+    | {
+        type: "GAME_OVER"
+        boardPosition: Position,
+        selfColor: BlackOrWhite,
+        selfCards: [CardType, CardType],
+        opponentCards: [CardType, CardType],
+        reserveCards: CardType[]
+        endGame: EndGame,
+        whiteRemainingTime: number,
+        blackRemainingTime: number
+    }
 
 type StateOptions = "pregame" | "idle" | "proposed_move" | "game_over"
 

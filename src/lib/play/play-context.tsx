@@ -18,8 +18,10 @@ const PlayContext = createContext({} as PlayValues);
 export default function PlayContextProvider({ children }: { children: ReactNode }) {
     const [isConnected, setIsConnected] = useState<boolean>(socket.connected);
     const ryujinService = useInterpret(ryujinMachine)
-    const roomId = useSelector(ryujinService, (state) => state.context.roomId)
     const { send } = ryujinService
+    const roomId = useSelector(ryujinService, (state) => state.context.roomId)
+    const state = useSelector(ryujinService, (state) => state.value)
+    console.log({ state })
 
     useEffect(() => {
         if (!isConnected) {
@@ -87,8 +89,20 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
             send({ type: "UPDATE_TIME", white, black })
         })
 
-        socket.on("END_GAME", (data: any) => {
-            send("GAME_OVER")
+        socket.on("END_GAME", (data: GameResponse) => {
+            const [selfCards, opponentCards] = socket.id === data.whiteId ? [data.whiteCards, data.blackCards] : [data.blackCards, data.whiteCards]
+            send({
+                type: "GAME_OVER",
+                boardPosition: data.boardPosition,
+                selfColor: socket.id === data.whiteId ? "w" : "b",
+                selfCards: selfCards,
+                opponentCards: opponentCards,
+                reserveCards: data.reserveCards,
+                endGame: data.endGame,
+                whiteRemainingTime: data.whiteRemainingTime,
+                blackRemainingTime: data.blackRemainingTime
+
+            })
         })
 
         return () => {
@@ -99,6 +113,7 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
             socket.off("OPPONENT_MOVE")
             socket.off("INVALID_MOVE")
             socket.off("UPDATE_TIME")
+            socket.off("END_GAME")
         }
     }, [])
 
