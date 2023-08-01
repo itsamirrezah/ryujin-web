@@ -1,5 +1,7 @@
 import { assign, createMachine } from "xstate";
-import { DEFAULT_POSITION, Events, GameContext, getCardOptions, State, swapWithDeck, updateBoard } from "./consts";
+import { DEFAULT_POSITION, gameOver, move, opponentMove, selectCard, selectPiece, tick, updateTime } from "./consts";
+import { Events, GameContext, State } from "./types";
+
 
 export const ryujinMachine = createMachine<GameContext, Events, State>({
     context: {
@@ -51,6 +53,33 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
             }
         },
         idle: {
+            initial: "normal",
+            id: "idle",
+            states: {
+                normal: {
+                    on: {
+                        MOVE: {
+                            actions: move,
+                            target: "proposed_move"
+                        },
+                        OPPONENT_MOVED: {
+                            actions: opponentMove
+                        },
+                    }
+                },
+                proposed_move: {
+                    on: {
+                        MOVE_CONFIRMED: 'normal',
+                        INVALID_MOVE: {
+                            actions: assign((_, e) => {
+                                const { boardPosition, selfColor, hasTurn, selfCards, opponentCards, reserveCards, } = e
+                                return { boardPosition, selfColor, selfCards, hasTurn, opponentCards, reserveCards }
+                            }),
+                            target: 'normal'
+                        },
+                    }
+                }
+            },
             invoke: {
                 id: 'invoke-tick',
                 src: () => (sendBack) => {
@@ -63,155 +92,22 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
             },
             on: {
                 SELECT_CARD: {
-                    actions: assign({
-                        selectedCard: (ctx, e) => {
-                            if (ctx.selfCards?.find(c => c.name === e.card.name)) return e.card
-                            return ctx.selectedCard
-                        },
-                        moveOptions: (ctx, e) => {
-                            const { selectedPiece, selfColor, boardPosition } = ctx
-                            const { card: selectedCard } = e
-                            if (!selectedPiece || !selfColor) return []
-                            return getCardOptions(selectedPiece.square, selectedCard.delta, selfColor, boardPosition)
-                        }
-                    })
+                    actions: selectCard
                 },
                 SELECT_PIECE: {
-                    actions: assign({
-                        selectedPiece: (ctx, e) => {
-                            if (e.piece[0] !== ctx.selfColor) return
-                            const { piece, square } = e;
-                            return { piece, square }
-                        },
-                        moveOptions: (ctx, e) => {
-                            const { selectedCard, selfColor, boardPosition } = ctx
-                            const { square } = e
-                            if (!selectedCard || !selfColor) return [];
-                            return getCardOptions(square, selectedCard.delta, selfColor, boardPosition)
-                        }
-                    })
-                },
-                MOVE: {
-                    actions: assign((ctx, e) => {
-                        const { from, to } = e
-                        const { selfCards, reserveCards, selectedCard, boardPosition } = ctx
-                        if (!selfCards || !reserveCards || !selectedCard || from === to) return ctx
-
-                        const [updatedSelfCards, updatedReserveCards] = swapWithDeck(selectedCard, reserveCards, selfCards)
-
-                        return {
-                            boardPosition: updateBoard(boardPosition, from, to),
-                            hasTurn: false,
-                            reserveCards: updatedReserveCards,
-                            selfCards: updatedSelfCards,
-                            moveOptions: [],
-                            selectedCard: undefined,
-                            selectedPiece: undefined,
-                        }
-                    }),
-                    target: "proposed_move"
-                },
-                OPPONENT_MOVED: {
-                    actions: assign((ctx, e) => {
-                        const { from, to, selectedCard, } = e
-                        const { opponentCards, reserveCards, boardPosition } = ctx
-                        if (!opponentCards || !reserveCards || !selectedCard || from === to) return ctx
-
-                        const [updatedOpponentCards, updatedReserveCards] = swapWithDeck(selectedCard, reserveCards, opponentCards)
-                        return {
-                            boardPosition: updateBoard(boardPosition, from, to),
-                            hasTurn: true,
-                            reserveCards: updatedReserveCards,
-                            opponentCards: updatedOpponentCards,
-                        }
-                    })
+                    actions: selectPiece
                 },
                 TICK: {
-                    actions: assign((ctx, e) => {
-                        const { hasTurn, selfRemainingTime, opponentRemainingTime, lastTracked } = ctx
-                        const { interval } = e
-                        const now = new Date().getTime()
-                        const diff = !lastTracked ? interval : now - lastTracked
-                        return {
-                            selfRemainingTime: hasTurn && selfRemainingTime > 0 ? selfRemainingTime - diff : selfRemainingTime,
-                            opponentRemainingTime: !hasTurn && opponentRemainingTime > 0 ? opponentRemainingTime - diff : opponentRemainingTime,
-                            lastTracked: now
-                        }
-                    })
+                    actions: tick
                 },
                 UPDATE_TIME: {
-                    actions: assign((ctx, e) => {
-                        const { selfColor } = ctx;
-                        return {
-                            selfRemainingTime: selfColor === "w" ? e.white : e.black,
-                            opponentRemainingTime: selfColor === "w" ? e.black : e.white
-                        }
-                    })
+                    actions: updateTime
                 },
                 GAME_OVER: {
-                    actions: assign((_, e) => {
-                        const {
-                            boardPosition,
-                            endGame,
-                            selfColor,
-                            selfCards,
-                            reserveCards,
-                            opponentCards,
-                            whiteRemainingTime,
-                            blackRemainingTime
-                        } = e
-                        return {
-                            boardPosition,
-                            selfColor,
-                            selfCards,
-                            reserveCards,
-                            opponentCards,
-                            endGame,
-                            selfRemainingTime: selfColor === "w" ? whiteRemainingTime : blackRemainingTime,
-                            opponentRemainingTime: selfColor === "w" ? blackRemainingTime : whiteRemainingTime
-                        }
-                    }),
+                    actions: gameOver,
                     target: "game_over"
                 }
             },
-        },
-        proposed_move: {
-            on: {
-                MOVE_CONFIRMED: 'idle',
-                INVALID_MOVE: {
-                    actions: assign((_, e) => {
-                        const { boardPosition, selfColor, hasTurn, selfCards, opponentCards, reserveCards, } = e
-                        return { boardPosition, selfColor, selfCards, hasTurn, opponentCards, reserveCards }
-                    }),
-                    target: 'idle'
-                },
-
-                GAME_OVER: {
-                    actions: assign((_, e) => {
-                        const {
-                            boardPosition,
-                            endGame,
-                            selfColor,
-                            selfCards,
-                            reserveCards,
-                            opponentCards,
-                            whiteRemainingTime,
-                            blackRemainingTime
-                        } = e
-                        return {
-                            boardPosition,
-                            selfColor,
-                            selfCards,
-                            reserveCards,
-                            opponentCards,
-                            endGame,
-                            selfRemainingTime: selfColor === "w" ? whiteRemainingTime : blackRemainingTime,
-                            opponentRemainingTime: selfColor === "w" ? blackRemainingTime : whiteRemainingTime
-                        }
-                    }),
-                    target: "game_over"
-                }
-            }
         },
         game_over: {}
     }

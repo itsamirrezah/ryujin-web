@@ -20,8 +20,6 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
     const ryujinService = useInterpret(ryujinMachine)
     const { send } = ryujinService
     const roomId = useSelector(ryujinService, (state) => state.context.roomId)
-    const state = useSelector(ryujinService, (state) => state.value)
-    console.log({ state })
 
     useEffect(() => {
         if (!isConnected) {
@@ -35,7 +33,7 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
             setIsConnected(false);
         })
 
-        socket.on("INVALID_MOVE", (data: InvalidMoveResponse) => {
+        socket.on("REJ_MOVE", (data: InvalidMoveResponse) => {
             const { payload } = data
             const [selfCards, opponentCards] = socket.id === payload.whiteId ? [payload.whiteCards, payload.blackCards] : [payload.blackCards, payload.whiteCards]
             send({
@@ -75,6 +73,10 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
             })
         })
 
+        socket.on("ACK_MOVE", () => {
+            send({ type: "MOVE_CONFIRMED" })
+        })
+
         socket.on("OPPONENT_MOVE", (move: MoveResponse) => {
             const { playerId, from, to, selectedCard } = move
             if (socket.id === playerId) {
@@ -111,9 +113,10 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
             socket.off("JOIN_ROOM");
             socket.off("START_GAME")
             socket.off("OPPONENT_MOVE")
-            socket.off("INVALID_MOVE")
+            socket.off("REJ_MOVE")
             socket.off("UPDATE_TIME")
             socket.off("END_GAME")
+            socket.off("ACK_MOVE")
         }
     }, [])
 
