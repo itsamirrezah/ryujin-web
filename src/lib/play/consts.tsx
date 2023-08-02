@@ -119,10 +119,12 @@ export const tick = assign((ctx, e) => {
     const { interval } = e
     const now = new Date().getTime()
     const diff = !lastTracked ? interval : now - lastTracked
+    const updatedSelfRemainingTime = hasTurn ? selfRemainingTime - diff : selfRemainingTime
+    const updatedOpponentRemainingTime = !hasTurn ? opponentRemainingTime - diff : opponentRemainingTime
     return {
-        selfRemainingTime: hasTurn && selfRemainingTime > 0 ? selfRemainingTime - diff : selfRemainingTime,
-        opponentRemainingTime: !hasTurn && opponentRemainingTime > 0 ? opponentRemainingTime - diff : opponentRemainingTime,
-        lastTracked: now
+        selfRemainingTime: updatedSelfRemainingTime,
+        opponentRemainingTime: updatedOpponentRemainingTime,
+        lastTracked: now,
     }
 }) as ActionFunction<GameContext, TickEvent>
 
@@ -142,9 +144,14 @@ export const opponentMove = assign((ctx, e) => {
 
 export const updateTime = assign((ctx, e) => {
     const { selfColor } = ctx;
+    const updatedSelfTime = selfColor === "w" ? e.white : e.black
+    const updatedOpponentTime = selfColor === "w" ? e.black : e.white
+
     return {
-        selfRemainingTime: selfColor === "w" ? e.white : e.black,
-        opponentRemainingTime: selfColor === "w" ? e.black : e.white
+        selfRemainingTime: updatedSelfTime,
+        opponentRemainingTime: updatedOpponentTime,
+        //FIXME: get lastTracked from server
+        lastTracked: new Date().getTime(),
     }
 }) as ActionFunction<GameContext, UpdateTimeEvent>
 
@@ -167,6 +174,6 @@ export const gameOver = assign((_, e) => {
         opponentCards,
         endGame,
         selfRemainingTime: selfColor === "w" ? whiteRemainingTime : blackRemainingTime,
-        opponentRemainingTime: selfColor === "w" ? blackRemainingTime : whiteRemainingTime
+        opponentRemainingTime: selfColor === "w" ? blackRemainingTime : whiteRemainingTime,
     }
 }) as ActionFunction<GameContext, GameOverEvent>

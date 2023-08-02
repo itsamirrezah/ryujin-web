@@ -87,7 +87,8 @@ export type GameContext = {
     selectedPiece?: { piece: PieceType, square: SquareType },
     moveOptions?: SquareType[],
     lastTracked: number,
-    endGame?: EndGame
+    endGame?: EndGame,
+    hasFlagInProgress: boolean
 }
 
 export type PlayerJoinEvent = {
@@ -134,10 +135,13 @@ export type GameOverEvent = {
     whiteRemainingTime: number,
     blackRemainingTime: number
 }
+export type FlagRequestEvent = { type: "FLAG_REQUEST" }
+export type REJECT_FLAG = { type: "REJECT_FLAG" }
 export type Events =
     | PlayerJoinEvent | GameStartedEvent | SelectCardEvent | SelectPieceEvent
     | MoveEvent | OpponentMoveEvent | MoveConfirmedEvent | TickEvent
-    | UpdateTimeEvent | InvalidMoveEvent | GameOverEvent
+    | UpdateTimeEvent | InvalidMoveEvent | GameOverEvent | FlagRequestEvent
+    | REJECT_FLAG
 
 export type StateOptions = "pregame" | "idle" | "game_over"
 

@@ -10,11 +10,12 @@ export default function OpponentPlayerInfo() {
     const opponentColor = useSelector(ryujinService, (state) => state.context.selfColor === "w" ? "b" : "w")
     const opponentHasTurn = useSelector(ryujinService, (state) => !state.context.hasTurn)
     const opponentInfo = useSelector(ryujinService, (state) => state.context.playersInfo?.opponent)
+    const hasFlagInProgress = useSelector(ryujinService, (state) => state.context.hasFlagInProgress)
 
     useEffect(() => {
-        if (opponentRemaining > 0 || !isGameStarted) return;
+        if (hasFlagInProgress || opponentRemaining > 0) return
         onFlag()
-    }, [opponentRemaining])
+    }, [opponentRemaining, hasFlagInProgress])
 
     return (
         <PlayerInfo

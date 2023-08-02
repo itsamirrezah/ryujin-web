@@ -22,7 +22,8 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
         selectedPiece: undefined,
         moveOptions: [],
         lastTracked: 0,
-        endGame: undefined
+        endGame: undefined,
+        hasFlagInProgress: false
     },
     initial: "pregame",
     states: {
@@ -77,8 +78,9 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
                             }),
                             target: 'normal'
                         },
+                        TICK: undefined
                     }
-                }
+                },
             },
             invoke: {
                 id: 'invoke-tick',
@@ -106,7 +108,14 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
                 GAME_OVER: {
                     actions: gameOver,
                     target: "game_over"
+                },
+                FLAG_REQUEST: {
+                    actions: assign({ hasFlagInProgress: true })
+                },
+                REJECT_FLAG: {
+                    actions: assign({ hasFlagInProgress: false }),
                 }
+
             },
         },
         game_over: {}
