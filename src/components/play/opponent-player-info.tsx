@@ -11,11 +11,12 @@ export default function OpponentPlayerInfo() {
     const opponentHasTurn = useSelector(ryujinService, (state) => !state.context.hasTurn)
     const opponentInfo = useSelector(ryujinService, (state) => state.context.playersInfo?.opponent)
     const hasFlagInProgress = useSelector(ryujinService, (state) => state.context.hasFlagInProgress)
+    const isPlaying = useSelector(ryujinService, (state) => state.matches('idle'))
 
     useEffect(() => {
-        if (hasFlagInProgress || opponentRemaining > 0) return
+        if (hasFlagInProgress || opponentRemaining > 0 || !isPlaying) return
         onFlag()
-    }, [opponentRemaining, hasFlagInProgress])
+    }, [opponentRemaining, hasFlagInProgress, isPlaying])
 
     return (
         <PlayerInfo

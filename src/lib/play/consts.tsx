@@ -129,7 +129,7 @@ export const tick = assign((ctx, e) => {
 }) as ActionFunction<GameContext, TickEvent>
 
 export const opponentMove = assign((ctx, e) => {
-    const { from, to, selectedCard, } = e
+    const { from, to, selectedCard } = e
     const { opponentCards, reserveCards, boardPosition } = ctx
     if (!opponentCards || !reserveCards || !selectedCard || from === to) return ctx
 

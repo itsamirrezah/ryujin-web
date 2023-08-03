@@ -111,7 +111,12 @@ export type GameStartedEvent = {
 export type SelectCardEvent = { type: "SELECT_CARD", card: CardType }
 export type SelectPieceEvent = { type: "SELECT_PIECE", piece: PieceType, square: SquareType }
 export type MoveEvent = { type: "MOVE", from: SquareType, to: SquareType }
-export type OpponentMoveEvent = { type: "OPPONENT_MOVED", playerId: string, from: SquareType, to: SquareType, selectedCard: CardType }
+export type OpponentMoveEvent = {
+    type: "OPPONENT_MOVED",
+    from: SquareType,
+    to: SquareType,
+    selectedCard: CardType
+}
 export type MoveConfirmedEvent = { type: "MOVE_CONFIRMED" }
 export type TickEvent = { type: "TICK", interval: number }
 export type UpdateTimeEvent = { type: "UPDATE_TIME", white: number, black: number }
