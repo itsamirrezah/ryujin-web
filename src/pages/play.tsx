@@ -12,9 +12,11 @@ import OpponentCards from "@/components/play/opponentCards";
 export default function PlayPage() {
     const {
         joinRoom,
+        onResign,
         ryujinService
     } = usePlay()
     const isGameStarted = useSelector(ryujinService, (state) => state.context.gameStarted)
+    const isPlaying = useSelector(ryujinService, (state) => state.matches('idle'))
     const hasRoom = useSelector(ryujinService, (state) => !!state.context.roomId)
 
     return (
@@ -37,10 +39,11 @@ export default function PlayPage() {
                         <div className={styles.cardsuser}>
                             <SelfCards />
                         </div>
+                        {isPlaying && <button style={{ backgroundColor: "#fff" }} onClick={onResign}> Resign</button>}
                     </div>}
                 </div>
             </div>
-        </div>
+        </div >
     )
 }
 

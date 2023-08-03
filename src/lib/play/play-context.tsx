@@ -2,7 +2,7 @@ import { createContext, useState, ReactNode, useEffect, useContext } from "react
 import { socket } from "@/lib/socket";
 import { ryujinMachine } from "./ryujin-machine";
 import { useInterpret, useSelector } from "@xstate/react";
-import { GameResponse, PlayerResponse, RoomResponse, PieceType, SquareType, CardType, MoveResponse, InvalidMoveResponse } from "./types";
+import { PlayerResponse, PieceType, SquareType, CardType } from "./types";
 import { InterpreterFrom } from "xstate";
 
 type PlayValues = {
@@ -10,7 +10,8 @@ type PlayValues = {
     onCardSelected: (card: CardType) => void,
     onPieceSelected: (piece: PieceType, square: SquareType) => void,
     onMove: (from: SquareType, to: SquareType, selectedCard: CardType) => void,
-    onFlag: () => void
+    onFlag: () => void,
+    onResign: () => void
     ryujinService: InterpreterFrom<typeof ryujinMachine>
 }
 
@@ -142,6 +143,11 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
         socket.emit("OPPONENT_FLAG", roomId)
     }
 
+    function onResign() {
+        if (!roomId) return;
+        socket.emit("RESIGNATION", { playerId: socket.id, roomId })
+    }
+
     return (
         <PlayContext.Provider value={{
             joinRoom,
@@ -149,6 +155,7 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
             onPieceSelected,
             onMove,
             onFlag,
+            onResign,
             ryujinService
         }}>
             {children}

@@ -119,8 +119,8 @@ export const tick = assign((ctx, e) => {
     const { interval } = e
     const now = new Date().getTime()
     const diff = !lastTracked ? interval : now - lastTracked
-    const updatedSelfRemainingTime = hasTurn ? selfRemainingTime - diff : selfRemainingTime
-    const updatedOpponentRemainingTime = !hasTurn ? opponentRemainingTime - diff : opponentRemainingTime
+    const updatedSelfRemainingTime = hasTurn && selfRemainingTime > 0 ? selfRemainingTime - diff : selfRemainingTime
+    const updatedOpponentRemainingTime = !hasTurn && opponentRemainingTime > 0 ? opponentRemainingTime - diff : opponentRemainingTime
     return {
         selfRemainingTime: updatedSelfRemainingTime,
         opponentRemainingTime: updatedOpponentRemainingTime,
