@@ -24,6 +24,12 @@ const playRoute = new Route({
     component: WrappedPlay
 })
 
+const playRoomRoute = new Route({
+    getParentRoute: () => playRoute,
+    path: '$roomId'
+})
+
+
 const rulesRoute = new Route({
     getParentRoute: () => root,
     path: "/rules"
@@ -34,10 +40,10 @@ const aboutRoute = new Route({
     path: "/about"
 })
 
-const routeTree = root.addChildren([indexRoute, playRoute, rulesRoute, aboutRoute])
+const routeTree = root.addChildren([indexRoute, playRoute.addChildren([playRoomRoute]), rulesRoute, aboutRoute])
 
 export const router = new Router({ routeTree })
 
 function WrappedPlay() {
-    return <PlayContextProvider><PlayPage /> </PlayContextProvider>
+    return <PlayContextProvider><PlayPage /></PlayContextProvider>
 }

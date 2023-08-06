@@ -7,12 +7,9 @@ export default function Layout() {
     const router = useRouter()
 
     let pageStyle = ""
-    switch (router.state.currentLocation.pathname) {
-        case "/":
-            pageStyle = styles.home; break;
-        case "/play":
-            pageStyle = styles.play; break;
-    }
+    const pathname = router.state.currentLocation.pathname
+    if (pathname === "/") pageStyle = styles.home
+    else if (pathname.startsWith("/play")) pageStyle = styles.play
 
     return (
         <div className={`${styles.container} ${pageStyle}`}>
