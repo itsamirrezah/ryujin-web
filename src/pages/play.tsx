@@ -8,16 +8,36 @@ import PlayBoard from "@/components/play/play-board";
 import { useSelector } from "@xstate/react";
 import SelfCards from "@/components/play/selfCards";
 import OpponentCards from "@/components/play/opponentCards";
+import { useEffect } from "react";
+import { useNavigate, useParams } from "@tanstack/router";
 
 export default function PlayPage() {
     const {
         joinRoom,
         onResign,
+        createRoom,
         ryujinService
     } = usePlay()
     const isGameStarted = useSelector(ryujinService, (state) => state.context.gameStarted)
     const isPlaying = useSelector(ryujinService, (state) => state.matches('idle'))
-    const hasRoom = useSelector(ryujinService, (state) => !!state.context.roomId)
+    const roomId = useSelector(ryujinService, (state) => state.context.roomId)
+    const navigate = useNavigate()
+    const param = useParams()
+    const hasRoom = !!roomId
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            if (!hasRoom && !!param.roomId && roomId !== param.roomId) {
+                joinRoom(param.roomId);
+            }
+        }, 500)
+        return () => clearTimeout(timer)
+    }, [])
+
+
+    useEffect(() => {
+        if (roomId) navigate({ to: "/play/$roomId", params: { roomId: roomId } })
+    }, [roomId])
 
     return (
         <div className={styles.main}>
@@ -30,7 +50,8 @@ export default function PlayPage() {
                     <SelfPlayerInfo />
                 </div>
                 <div className={styles.side}>
-                    {!hasRoom && !isGameStarted && <RoundButton onClick={joinRoom}>New opponent</RoundButton>}
+                    {!hasRoom && !isGameStarted && <RoundButton onClick={() => joinRoom()}>Random</RoundButton>}
+                    {!hasRoom && !isGameStarted && <RoundButton onClick={createRoom}>With Friends</RoundButton>}
                     {isGameStarted && <div className={styles.cards}>
                         <div className={styles.cardsuser}>
                             <OpponentCards />

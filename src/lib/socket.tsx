@@ -46,9 +46,10 @@ export type ServerEvents = {
 }
 
 export type ClientEvents = {
-    JOIN_ROOM: () => void;
+    JOIN_ROOM: (payload?: { roomId: string }) => void;
     MOVE: (payload: { playerId: string, roomId: string, from: SquareType, to: SquareType, selectedCard: CardType }) => void;
     OPPONENT_FLAG: (roomId: string) => void;
     RESIGNATION: (payload: { playerId: string, roomId: string }) => void;
+    CREATE_ROOM: () => void
 
 }

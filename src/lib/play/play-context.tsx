@@ -1,38 +1,34 @@
-import { createContext, useState, ReactNode, useEffect, useContext } from "react";
 import { socket } from "@/lib/socket";
-import { ryujinMachine } from "./ryujin-machine";
 import { useInterpret, useSelector } from "@xstate/react";
-import { PlayerResponse, PieceType, SquareType, CardType } from "./types";
+import { createContext, ReactNode, useContext, useEffect } from "react";
 import { InterpreterFrom } from "xstate";
+import { ryujinMachine } from "./ryujin-machine";
+import { CardType, PieceType, PlayerResponse, SquareType } from "./types";
 
 type PlayValues = {
-    joinRoom: () => void,
+    joinRoom: (roomId?: string) => void,
     onCardSelected: (card: CardType) => void,
     onPieceSelected: (piece: PieceType, square: SquareType) => void,
     onMove: (from: SquareType, to: SquareType, selectedCard: CardType) => void,
     onFlag: () => void,
-    onResign: () => void
+    onResign: () => void,
+    createRoom: () => void,
     ryujinService: InterpreterFrom<typeof ryujinMachine>
 }
 
 const PlayContext = createContext({} as PlayValues);
 
 export default function PlayContextProvider({ children }: { children: ReactNode }) {
-    const [isConnected, setIsConnected] = useState<boolean>(socket.connected);
     const ryujinService = useInterpret(ryujinMachine)
     const { send } = ryujinService
     const roomId = useSelector(ryujinService, (state) => state.context.roomId)
 
     useEffect(() => {
-        if (!isConnected) {
+        if (!socket.connected) {
             socket.connect();
         }
-        socket.on("connect", () => {
-            setIsConnected(true);
-        })
-        socket.on("disconnect", () => {
-            setIsConnected(false);
-        })
+        socket.on("connect", () => { })
+        socket.on("disconnect", () => { })
 
         socket.on("JOIN_ROOM", (room) => {
             let playersInfo = {} as Record<"self" | "opponent", PlayerResponse>
@@ -116,11 +112,17 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
             socket.off("END_GAME")
             socket.off("ACK_MOVE")
             socket.off("REJ_FLAG")
+            socket.disconnect()
         }
     }, [])
 
-    function joinRoom() {
-        socket.emit("JOIN_ROOM");
+    function joinRoom(roomId?: string) {
+        const paylaod = roomId ? { roomId } : undefined
+        socket.emitWithAck("JOIN_ROOM", paylaod);
+    }
+
+    function createRoom() {
+        socket.emit("CREATE_ROOM")
     }
 
     function onCardSelected(card: CardType) {
@@ -156,6 +158,7 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
             onMove,
             onFlag,
             onResign,
+            createRoom,
             ryujinService
         }}>
             {children}
