@@ -138,13 +138,15 @@ export type GameOverEvent = {
 }
 export type FlagRequestEvent = { type: "FLAG_REQUEST" }
 export type REJECT_FLAG = { type: "REJECT_FLAG" }
+export type PassEvent = { type: "PASS" }
+export type OpponentPassEvent = { type: "OPPONENT_PASS" }
 export type Events =
     | PlayerJoinEvent | GameStartedEvent | SelectCardEvent | SelectPieceEvent
     | MoveEvent | OpponentMoveEvent | MoveConfirmedEvent | TickEvent
     | UpdateTimeEvent | InvalidMoveEvent | GameOverEvent | FlagRequestEvent
-    | REJECT_FLAG
+    | REJECT_FLAG | PassEvent | OpponentPassEvent
 
-export type StateOptions = "pregame" | "idle" | "game_over"
+export type StateOptions = "pregame" | "idle" | "idle.no_moves" | "game_over"
 
 export type State = { value: StateOptions, context: GameContext }
 

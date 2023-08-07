@@ -8,12 +8,15 @@ export const socket = io(
 
 export type TimePayload = { whiteRemaining: number, blackRemaining: number }
 
-export type OpponentMovePayload = {
+export type OpponentMovePayload = ({
+    type: "move",
     from: SquareType,
     to: SquareType,
     selectedCard: CardType,
     replacedCard: CardType,
-} & TimePayload;
+} | {
+    type: "pass"
+}) & TimePayload;
 
 export type JoinRoomPayload = {
     id: string,
@@ -54,6 +57,7 @@ export type ClientEvents = {
     MOVE: (payload: { playerId: string, roomId: string, from: SquareType, to: SquareType, selectedCard: CardType }) => void;
     OPPONENT_FLAG: (roomId: string) => void;
     RESIGNATION: (payload: { playerId: string, roomId: string }) => void;
-    CREATE_ROOM: () => void
+    CREATE_ROOM: () => void,
+    PASS: (payload: { playerId: string, roomId: string }) => void
 
 }

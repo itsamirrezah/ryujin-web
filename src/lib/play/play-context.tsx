@@ -10,6 +10,7 @@ type PlayValues = {
     onCardSelected: (card: CardType) => void,
     onPieceSelected: (piece: PieceType, square: SquareType) => void,
     onMove: (from: SquareType, to: SquareType, selectedCard: CardType) => void,
+    onPass: () => void
     onFlag: () => void,
     onResign: () => void,
     createRoom: () => void,
@@ -62,8 +63,11 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
         })
 
         socket.on("OPPONENT_MOVED", (move) => {
-            const { from, to, selectedCard, whiteRemaining, blackRemaining, replacedCard } = move
-            send({ type: "OPPONENT_MOVED", from, to, selectedCard, replacedCard })
+            const { whiteRemaining, blackRemaining } = move
+            if (move.type === "move")
+                send({ type: "OPPONENT_MOVED", from: move.from, to: move.to, selectedCard: move.selectedCard, replacedCard: move.replacedCard })
+            else if (move.type === "pass")
+                send({ type: "OPPONENT_PASS" })
             send({ type: "UPDATE_TIME", white: whiteRemaining, black: blackRemaining })
         })
 
@@ -137,6 +141,12 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
         socket.emit("MOVE", { playerId: socket.id, roomId, from, to, selectedCard })
     }
 
+    function onPass() {
+        if (!roomId) return
+        send({ type: "PASS" })
+        socket.emit("PASS", { playerId: socket.id, roomId })
+    }
+
     function onFlag() {
         if (!roomId) return
         send({ type: "FLAG_REQUEST" })
@@ -154,6 +164,7 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
             onCardSelected,
             onPieceSelected,
             onMove,
+            onPass,
             onFlag,
             onResign,
             createRoom,

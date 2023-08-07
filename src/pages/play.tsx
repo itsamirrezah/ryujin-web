@@ -15,12 +15,14 @@ export default function PlayPage() {
     const {
         joinRoom,
         onResign,
+        onPass,
         createRoom,
         ryujinService
     } = usePlay()
     const isGameStarted = useSelector(ryujinService, (state) => state.context.gameStarted)
     const isPlaying = useSelector(ryujinService, (state) => state.matches('idle'))
     const roomId = useSelector(ryujinService, (state) => state.context.roomId)
+    const hasNoMoves = useSelector(ryujinService, (state) => state.matches('idle.no_moves'))
     const navigate = useNavigate()
     const param = useParams()
     const hasRoom = !!roomId
@@ -48,6 +50,7 @@ export default function PlayPage() {
                         <PlayBoard />
                     </div>
                     <SelfPlayerInfo />
+                    {hasNoMoves && <button style={{ color: "#fff", padding: 4 }} onClick={onPass}>Pass Turn</button>}
                 </div>
                 <div className={styles.side}>
                     {!hasRoom && !isGameStarted && <RoundButton onClick={() => joinRoom()}>Random</RoundButton>}
