@@ -5,6 +5,7 @@ import {
     Delta,
     GameContext,
     GameOverEvent,
+    MoveConfirmedEvent,
     MoveEvent,
     OpponentMoveEvent,
     Position,
@@ -29,19 +30,15 @@ export function updateBoard(board: Position, from: SquareType, to: SquareType) {
 
 export function swapWithDeck(
     selectedCard: CardType,
-    deckCards: CardType[],
+    replacedCard: CardType,
     playerCards: [CardType, CardType]
-): [[CardType, CardType], CardType[]] {
+): [CardType, CardType] {
     const mutablePlayerCards = [...playerCards] as [CardType, CardType]
     const idx = mutablePlayerCards.findIndex(c => c.name === selectedCard.name)
-    if (idx < 0) return [playerCards, deckCards]
+    if (idx < 0) return playerCards
     mutablePlayerCards.splice(idx, 1)
-    mutablePlayerCards.push(deckCards[0])
-
-    const mutableDeckCards = [...deckCards]
-    mutableDeckCards.splice(0, 1)
-    mutableDeckCards.push(selectedCard)
-    return [mutablePlayerCards, mutableDeckCards]
+    mutablePlayerCards.push(replacedCard)
+    return mutablePlayerCards
 }
 export function getCardOptions(
     sourceSquare: SquareType,
@@ -98,21 +95,29 @@ export const selectPiece = assign({
 
 export const move = assign((ctx, e) => {
     const { from, to } = e
-    const { selfCards, reserveCards, selectedCard, boardPosition } = ctx
-    if (!selfCards || !reserveCards || !selectedCard || from === to) return ctx
-
-    const [updatedSelfCards, updatedReserveCards] = swapWithDeck(selectedCard, reserveCards, selfCards)
+    const { boardPosition } = ctx
 
     return {
         boardPosition: updateBoard(boardPosition, from, to),
         hasTurn: false,
-        reserveCards: updatedReserveCards,
-        selfCards: updatedSelfCards,
-        moveOptions: [],
-        selectedCard: undefined,
         selectedPiece: undefined,
+        moveOptions: []
     }
 }) as ActionFunction<GameContext, MoveEvent>
+
+export const moveConfirmed = assign((ctx, e) => {
+    const { replacedCard } = e
+
+    const { selfCards, selectedCard } = ctx
+    if (!selfCards || !selectedCard) return ctx
+
+    const updatedSelfCards = swapWithDeck(selectedCard, replacedCard, selfCards)
+    return {
+        selfCards: updatedSelfCards,
+        selectedCard: undefined
+    }
+
+}) as ActionFunction<GameContext, MoveConfirmedEvent>
 
 export const tick = assign((ctx, e) => {
     const { hasTurn, selfRemainingTime, opponentRemainingTime, lastTracked } = ctx
@@ -129,15 +134,14 @@ export const tick = assign((ctx, e) => {
 }) as ActionFunction<GameContext, TickEvent>
 
 export const opponentMove = assign((ctx, e) => {
-    const { from, to, selectedCard } = e
-    const { opponentCards, reserveCards, boardPosition } = ctx
-    if (!opponentCards || !reserveCards || !selectedCard || from === to) return ctx
+    const { from, to, selectedCard, replacedCard } = e
+    const { opponentCards, boardPosition } = ctx
+    if (!opponentCards || !selectedCard || from === to) return ctx
 
-    const [updatedOpponentCards, updatedReserveCards] = swapWithDeck(selectedCard, reserveCards, opponentCards)
+    const updatedOpponentCards = swapWithDeck(selectedCard, replacedCard, opponentCards)
     return {
         boardPosition: updateBoard(boardPosition, from, to),
         hasTurn: true,
-        reserveCards: updatedReserveCards,
         opponentCards: updatedOpponentCards,
     }
 }) as ActionFunction<GameContext, OpponentMoveEvent>
@@ -161,7 +165,6 @@ export const gameOver = assign((_, e) => {
         endGame,
         selfColor,
         selfCards,
-        reserveCards,
         opponentCards,
         whiteRemainingTime,
         blackRemainingTime
@@ -170,7 +173,6 @@ export const gameOver = assign((_, e) => {
         boardPosition,
         selfColor,
         selfCards,
-        reserveCards,
         opponentCards,
         endGame,
         selfRemainingTime: selfColor === "w" ? whiteRemainingTime : blackRemainingTime,

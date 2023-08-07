@@ -39,7 +39,6 @@ export type GameResponse = {
     boardPosition: Position,
     whiteCards: [CardType, CardType],
     blackCards: [CardType, CardType],
-    reserveCards: CardType[],
     gameTime: number,
     endGame: EndGame,
     whiteRemainingTime: number,
@@ -78,7 +77,6 @@ export type GameContext = {
     hasTurn: boolean,
     selfCards?: [CardType, CardType],
     opponentCards?: [CardType, CardType],
-    reserveCards: CardType[],
     selfRemainingTime: number,
     opponentRemainingTime: number,
     selfTemple?: SquareType,
@@ -104,7 +102,6 @@ export type GameStartedEvent = {
     hasTurn: boolean,
     selfCards: [CardType, CardType],
     opponentCard: [CardType, CardType],
-    reserveCards: CardType[],
     time: number
 }
 
@@ -115,9 +112,10 @@ export type OpponentMoveEvent = {
     type: "OPPONENT_MOVED",
     from: SquareType,
     to: SquareType,
-    selectedCard: CardType
+    selectedCard: CardType,
+    replacedCard: CardType,
 }
-export type MoveConfirmedEvent = { type: "MOVE_CONFIRMED" }
+export type MoveConfirmedEvent = { type: "MOVE_CONFIRMED", replacedCard: CardType }
 export type TickEvent = { type: "TICK", interval: number }
 export type UpdateTimeEvent = { type: "UPDATE_TIME", white: number, black: number }
 export type InvalidMoveEvent = {
@@ -127,7 +125,6 @@ export type InvalidMoveEvent = {
     hasTurn: boolean,
     selfCards: [CardType, CardType],
     opponentCards: [CardType, CardType],
-    reserveCards: CardType[]
 }
 export type GameOverEvent = {
     type: "GAME_OVER"
@@ -135,7 +132,6 @@ export type GameOverEvent = {
     selfColor: BlackOrWhite,
     selfCards: [CardType, CardType],
     opponentCards: [CardType, CardType],
-    reserveCards: CardType[]
     endGame: EndGame,
     whiteRemainingTime: number,
     blackRemainingTime: number

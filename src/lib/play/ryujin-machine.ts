@@ -1,7 +1,6 @@
 import { assign, createMachine } from "xstate";
-import { DEFAULT_POSITION, gameOver, move, opponentMove, selectCard, selectPiece, tick, updateTime } from "./consts";
+import { DEFAULT_POSITION, gameOver, move, moveConfirmed, opponentMove, selectCard, selectPiece, tick, updateTime } from "./consts";
 import { Events, GameContext, State } from "./types";
-
 
 export const ryujinMachine = createMachine<GameContext, Events, State>({
     context: {
@@ -13,7 +12,6 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
         hasTurn: false,
         selfCards: undefined,
         opponentCards: undefined,
-        reserveCards: [],
         selfRemainingTime: 0,
         opponentRemainingTime: 0,
         selfTemple: undefined,
@@ -43,7 +41,6 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
                         hasTurn: (_, e) => e.hasTurn,
                         selfCards: (_, e) => e.selfCards,
                         opponentCards: (_, e) => e.opponentCard,
-                        reserveCards: (_, e) => e.reserveCards,
                         selfRemainingTime: (_, e) => e.time,
                         opponentRemainingTime: (_, e) => e.time,
                         selfTemple: (_, e) => e.selfColor === "w" ? "c1" : "c5",
@@ -70,15 +67,20 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
                 },
                 proposed_move: {
                     on: {
-                        MOVE_CONFIRMED: 'normal',
+                        MOVE_CONFIRMED: {
+                            actions: moveConfirmed,
+                            target: 'normal'
+                        },
                         INVALID_MOVE: {
                             actions: assign((_, e) => {
-                                const { boardPosition, selfColor, hasTurn, selfCards, opponentCards, reserveCards, } = e
-                                return { boardPosition, selfColor, selfCards, hasTurn, opponentCards, reserveCards }
+                                const { boardPosition, selfColor, hasTurn, selfCards, opponentCards } = e
+                                return { boardPosition, selfColor, selfCards, hasTurn, opponentCards }
                             }),
                             target: 'normal'
                         },
-                        TICK: undefined
+                        TICK: undefined,
+                        SELECT_CARD: undefined,
+                        SELECT_PIECE: undefined
                     }
                 },
             },

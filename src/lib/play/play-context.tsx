@@ -51,24 +51,24 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
                 hasTurn: socket.id === game.turnId,
                 selfCards: selfCards as [CardType, CardType],
                 opponentCard: opponentCards as [CardType, CardType],
-                reserveCards: game.reserveCards,
                 time: game.gameTime
             })
         })
 
-        socket.on("ACK_MOVE", (time) => {
-            send({ type: "MOVE_CONFIRMED" })
-            send({ type: "UPDATE_TIME", white: time.whiteRemaining, black: time.blackRemaining })
+        socket.on("ACK_MOVE", (payload) => {
+            const { replacedCard, whiteRemaining, blackRemaining } = payload
+            send({ type: "MOVE_CONFIRMED", replacedCard })
+            send({ type: "UPDATE_TIME", white: whiteRemaining, black: blackRemaining })
         })
 
         socket.on("OPPONENT_MOVED", (move) => {
-            const { from, to, selectedCard, whiteRemaining, blackRemaining } = move
-            send({ type: "OPPONENT_MOVED", from, to, selectedCard })
+            const { from, to, selectedCard, whiteRemaining, blackRemaining, replacedCard } = move
+            send({ type: "OPPONENT_MOVED", from, to, selectedCard, replacedCard })
             send({ type: "UPDATE_TIME", white: whiteRemaining, black: blackRemaining })
         })
 
         socket.on("REJ_MOVE", (rejMove) => {
-            const { whiteId, whiteCards, blackCards, reserveCards, boardPosition, turnId, whiteRemaining, blackRemaining } = rejMove
+            const { whiteId, whiteCards, blackCards, boardPosition, turnId, whiteRemaining, blackRemaining } = rejMove
             const [selfCards, opponentCards] = socket.id === whiteId ? [whiteCards, blackCards] : [blackCards, whiteCards]
             send({
                 type: "INVALID_MOVE",
@@ -77,7 +77,6 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
                 hasTurn: socket.id === turnId,
                 selfCards: selfCards as [CardType, CardType],
                 opponentCards: opponentCards as [CardType, CardType],
-                reserveCards: reserveCards,
             })
             send({ type: "UPDATE_TIME", white: whiteRemaining, black: blackRemaining })
         })
@@ -95,7 +94,6 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
                 selfColor: socket.id === game.whiteId ? "w" : "b",
                 selfCards: selfCards as [CardType, CardType],
                 opponentCards: opponentCards as [CardType, CardType],
-                reserveCards: game.reserveCards,
                 endGame: game.endGame,
                 whiteRemainingTime: game.whiteRemaining,
                 blackRemainingTime: game.blackRemaining
