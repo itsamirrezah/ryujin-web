@@ -13,6 +13,7 @@ type PlayValues = {
     onPass: () => void
     onFlag: () => void,
     onResign: () => void,
+    onRematch: () => void
     createRoom: () => void,
     ryujinService: InterpreterFrom<typeof ryujinMachine>
 }
@@ -158,6 +159,11 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
         socket.emit("RESIGNATION", { playerId: socket.id, roomId })
     }
 
+    function onRematch() {
+        if (!roomId) return
+        socket.emit("REMATCH", { playerId: socket.id, roomId })
+    }
+
     return (
         <PlayContext.Provider value={{
             joinRoom,
@@ -167,6 +173,7 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
             onPass,
             onFlag,
             onResign,
+            onRematch,
             createRoom,
             ryujinService
         }}>

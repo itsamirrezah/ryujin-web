@@ -16,6 +16,7 @@ export default function PlayPage() {
         joinRoom,
         onResign,
         onPass,
+        onRematch,
         createRoom,
         ryujinService
     } = usePlay()
@@ -63,7 +64,8 @@ export default function PlayPage() {
                         <div className={styles.cardsuser}>
                             <SelfCards />
                         </div>
-                        {isPlaying && <button style={{ backgroundColor: "#fff" }} onClick={onResign}> Resign</button>}
+                        {isPlaying && <button style={{ backgroundColor: "#fff" }} onClick={onResign}>Resign</button>}
+                        <button style={{ backgroundColor: "#fff" }} onClick={onRematch}>Rematch</button>
                     </div>}
                 </div>
             </div>

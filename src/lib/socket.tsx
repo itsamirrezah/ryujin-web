@@ -59,5 +59,6 @@ export type ClientEvents = {
     RESIGNATION: (payload: { playerId: string, roomId: string }) => void;
     CREATE_ROOM: () => void,
     PASS: (payload: { playerId: string, roomId: string }) => void
+    REMATCH: (payload: { playerId: string, roomId: string }) => void
 
 }

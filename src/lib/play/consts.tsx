@@ -5,6 +5,7 @@ import {
     Delta,
     GameContext,
     GameOverEvent,
+    GameStartedEvent,
     MoveConfirmedEvent,
     MoveEvent,
     OpponentMoveEvent,
@@ -65,6 +66,21 @@ export function getCardOptions(
     }
     return options
 }
+export const startGame = assign((_, e) => {
+    return {
+        boardPosition: e.boardPosition,
+        selfColor: e.selfColor,
+        hasTurn: e.hasTurn,
+        selfCards: e.selfCards,
+        opponentCards: e.opponentCard,
+        selfRemainingTime: e.time,
+        opponentRemainingTime: e.time,
+        selfTemple: e.selfColor === "w" ? "c1" : "c5",
+        opponentTemple: e.selfColor === "w" ? "c5" : "c1",
+        gameStarted: true,
+        lastTracked: new Date().getTime()
+    }
+}) as ActionFunction<GameContext, GameStartedEvent>
 
 export const selectCard = assign({
     selectedCard: (ctx, e) => {

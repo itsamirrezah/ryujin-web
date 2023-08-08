@@ -1,5 +1,5 @@
 import { assign, createMachine } from "xstate";
-import { DEFAULT_POSITION, gameOver, getCardOptions, move, moveConfirmed, opponentMove, selectCard, selectPiece, tick, updateTime } from "./consts";
+import { DEFAULT_POSITION, gameOver, getCardOptions, move, moveConfirmed, opponentMove, selectCard, selectPiece, startGame, tick, updateTime } from "./consts";
 import { Events, GameContext, PieceType, SquareType, State } from "./types";
 
 export const ryujinMachine = createMachine<GameContext, Events, State>({
@@ -35,18 +35,7 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
                 },
                 GAME_STARTED: {
                     target: "idle",
-                    actions: assign({
-                        boardPosition: (_, e) => e.boardPosition,
-                        selfColor: (_, e) => e.selfColor,
-                        hasTurn: (_, e) => e.hasTurn,
-                        selfCards: (_, e) => e.selfCards,
-                        opponentCards: (_, e) => e.opponentCard,
-                        selfRemainingTime: (_, e) => e.time,
-                        opponentRemainingTime: (_, e) => e.time,
-                        selfTemple: (_, e) => e.selfColor === "w" ? "c1" : "c5",
-                        opponentTemple: (_, e) => e.selfColor === "w" ? "c5" : "c1",
-                        gameStarted: true
-                    })
+                    actions: startGame
                 }
             }
         },
@@ -136,7 +125,14 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
                 }
             },
         },
-        game_over: {}
+        game_over: {
+            on: {
+                GAME_STARTED: {
+                    target: "idle",
+                    actions: startGame
+                }
+            }
+        }
     }
 })
 
