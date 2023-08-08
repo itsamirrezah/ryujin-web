@@ -24,6 +24,7 @@ export type JoinRoomPayload = {
 }
 
 export type GamePayload = {
+    id: string,
     whiteId: string,
     blackId: string,
     whiteCards: CardType[],
@@ -54,11 +55,11 @@ export type ServerEvents = {
 
 export type ClientEvents = {
     JOIN_ROOM: (payload?: { roomId: string }) => void;
-    MOVE: (payload: { playerId: string, roomId: string, from: SquareType, to: SquareType, selectedCard: CardType }) => void;
-    OPPONENT_FLAG: (roomId: string) => void;
-    RESIGNATION: (payload: { playerId: string, roomId: string }) => void;
+    MOVE: (payload: { playerId: string, gameId: string, from: SquareType, to: SquareType, selectedCard: CardType }) => void;
+    OPPONENT_FLAG: (gameId: string) => void;
+    RESIGNATION: (payload: { playerId: string, gameId: string }) => void;
     CREATE_ROOM: () => void,
-    PASS: (payload: { playerId: string, roomId: string }) => void
-    REMATCH: (payload: { playerId: string, roomId: string }) => void
+    PASS: (payload: { playerId: string, gameId: string }) => void
+    REMATCH: (payload: { playerId: string, gameId: string }) => void
 
 }

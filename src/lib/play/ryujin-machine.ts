@@ -7,6 +7,7 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
         gameStarted: false,
         boardPosition: DEFAULT_POSITION,
         roomId: undefined,
+        gameId: undefined,
         playersInfo: undefined,
         selfColor: undefined,
         hasTurn: false,

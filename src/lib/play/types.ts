@@ -72,6 +72,7 @@ export type GameContext = {
     gameStarted: boolean,
     boardPosition: Position,
     roomId?: string,
+    gameId?: string,
     playersInfo?: Record<"self" | "opponent", PlayerResponse>
     selfColor?: BlackOrWhite
     hasTurn: boolean,
@@ -97,6 +98,7 @@ export type PlayerJoinEvent = {
 
 export type GameStartedEvent = {
     type: "GAME_STARTED",
+    id: string,
     boardPosition: Position,
     selfColor: BlackOrWhite,
     hasTurn: boolean,

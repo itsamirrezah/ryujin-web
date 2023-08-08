@@ -24,6 +24,7 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
     const ryujinService = useInterpret(ryujinMachine)
     const { send } = ryujinService
     const roomId = useSelector(ryujinService, (state) => state.context.roomId)
+    const gameId = useSelector(ryujinService, (state) => state.context.gameId)
 
     useEffect(() => {
         if (!socket.connected) {
@@ -48,6 +49,7 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
             const [selfCards, opponentCards] = socket.id === game.whiteId ? [game.whiteCards, game.blackCards] : [game.blackCards, game.whiteCards]
             send({
                 type: "GAME_STARTED",
+                id: game.id,
                 boardPosition: game.boardPosition,
                 selfColor: socket.id === game.whiteId ? "w" : "b",
                 hasTurn: socket.id === game.turnId,
@@ -137,31 +139,31 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
     }
 
     function onMove(from: SquareType, to: SquareType, selectedCard: CardType) {
-        if (!roomId) return;
+        if (!gameId) return;
         send({ type: "MOVE", from, to })
-        socket.emit("MOVE", { playerId: socket.id, roomId, from, to, selectedCard })
+        socket.emit("MOVE", { playerId: socket.id, gameId, from, to, selectedCard })
     }
 
     function onPass() {
-        if (!roomId) return
+        if (!gameId) return
         send({ type: "PASS" })
-        socket.emit("PASS", { playerId: socket.id, roomId })
+        socket.emit("PASS", { playerId: socket.id, gameId })
     }
 
     function onFlag() {
-        if (!roomId) return
+        if (!gameId) return
         send({ type: "FLAG_REQUEST" })
-        socket.emit("OPPONENT_FLAG", roomId)
+        socket.emit("OPPONENT_FLAG", gameId)
     }
 
     function onResign() {
-        if (!roomId) return;
-        socket.emit("RESIGNATION", { playerId: socket.id, roomId })
+        if (!gameId) return;
+        socket.emit("RESIGNATION", { playerId: socket.id, gameId })
     }
 
     function onRematch() {
-        if (!roomId) return
-        socket.emit("REMATCH", { playerId: socket.id, roomId })
+        if (!gameId) return
+        socket.emit("REMATCH", { playerId: socket.id, gameId })
     }
 
     return (

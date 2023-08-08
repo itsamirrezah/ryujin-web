@@ -68,6 +68,7 @@ export function getCardOptions(
 }
 export const startGame = assign((_, e) => {
     return {
+        gameId: e.id,
         boardPosition: e.boardPosition,
         selfColor: e.selfColor,
         hasTurn: e.hasTurn,
