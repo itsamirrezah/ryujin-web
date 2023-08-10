@@ -10,6 +10,7 @@ import SelfCards from "@/components/play/selfCards";
 import OpponentCards from "@/components/play/opponentCards";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "@tanstack/router";
+import GameOverModal from "@/components/play/game-over-modal";
 
 export default function PlayPage() {
     const {
@@ -22,6 +23,7 @@ export default function PlayPage() {
     } = usePlay()
     const isGameStarted = useSelector(ryujinService, (state) => state.context.gameStarted)
     const isPlaying = useSelector(ryujinService, (state) => state.matches('idle'))
+    const isGameOver = useSelector(ryujinService, (state) => state.matches('game_over'))
     const roomId = useSelector(ryujinService, (state) => state.context.roomId)
     const hasNoMoves = useSelector(ryujinService, (state) => state.matches('idle.no_moves'))
     const navigate = useNavigate()
@@ -49,6 +51,7 @@ export default function PlayPage() {
                     <OpponentPlayerInfo />
                     <div className={styles.boardlyt}>
                         <PlayBoard />
+                        {isGameOver && <GameOverModal />}
                     </div>
                     <SelfPlayerInfo />
                     {hasNoMoves && <button style={{ color: "#fff", padding: 4 }} onClick={onPass}>Pass Turn</button>}
