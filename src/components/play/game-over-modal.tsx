@@ -1,37 +1,48 @@
 import { usePlay } from "@/lib/play/play-context"
+import { BlackOrWhite } from "@/lib/play/types"
 import { useSelector } from "@xstate/react"
+import LogoSecondary from "../icons/logo-secondary"
+import MasterGreen from "../icons/master-green"
+import MasterRed from "../icons/master-red"
+import styles from "./game-over-modal.module.css"
+
 export default function GameOverModal() {
     const { ryujinService } = usePlay()
     const gameOver = useSelector(ryujinService, (state) => state.context.endGame)
+    const selfColor = useSelector(ryujinService, (state) => state.context.selfColor)
+
     return (
-        <div style={{
-            background: "#fff", color: "#000", position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%)", boxShadow: "0 .3rem .4rem .1rem rgba(0,0,0,.2)", minWidth: "30rem",
-        }}>
-            <div id="header" style={{
-                height: "10rem", backgroundColor: "green", clipPath: "ellipse(65% 77% at 50% -3%)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-start", marginBottom: -20
-            }}>
-                <div>{gameOver?.result}</div>
-                <div>{gameOver?.by}</div>
+        <div className={styles.container}>
+            <div className={styles.header}>
+                <div className={styles.title}>{`You Won`}</div>
+                <div className={styles.description}>{`opponent left the game`}</div>
             </div>
-            <div style={{ display: "flex", justifyContent: "space-evenly", }}>
-                <PlayerResult color="red" result={.5} name="itsamirrezah@gmail.com" />
-                <PlayerResult color="green" result={0} />
+            <div className={styles.result}>
+                <PlayerResult color="w" name="itsamirrezaah" />
+                <div className={styles.middle}>
+                    <div className={styles.logo}>
+                        <LogoSecondary />
+                    </div>
+                    <span>1 - 0</span>
+                </div>
+                <PlayerResult color="b" name="itsmeursault@gmail.com" />
+            </div>
+            <div className={styles.action}>
+                <button>Rematch</button>
+                <button>New Game</button>
             </div>
         </div>
     )
 }
 
-function PlayerResult({ color, result, name }: any) {
+function PlayerResult({ color, name }: { color: BlackOrWhite, name: string }) {
     return (
-        <div id="player" style={{
-            width: "9rem",
-        }}>
-            <div style={{
-                width: "9rem", height: "9rem", backgroundColor: color, display: "flex", justifyContent: "center", alignItems: "center"
-            }}>
-                <span style={{ fontSize: 50 }}>{result}</span>
+        <div className={`${styles.player}`}>
+            <div className={styles[`player-${color}`]}>
+                {color === "w" && <MasterRed />}
+                {color === "b" && <MasterGreen />}
             </div>
-            <span style={{ textOverflow: "ellipsis", overflow: "hidden", maxWidth: "100%", display: "inline-block" }}>{name}</span>
-        </div>
+            <span>{name}</span>
+        </div >
     )
 }

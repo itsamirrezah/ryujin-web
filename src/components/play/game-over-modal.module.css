@@ -1,0 +1,113 @@
+.container {
+    min-width: var(--320);
+    background-color: #EBD5B4EA;
+    background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.3294) 11.45%, rgba(255, 214, 0, 0.1566) 139.13%);
+    color: #303456;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    box-shadow: 0 .3rem .4rem .1rem rgba(0,0,0,.2);
+    border-radius: var(--16);
+    overflow: hidden;
+    padding-bottom: var(--12);
+    font-family: var(--font-lato);
+}
+
+.header {
+    height: var(--112);
+    padding: var(--12) 0;
+    background-color: rgba(192, 12, 12,.75);
+    clip-path: ellipse(65% 77% at 50% -3%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: calc(-1 * var(--32));
+    color: #fff;
+}
+
+.title{
+    font-size: var(--36);
+    font-family: var(--font-marker);
+    line-height: 1;
+}
+
+.description {
+    font-family: var(--font-lato);
+    font-size: var(--14);
+    font-style: italic;
+    line-height: 1;
+}
+
+.result {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.player > span {
+    display: inline-block;
+    max-width: 100%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.middle {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    justify-content: center;
+    align-items: center;
+}
+
+.middle > span {
+    font-family: var(--font-lato);
+    font-weight: 800;
+}
+
+.logo {
+    width: var(--64);
+}
+
+.logo > svg {
+    fill: #303456;
+}
+
+.action {
+    display: flex;
+    justify-content: center;
+    gap: var(--8);
+    margin-top: var(--16);
+}
+
+.action > button {
+    border-radius: var(--16);
+    color: #223338;
+    padding: var(--4) var(--8);
+    font-family: var(--font-lato);
+    border: 1px solid #223338;
+    background-color: #ffffff66;
+    box-shadow: 0 0.3rem 0.4rem 0.1rem rgba(0,0,0,.2);
+    font-weight: 600;
+}
+
+.player {
+    width: var(--96);
+}
+.player > div {
+    border-radius: var(--16);
+    padding: var(--4);
+}
+
+.player-w {
+    background-color: #FF414130;
+}
+
+.player-b {
+    background-color: #01C1AA30;
+}
+
+
