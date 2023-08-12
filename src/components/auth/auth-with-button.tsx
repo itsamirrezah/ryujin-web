@@ -2,10 +2,11 @@ import { ButtonHTMLAttributes } from "react"
 import Google from "../icons/google"
 import styles from "./auth-with-button.module.css"
 
-interface IAuthWithButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+type AuthWithButtonProps = {
     children: string
-}
-export default function AuthWithButton({ children, ...rest }: IAuthWithButtonProps) {
+} & ButtonHTMLAttributes<HTMLButtonElement>;
+
+export default function AuthWithButton({ children, ...rest }: AuthWithButtonProps) {
     return (
         <button className={styles.button} {...rest}>
             <span className={styles.icon}><Google /></span>

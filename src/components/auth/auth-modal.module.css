@@ -17,6 +17,7 @@
     display: flex;
     flex-direction: column;
     gap: var(--12);
+    align-items: center;
 }
 
 .fields {

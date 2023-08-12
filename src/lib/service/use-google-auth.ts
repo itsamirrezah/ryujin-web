@@ -8,7 +8,7 @@ const url = `${import.meta.env.VITE_SERVER_BASEURL}/auth/google`;
 
 export function useGoogleAuth() {
     const { setUser } = useAuthContext()
-    const [userInfo, setUserInfo] = useState<User | null>(null)
+    const [userInfo, setUserInfo] = useState<User>()
     const [isError, setError] = useState(false)
     const googleAuthHandler = useGoogleLogin({
         onSuccess: async (token) => {
