@@ -17,7 +17,7 @@
 .header {
     height: var(--112);
     padding: var(--12) 0;
-    background-color: rgba(192, 12, 12,.75);
+    background-color: #503E3A66;
     clip-path: ellipse(65% 77% at 50% -3%);
     display: flex;
     flex-direction: column;
@@ -25,6 +25,12 @@
     justify-content: flex-start;
     margin-bottom: calc(-1 * var(--32));
     color: #fff;
+}
+.header-b {
+    background-color: rgba(0, 152, 134, 0.9);
+}
+.header-w {
+    background-color: rgba(192, 12, 12,.75);
 }
 
 .title{
