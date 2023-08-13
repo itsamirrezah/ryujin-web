@@ -1,6 +1,6 @@
 import Modal from "@/components/modal/modal"
+import { useAuthContext } from "@/lib/auth"
 import { useGoogleAuth } from "@/lib/service/use-google-auth"
-import { sign } from "crypto"
 import { useEffect, useState } from "react"
 import H2 from "../h/h2"
 import Close from "../icons/close"
@@ -20,6 +20,7 @@ export type SignOption = "signin" | "signup" | "username"
 export default function AuthModal({ onClose, signOption = "signin" }: AuthModalProps) {
     const [signType, setSignType] = useState<SignOption>(signOption)
     const { isError, userInfo, googleAuthHandler, isSuccess } = useGoogleAuth()
+    const { user } = useAuthContext()
 
     function setSignTypeHandler(signOption: SignOption) {
         setSignType(signOption)
@@ -37,7 +38,9 @@ export default function AuthModal({ onClose, signOption = "signin" }: AuthModalP
                     <SignUpForm setSignType={setSignTypeHandler} onClose={onClose} /> :
                     signType === "signin" ?
                         <SignInForm setSignType={setSignTypeHandler} onClose={onClose} /> :
-                        <UsernameForm />
+                        signType === "username" && !!user ?
+                            <UsernameForm userId={user.id} /> :
+                            null
                 }
                 {signType !== "username" && (<div className={styles.join}>
                     <small> or </small>

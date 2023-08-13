@@ -70,7 +70,7 @@ export default function PlayPage() {
                     </div>}
                 </div>
             </div>
-        </div >
+        </div>
     )
 }
 

@@ -56,6 +56,6 @@ function PlayerResult({ color, name }: { color: BlackOrWhite, name: string }) {
                 {color === "b" && <MasterGreen />}
             </div>
             <span>{name}</span>
-        </div >
+        </div>
     )
 }
