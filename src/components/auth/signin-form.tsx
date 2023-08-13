@@ -22,7 +22,6 @@ export default function SignInForm({ setSignType, onClose }: SignInFormProps) {
 
     useEffect(() => {
         if (isSuccess) onClose()
-
     }, [isSuccess])
 
     return (
@@ -33,6 +32,6 @@ export default function SignInForm({ setSignType, onClose }: SignInFormProps) {
             </div>
             <button className={styles.switch} onClick={() => setSignType("signup")}>No account? <b>Join us</b></button>
             <RoundButton theme="red" type="submit">Login</RoundButton>
-        </form >
+        </form>
     )
 }

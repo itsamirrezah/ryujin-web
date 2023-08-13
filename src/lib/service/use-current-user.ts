@@ -47,5 +47,5 @@ export default function useCurrentUser() {
         return () => clearInterval(interval)
     }, [error, retry])
 
-    return [user, !!user, setUserHandler, invalidateUser] as const
+    return [user, !!user && !!user.username, setUserHandler, invalidateUser] as const
 }
