@@ -2,6 +2,11 @@ import { createContext, ReactNode, useContext, useEffect, useState } from "react
 import { DEFAULT_POSITION } from "@/lib/play/consts";
 import { PieceType, BlackOrWhite, Position, SquareType } from "@/lib/play/types";
 
+type Move = {
+    from: SquareType,
+    to: SquareType
+}
+
 export type BoardProps = {
     currentPosition?: Position
     currentView?: BlackOrWhite,
@@ -22,6 +27,8 @@ type BoardValues = {
     onPieceDrop: RequiredBoardProps["onPieceDrop"]
     moveOptions: RequiredBoardProps["moveOptions"]
     selectedSquare?: SquareType,
+    nextMove?: Move,
+    isWaitForAnimation: boolean,
     setSelectedSquare: (square?: SquareType) => void
 }
 
@@ -38,20 +45,70 @@ export function BoardContextProvider({
 }: BoardProps) {
     const [playerView, setPlayerView] = useState<BlackOrWhite>(currentView)
     const [selectedSquare, setSelectedSquare] = useState<SquareType>()
+    const [position, setPosition] = useState<Position>(currentPosition)
+    const [nextMove, setNextMove] = useState<Move>()
+    const [isWaitForAnimation, setIsWaitForAnimation] = useState(false)
 
     function setSelectedSquareHandler(square?: SquareType) {
         setSelectedSquare(prev => prev === square ? prev : square)
+    }
+
+    function getDiffPosition(current: Position, next: Position) {
+        const currentSquares = Object.keys(current)
+        let from = "" as SquareType
+        let to = "" as SquareType
+        for (let i = 0; i < currentSquares.length; i++) {
+            const square = currentSquares[i] as SquareType
+            if (current[square] === next[square]) continue;
+            from = square
+            break;
+        }
+        const nextSquares = Object.keys(next)
+        for (let i = 0; i < nextSquares.length; i++) {
+            const square = nextSquares[i] as SquareType
+            if (next[square] === current[square]) continue;
+            to = square
+            break;
+        }
+        if (!from || !to) return null
+        return { from, to }
     }
 
     useEffect(() => {
         setPlayerView(currentView)
     }, [currentView])
 
+    useEffect(() => {
+        if (!currentPosition) return;
+        if (isWaitForAnimation) {
+            setPosition(currentPosition)
+            setIsWaitForAnimation(false)
+            return;
+        }
+        const nextMove = getDiffPosition(position, currentPosition)
+        if (!nextMove) {
+            setPosition(currentPosition)
+            setIsWaitForAnimation(false)
+            return;
+        }
+        setNextMove(nextMove)
+        setIsWaitForAnimation(true)
+        const timeout = setTimeout(() => {
+            setPosition(currentPosition)
+            setIsWaitForAnimation(false)
+        }, 1000)
+
+        return () => clearTimeout(timeout)
+
+    }, [currentPosition])
+
     return (
         <BoardContext.Provider
             value={{
-                currentPosition,
+                currentPosition: position,
                 currentView: playerView,
+                nextMove,
+                isWaitForAnimation,
                 isPieceDraggable,
                 onPieceDrag,
                 onPieceDrop,
