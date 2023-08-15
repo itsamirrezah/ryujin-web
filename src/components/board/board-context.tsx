@@ -1,13 +1,18 @@
-import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { DEFAULT_POSITION } from "@/lib/play/consts";
-import { PieceType, BlackOrWhite, Position, SquareType } from "@/lib/play/types";
+import { BlackOrWhite, PieceType, Position, SquareType } from "@/lib/play/types";
+import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 
 type Move = {
     from: SquareType,
     to: SquareType
 }
 
+type Coord = { x: number, y: number }
+type Coordinates = { [key in SquareType]?: Coord }
+
 export type BoardProps = {
+    boardWidth?: number,
+    animationDuration: number,
     currentPosition?: Position
     currentView?: BlackOrWhite,
     isPieceDraggable?: (piece: PieceType) => boolean
@@ -26,9 +31,13 @@ type BoardValues = {
     onPieceDrag: RequiredBoardProps["onPieceDrag"]
     onPieceDrop: RequiredBoardProps["onPieceDrop"]
     moveOptions: RequiredBoardProps["moveOptions"]
+    boardWidth?: number,
+    animationDuration: number,
     selectedSquare?: SquareType,
     nextMove?: Move,
     isWaitForAnimation: boolean,
+    coordinates?: Coordinates,
+    setCoordinate: (square: SquareType, coord: Coord) => void,
     setSelectedSquare: (square?: SquareType) => void
 }
 
@@ -37,6 +46,8 @@ const BoardContext = createContext<BoardValues>({} as BoardValues)
 export function BoardContextProvider({
     children,
     currentPosition = DEFAULT_POSITION,
+    boardWidth,
+    animationDuration,
     currentView = "w",
     isPieceDraggable = () => true,
     onPieceDrag = () => { },
@@ -47,10 +58,15 @@ export function BoardContextProvider({
     const [selectedSquare, setSelectedSquare] = useState<SquareType>()
     const [position, setPosition] = useState<Position>(currentPosition)
     const [nextMove, setNextMove] = useState<Move>()
+    const [coordinates, setCoordinates] = useState<Coordinates>()
     const [isWaitForAnimation, setIsWaitForAnimation] = useState(false)
 
     function setSelectedSquareHandler(square?: SquareType) {
         setSelectedSquare(prev => prev === square ? prev : square)
+    }
+
+    function setCoordinate(square: SquareType, coord: Coord) {
+        setCoordinates(prev => ({ ...prev, [square]: coord }))
     }
 
     function getDiffPosition(current: Position, next: Position) {
@@ -96,10 +112,9 @@ export function BoardContextProvider({
         const timeout = setTimeout(() => {
             setPosition(currentPosition)
             setIsWaitForAnimation(false)
-        }, 1000)
+        }, animationDuration)
 
         return () => clearTimeout(timeout)
-
     }, [currentPosition])
 
     return (
@@ -107,10 +122,14 @@ export function BoardContextProvider({
             value={{
                 currentPosition: position,
                 currentView: playerView,
+                coordinates,
+                setCoordinate,
                 nextMove,
                 isWaitForAnimation,
                 isPieceDraggable,
                 onPieceDrag,
+                boardWidth,
+                animationDuration,
                 onPieceDrop,
                 moveOptions,
                 setSelectedSquare: setSelectedSquareHandler,
