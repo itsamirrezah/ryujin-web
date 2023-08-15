@@ -17,7 +17,7 @@ export type BoardProps = {
     currentView?: BlackOrWhite,
     isPieceDraggable?: (piece: PieceType) => boolean
     onPieceDrag?: (piece: PieceType, square: SquareType) => void
-    onPieceDrop?: (square: SquareType) => void
+    onPieceMoved?: (square: SquareType) => void
     moveOptions?: SquareType[]
     children: ReactNode
 }
@@ -29,8 +29,8 @@ type BoardValues = {
     currentView: RequiredBoardProps["currentView"]
     isPieceDraggable: RequiredBoardProps["isPieceDraggable"]
     onPieceDrag: RequiredBoardProps["onPieceDrag"]
-    onPieceDrop: RequiredBoardProps["onPieceDrop"]
-    moveOptions: RequiredBoardProps["moveOptions"]
+    onMoveHandler: (to: SquareType, isDrop?: boolean) => void,
+    moveOptions: RequiredBoardProps["moveOptions"],
     boardWidth?: number,
     animationDuration: number,
     selectedSquare?: SquareType,
@@ -51,7 +51,7 @@ export function BoardContextProvider({
     currentView = "w",
     isPieceDraggable = () => true,
     onPieceDrag = () => { },
-    onPieceDrop = () => { },
+    onPieceMoved = () => { },
     moveOptions = [],
 }: BoardProps) {
     const [playerView, setPlayerView] = useState<BlackOrWhite>(currentView)
@@ -59,6 +59,7 @@ export function BoardContextProvider({
     const [position, setPosition] = useState<Position>(currentPosition)
     const [nextMove, setNextMove] = useState<Move>()
     const [coordinates, setCoordinates] = useState<Coordinates>()
+    const [isNextMoveDrop, setIsNextMoveDrop] = useState(false)
     const [isWaitForAnimation, setIsWaitForAnimation] = useState(false)
 
     function setSelectedSquareHandler(square?: SquareType) {
@@ -70,24 +71,30 @@ export function BoardContextProvider({
     }
 
     function getDiffPosition(current: Position, next: Position) {
-        const currentSquares = Object.keys(current)
         let from = "" as SquareType
         let to = "" as SquareType
-        for (let i = 0; i < currentSquares.length; i++) {
-            const square = currentSquares[i] as SquareType
-            if (current[square] === next[square]) continue;
-            from = square
-            break;
-        }
+
         const nextSquares = Object.keys(next)
         for (let i = 0; i < nextSquares.length; i++) {
             const square = nextSquares[i] as SquareType
             if (next[square] === current[square]) continue;
+            if (!!to) return null
             to = square
-            break;
+        }
+        const currentSquares = Object.keys(current)
+        for (let i = 0; i < currentSquares.length; i++) {
+            const square = currentSquares[i] as SquareType
+            if (current[square] === next[square] || square === to) continue;
+            if (!!from) return null
+            from = square
         }
         if (!from || !to) return null
         return { from, to }
+    }
+
+    function onMoveHandler(to: SquareType, isDrop: boolean = false) {
+        setIsNextMoveDrop(isDrop)
+        onPieceMoved(to)
     }
 
     useEffect(() => {
@@ -96,9 +103,10 @@ export function BoardContextProvider({
 
     useEffect(() => {
         if (!currentPosition) return;
-        if (isWaitForAnimation) {
+        if (isWaitForAnimation || isNextMoveDrop || playerView !== currentView) {
             setPosition(currentPosition)
             setIsWaitForAnimation(false)
+            setIsNextMoveDrop(false)
             return;
         }
         const nextMove = getDiffPosition(position, currentPosition)
@@ -130,7 +138,7 @@ export function BoardContextProvider({
                 onPieceDrag,
                 boardWidth,
                 animationDuration,
-                onPieceDrop,
+                onMoveHandler,
                 moveOptions,
                 setSelectedSquare: setSelectedSquareHandler,
                 selectedSquare

@@ -32,7 +32,7 @@ export default function PlayBoard() {
             currentView={selfColor}
             onPieceDrag={onPieceSelectedHandler}
             moveOptions={moveOptions}
-            onPieceDrop={onMoveHandler}
+            onPieceMoved={onMoveHandler}
         />
     )
 }

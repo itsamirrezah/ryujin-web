@@ -19,7 +19,7 @@ type SquareProps = {
 
 export default function Square({ square, hasPiece, hasOption, color, children }: SquareProps) {
     const {
-        onPieceDrop,
+        onMoveHandler,
         moveOptions,
         selectedSquare,
         setSelectedSquare,
@@ -29,22 +29,22 @@ export default function Square({ square, hasPiece, hasOption, color, children }:
     } = useBoard()
     const squareRef = useRef<HTMLDivElement>(null)
 
-    function onSquareSelectHandler(square: SquareType) {
+    function onSquareSelectHandler(square: SquareType, isDrop?: boolean) {
         if (!moveOptions?.includes(square) || !hasOption) return
         setSelectedSquare(undefined)
-        onPieceDrop(square)
+        onMoveHandler(square, isDrop)
     }
 
     const [{ canDrop, isOver }, ref] = useDrop(() => ({
         accept: DND_ITEM_TYPE,
         drop: (item: DndItem) => {
-            onSquareSelectHandler(square)
+            onSquareSelectHandler(square, true)
         },
         collect: (monitor) => ({
             isOver: monitor.isOver(),
             canDrop: monitor.canDrop(),
         }),
-    }), [square, onPieceDrop])
+    }), [square, onMoveHandler])
 
 
     useEffect(() => {
