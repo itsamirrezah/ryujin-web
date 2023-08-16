@@ -1,0 +1,115 @@
+.button {
+  position: relative;
+  padding: var(--8) var(--28);
+  line-height: var(--40);
+  font-family: var(--font-rubik);
+  font-size: var(--24);
+  background-color: #03c9b2d3;
+  color: #f3f3f3; 
+  font-weight: 600;
+  border-radius: var(--12);
+  border-width: 2px;
+  border-style: solid;
+  border-color: #009886;
+  text-transform: uppercase;
+  outline: none;
+  transform-style: preserve-3d;
+  transition: transform 150ms cubic-bezier(0, 0, 0.58, 1), background 150ms cubic-bezier(0, 0, 0.58, 1);
+}
+
+
+.button::before {
+  position: absolute;
+  content: '';
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #03c9b243;
+  border-radius: inherit;
+  transform: translate3d(0, 0.3em, -1em);
+  transition: transform 150ms cubic-bezier(0, 0, 0.58, 1), box-shadow 150ms cubic-bezier(0, 0, 0.58, 1);
+}
+
+.button:hover {
+  transform: translate(0, -0.1em);
+}
+
+.button:hover::before {
+  transform: translate3d(0, 0.5em, -1em);
+}
+
+.button:active {
+  transform: translate(0, 0.1em);
+}
+
+.button:active::before {
+  transform: translate3d(0, 0, -1em);
+}
+
+.fiery {
+  background-color: #B22222aa;
+  border-color: #B22222;
+  color: #FFFFFF
+}
+.fiery:hover {
+  background: #B22222;
+}
+
+.fiery::before{
+  background: #B2222255;
+}
+
+.teal {
+  background-color: #008080a5;
+  border-color: #008080;
+  color: #FFFFFF
+}
+
+.teal:hover {
+  background: #008080;
+}
+
+.teal::before {
+  background: #20B2AA55
+}
+
+.green{
+  background-color: #228B22;
+  border-color: #228B22;
+  color: #FFFFFF;
+}
+.green:hover {
+  background: #12CD32;
+}
+
+.green::before {
+  background: #32CD3255;
+}
+
+.ocean { 
+  background-color: #4682B4;
+  border-color: #4682B4;
+  color: #FFFFFF
+}
+.ocean:hover {
+  background: #1E90FF;
+}
+.ocean::before {
+  background: #4682B455;
+}
+
+.navy {
+  background-color: #001F3FCC;
+  border-color: #001F3F;
+  color: #ffffff
+}
+
+.navy:hover {
+  background: #4169E1;
+}
+.navy::before {
+  background: #001F3F55;
+}

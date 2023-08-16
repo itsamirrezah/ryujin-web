@@ -5,6 +5,7 @@ import Ryujin from "@/components/home/ryujin"
 import H2 from "@/components/home/h2"
 import { useAuthContext } from "@/lib/auth"
 import { useNavigate } from "@tanstack/router"
+import PlayButton from "@/components/buttons/play-button"
 
 export default function HomePage() {
     const navigate = useNavigate()
@@ -19,6 +20,7 @@ export default function HomePage() {
                 </div>
                 <div className={styles.get_started}>
                     <Masters />
+                    <PlayButton onClick={() => !isAuth ? openAuth() : navigate({ to: '/play' })}>Play Now</PlayButton>
                     <RoundButton onClick={() => !isAuth ? openAuth() : navigate({ to: '/play' })}>Play Now</RoundButton>
                 </div>
             </div>
