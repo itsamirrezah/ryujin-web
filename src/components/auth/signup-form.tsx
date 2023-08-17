@@ -49,7 +49,7 @@ export default function SignUpForm({ setSignType, onClose }: SignUpFormProps) {
             <SignButton
                 type="submit"
                 status={isLoading ? "loading" : isSuccess ? "succeed" : isError ? "failed" : undefined}>
-                Join us 
+                Join us
             </SignButton>
         </form>
     )

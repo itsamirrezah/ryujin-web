@@ -1,8 +1,21 @@
 .button {
-    padding: var(--12) var(--40);
+    padding: var(--8) var(--20);
     background-color: #ffffff;
+    box-shadow: 0 -1px 0 rgba(0, 0, 0, .04), 0 1px 1px rgba(0, 0, 0, .25);
+    border: none;
+    border-radius: var(--20);
+    outline: none;
+    color: #757575;
+    transition: all 0.25s ease;
     box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.084), 0px 2px 3px rgba(0, 0, 0, 0.168);
-    border-radius: var(--112);
+}
+
+.button:hover {
+    letter-spacing: 0.05em;
+}
+
+.button:active {
+    letter-spacing: 0.09em;
 }
 
 .icon {
@@ -12,7 +25,8 @@
 .text {
     margin-left: var(--8);
     vertical-align: middle;
-    font-family: var(--font-lato);
-    font-size: var(--24);
-    line-height: var(--40);
+    font-family: var(--font-mukta);
+    font-size: var(--20);
+    font-weight: 500;
 }
+
