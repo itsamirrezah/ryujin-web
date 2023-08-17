@@ -1,11 +1,10 @@
-import styles from "./home.module.css"
-import Masters from "@/components/home/masters"
-import RoundButton from "@/components/round-button/round-button"
-import Ryujin from "@/components/home/ryujin"
+import PlayButton from "@/components/buttons/play-button"
 import H2 from "@/components/home/h2"
+import Masters from "@/components/home/masters"
+import Ryujin from "@/components/home/ryujin"
 import { useAuthContext } from "@/lib/auth"
 import { useNavigate } from "@tanstack/router"
-import PlayButton from "@/components/buttons/play-button"
+import styles from "./home.module.css"
 
 export default function HomePage() {
     const navigate = useNavigate()
@@ -21,7 +20,6 @@ export default function HomePage() {
                 <div className={styles.get_started}>
                     <Masters />
                     <PlayButton onClick={() => !isAuth ? openAuth() : navigate({ to: '/play' })}>Play Now</PlayButton>
-                    <RoundButton onClick={() => !isAuth ? openAuth() : navigate({ to: '/play' })}>Play Now</RoundButton>
                 </div>
             </div>
             <div>
