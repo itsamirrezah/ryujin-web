@@ -87,17 +87,8 @@
     justify-content: center;
     gap: var(--8);
     margin-top: var(--16);
-}
-
-.action > button {
-    border-radius: var(--16);
-    color: #223338;
-    padding: var(--4) var(--8);
-    font-family: var(--font-lato);
-    border: 1px solid #223338;
-    background-color: #ffffff66;
-    box-shadow: 0 0.3rem 0.4rem 0.1rem rgba(0,0,0,.2);
-    font-weight: 600;
+    margin-left: var(--12);
+    margin-right: var(--12);
 }
 
 .player {

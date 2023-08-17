@@ -3,7 +3,7 @@ import useValidateUsername from "@/lib/service/use-validate-username"
 import { usernameSchema } from "@/lib/validation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import RoundButton from "../round-button/round-button"
+import SignButton from "../buttons/sign-button"
 import styles from "./auth-modal.module.css"
 import Field from "./field"
 
@@ -19,8 +19,8 @@ export default function UsernameForm({ userId }: UsernameFormProps) {
         formState: { errors }
     } = useForm<{ username: string }>({ resolver: zodResolver(usernameSchema), defaultValues: { username: "" } })
     const username = watch("username")
-    const { isSuccess, data, error, isError, isLoading } = useValidateUsername(username)
-    const { mutate } = useUpdateUsername(userId)
+    const validateUsername = useValidateUsername(username)
+    const { mutate, isSuccess, isError, isLoading } = useUpdateUsername(userId)
     async function onSubmitHandler(data: { username: string }) {
         await mutate(data)
     }
@@ -30,7 +30,11 @@ export default function UsernameForm({ userId }: UsernameFormProps) {
             <div className={styles.fields}>
                 <Field placeholder="Choose a username" {...register("username")} />
             </div>
-            <RoundButton theme="red" type="submit">Update</RoundButton>
+            <SignButton
+                type="submit"
+                status={isLoading ? "loading" : isSuccess ? "succeed" : isError ? "failed" : undefined}>
+                Update
+            </SignButton>
         </form>
     )
 }

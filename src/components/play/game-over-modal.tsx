@@ -1,6 +1,7 @@
 import { usePlay } from "@/lib/play/play-context"
 import { BlackOrWhite, EndGame } from "@/lib/play/types"
 import { useSelector } from "@xstate/react"
+import GameOverButton from "../buttons/game-over-button"
 import LogoSecondary from "../icons/logo-secondary"
 import MasterGreen from "../icons/master-green"
 import MasterRed from "../icons/master-red"
@@ -41,8 +42,8 @@ export default function GameOverModal() {
                 <PlayerResult color={selfColor === "w" ? "b" : "w"} name={playerInfo.opponent.username} />
             </div>
             <div className={styles.action}>
-                <button onClick={onRematch}>Rematch</button>
-                <button onClick={() => joinRoom()}>New Game</button>
+                <GameOverButton onClick={() => joinRoom()}>New Game</GameOverButton>
+                <GameOverButton onClick={onRematch}>Rematch</GameOverButton>
             </div>
         </div>
     )
