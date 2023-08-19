@@ -1,7 +1,7 @@
 import useSignIn from "@/lib/service/use-signin"
 import { ISignSchema, signInSchema } from "@/lib/validation"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import SignButton from "../buttons/sign-button"
 import { SignOption } from "./auth-modal"
@@ -37,8 +37,8 @@ export default function SignInForm({ setSignType, onClose }: SignInFormProps) {
     return (
         <form className={styles.form} onSubmit={handleSubmit(onSubmitHandler)}>
             <div className={styles.fields}>
-                <Field placeholder="Username or Email" {...register("username")} />
-                <Field placeholder="Password" type="password" {...register("password")} />
+                <Field hasError={false} helperText="custom error message" required placeholder="Username or Email" {...register("username")} />
+                <Field hasError={false} helperText={"another custom message here"} required placeholder="Password" type="password" {...register("password")} />
             </div>
             <button className={styles.switch} onClick={() => setSignType("signup")}>
                 No account? <b>Join us</b>

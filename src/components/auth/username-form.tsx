@@ -28,7 +28,7 @@ export default function UsernameForm({ userId }: UsernameFormProps) {
     return (
         <form className={styles.form} onSubmit={handleSubmit(onSubmitHandler)}>
             <div className={styles.fields}>
-                <Field placeholder="Choose a username" {...register("username")} />
+                <Field required placeholder="Choose a username" {...register("username")} />
             </div>
             <SignButton
                 type="submit"

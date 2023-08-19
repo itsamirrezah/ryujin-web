@@ -38,9 +38,9 @@ export default function SignUpForm({ setSignType, onClose }: SignUpFormProps) {
     return (
         <form className={styles.form} onSubmit={handleSubmit(onSubmitHandler)}>
             <div className={styles.fields}>
-                <Field placeholder="Username" {...register("username")} />
-                <Field placeholder="Email" type="email" {...register("email")} />
-                <Field placeholder="Password" type="password" {...register("password")} />
+                <Field required placeholder="Username" {...register("username")} />
+                <Field required placeholder="Email" type="email" {...register("email")} />
+                <Field required placeholder="Password" type="password" {...register("password")} />
             </div>
             <button className={styles.switch} onClick={() => setSignType("signin")}>
                 Already have an account? <b>Sign in</b></button>
