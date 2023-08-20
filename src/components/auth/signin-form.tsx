@@ -41,12 +41,12 @@ export default function SignInForm({ setSignType, onClose }: SignInFormProps) {
                 <Field hasError={false} helperText={"another custom message here"} required placeholder="Password" type="password" {...register("password")} />
             </div>
             <button className={styles.switch} onClick={() => setSignType("signup")}>
-                No account? <b>Join us</b>
+                Don't have an account? <u>Sign up now</u>
             </button>
             <SignButton
                 type="submit"
                 status={isLoading ? "loading" : isSuccess ? "succeed" : isError ? "failed" : undefined}>
-                Sign in
+                Log In
             </SignButton>
         </form>
     )

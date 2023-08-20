@@ -1,9 +1,10 @@
 .button {
-    padding: var(--8) var(--20);
+    padding: var(--8) var(--16);
     background-color: #ffffff;
     border: none;
-    border-radius: var(--20);
+    border-radius: var(--8);
     outline: none;
+    line-height: 1;
     color: #757575;
     transition: all 0.25s ease;
     box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.084), 0px 2px 3px rgba(0, 0, 0, 0.168);

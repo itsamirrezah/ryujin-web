@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, useEffect, useState } from "react";
+import { ButtonHTMLAttributes } from "react";
 import styles from "./sign-button.module.css";
 
 type SignButtonProps = {

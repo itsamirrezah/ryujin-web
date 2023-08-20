@@ -5,10 +5,10 @@
 }
 
 .field {
-    border: 1px solid #ccc;
-    border-radius: 16px;
-    padding: 16px 3%;
-    padding-bottom: 8px;
+    border: 1px solid #ddd;
+    border-radius: var(--4);
+    padding: var(--20) 2%;
+    padding-bottom: var(--8);
     font-size: var(--16);
     background: #fff;
     position: relative;
@@ -20,26 +20,27 @@
     border: none;
     background: transparent;
     width: 100%;
-    font-size: 16px;
+    font-size: var(--14);
 }
 
 .placeholder {
     position: absolute;
     top: 50%;
-    left: 3%;
-    transform: translate(-3%,-50%);
+    left: 2%;
+    transform: translate(-2%,-50%);
     color: #9A9A9A;
-    text-transform: capitalize;
     transition: all 0.2s;
+    font-size: var(--14);
+    text-transform: uppercase;
+    font-weight: 500;
 }
 
 .field:focus-within .placeholder,
 input:valid ~ .placeholder {
     top: 5%;
-    left: 3%;
-    font-size: 12px;
-    color: #1e4bd1;
-    font-family: var(--font-rubik);
+    left: 2%;
+    font-size: var(--12);
+    color: #8c7569;
     transform: translate(0%,0);
 }
 
@@ -48,12 +49,12 @@ input:valid ~ .placeholder {
     bottom: 0;
     left: 0;
     margin-left: 1%;
-    font-size: 14px;
+    font-size: var(--14);
     display: block;
     z-index: 0;
     transition: all 0.1s;
     transform: translateY(0);
-    color: red;
+    color: #b50706;
     font-family: var(--font-lato);
     visibility: hidden;
 }
@@ -64,5 +65,6 @@ input:valid ~ .placeholder {
 }
 
 .error .placeholder {
-    color: red !important
+    color: #b50706 !important;
+    font-weight: 600;
 }

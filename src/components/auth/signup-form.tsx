@@ -41,15 +41,14 @@ export default function SignUpForm({ setSignType, onClose }: SignUpFormProps) {
                 <Field required placeholder="Username" {...register("username")} />
                 <Field required placeholder="Email" type="email" {...register("email")} />
                 <Field required placeholder="Password" type="password" {...register("password")} />
+                <Field required placeholder="Confirm Password" type="password" {...register("password")} />
             </div>
             <button className={styles.switch} onClick={() => setSignType("signin")}>
-                Already have an account? <b>Sign in</b></button>
-            <p className={styles.terms}>
-                By continuing, you agree to Ryujin’s <a href="#">Terms of Service</a><br />and acknowledge you've read our <a href="#">Privacy Policy</a></p>
+                Already have an account? <u>Sign in</u></button>
             <SignButton
                 type="submit"
                 status={isLoading ? "loading" : isSuccess ? "succeed" : isError ? "failed" : undefined}>
-                Join us
+                Get Started
             </SignButton>
         </form>
     )

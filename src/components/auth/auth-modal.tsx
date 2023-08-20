@@ -2,8 +2,6 @@ import Modal from "@/components/modal/modal"
 import { useAuthContext } from "@/lib/auth"
 import { useGoogleAuth } from "@/lib/service/use-google-auth"
 import { useEffect, useState } from "react"
-import SignButton from "../buttons/sign-button"
-import H2 from "../h/h2"
 import Close from "../icons/close"
 import styles from "./auth-modal.module.css"
 import AuthWithButton from "./auth-with-button"
@@ -31,10 +29,17 @@ export default function AuthModal({ onClose, signOption = "signin" }: AuthModalP
         setSignType(signOption)
     }, [signOption])
 
+    const signupDescription = "Immerse yourself in a world where tactics are paramount. Join us to conquer the arena!"
+    const usernameDescription = "to get started, please create a unique username. Your username will be how other members identify you. Let's begin your journey!"
     return (
         <Modal>
             <div className={styles.container}>
-                <H2>{signType === "signup" ? "Sign Up" : signType === "signin" ? "Sign In" : "Update Profile"}</H2>
+                <div className={styles.title}>
+                    <h2>{signType === "signup" ? "Craft, Clash, Conquer!" : signType === "signin" ? "Sign in" : "Choose Your Username"}</h2>
+                    <p>
+                        {signType === "signup" ? signupDescription : signType === "username" ? usernameDescription : ""}
+                    </p>
+                </div>
                 {signType === "signup" ?
                     <SignUpForm setSignType={setSignTypeHandler} onClose={onClose} /> :
                     signType === "signin" ?

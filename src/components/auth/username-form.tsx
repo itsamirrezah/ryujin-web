@@ -28,12 +28,12 @@ export default function UsernameForm({ userId }: UsernameFormProps) {
     return (
         <form className={styles.form} onSubmit={handleSubmit(onSubmitHandler)}>
             <div className={styles.fields}>
-                <Field required placeholder="Choose a username" {...register("username")} />
+                <Field required placeholder="username" {...register("username")} />
             </div>
             <SignButton
                 type="submit"
                 status={isLoading ? "loading" : isSuccess ? "succeed" : isError ? "failed" : undefined}>
-                Update
+                Continue
             </SignButton>
         </form>
     )
