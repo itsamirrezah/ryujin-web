@@ -18,7 +18,6 @@ export default function SignInForm({ setSignType, onClose }: SignInFormProps) {
         handleSubmit,
         formState: { errors }
     } = useForm<ISignSchema>({ mode: "onBlur", resolver: zodResolver(signInSchema) })
-    console.log({ errors })
     const {
         mutate,
         isLoading,
@@ -36,11 +35,12 @@ export default function SignInForm({ setSignType, onClose }: SignInFormProps) {
     }, [isSuccess])
 
     return (
-        <form className={styles.form} onSubmit={handleSubmit(onSubmitHandler)} noValidate>
+        <form className={styles.form} onSubmit={handleSubmit(onSubmitHandler)} noValidate spellCheck={false}>
             <div className={styles.fields}>
                 <Field
                     required
                     hasError={!!errors.username}
+                    formNoValidate={true}
                     helperText={errors.username?.message}
                     placeholder="Username or Email"
                     {...register("username")}
@@ -54,10 +54,10 @@ export default function SignInForm({ setSignType, onClose }: SignInFormProps) {
                     {...register("password")}
                 />
             </div>
+            {isError && <p className={styles.message}>{error?.message}</p>}
             {!isLoading && <button className={styles.switch} onClick={() => setSignType("signup")}>
                 Don't have an account? <u>Sign up now</u>
             </button>}
-            {isError && <p className={styles.message}>{error?.message}</p>}
             <SignButton
                 disabled={isLoading || isSuccess}
                 type="submit"

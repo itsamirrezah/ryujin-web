@@ -26,7 +26,6 @@ export default function useMutation<T = unknown, R = unknown>(fn: MutationFuncti
             setData(data);
             setIsSuccess(true);
         } catch (err) {
-            console.log({ err })
             if (err instanceof AxiosError) setError(new Error(err.response?.data?.message));
             else setError(new Error("Unknown error"));
         } finally {

@@ -29,7 +29,6 @@
     font-size: var(--14);
     font-family: inherit;
     color: #000000AA;
-    margin-top: var(--12);
 }
 
 .switch > u {
@@ -60,6 +59,7 @@
     flex-direction: column;
     align-items: center;
     gap: var(--24);
+    margin-bottom: var(--12);
 }
 
 .close {
