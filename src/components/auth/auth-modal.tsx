@@ -14,9 +14,9 @@ type AuthModalProps = {
     signOption?: SignOption
 }
 
-export type SignOption = "signin" | "signup" | "username"
+export type SignOption = "signin" | "signup" | "username" | "email"
 
-export default function AuthModal({ onClose, signOption = "signin" }: AuthModalProps) {
+export default function AuthModal({ onClose, signOption = "signup" }: AuthModalProps) {
     const [signType, setSignType] = useState<SignOption>(signOption)
     const { isError, userInfo, googleAuthHandler, isSuccess } = useGoogleAuth()
     const { user } = useAuthContext()
@@ -31,13 +31,19 @@ export default function AuthModal({ onClose, signOption = "signin" }: AuthModalP
 
     const signupDescription = "Immerse yourself in a world where tactics are paramount. Join us to conquer the arena!"
     const usernameDescription = "to get started, please create a unique username. Your username will be how other members identify you. Let's begin your journey!"
+    const emailDescription = "Thank you for joining Ryujin! We've sent a confirmation link to your inbox. Please verify your account by clicking on the verification link we've sent you. We're excited to have you onboard!"
     return (
         <Modal>
             <div className={styles.container}>
                 <div className={styles.title}>
-                    <h2>{signType === "signup" ? "Craft, Clash, Conquer!" : signType === "signin" ? "Sign in" : "Choose Your Username"}</h2>
+                    <h2>
+                        {signType === "signup" ? "Craft, Clash, Conquer!"
+                            : signType === "signin" ? "Sign in"
+                                : signOption === "username" ? "Choose Your Username"
+                                    : "Confirm Your Email"
+                        }</h2>
                     <p>
-                        {signType === "signup" ? signupDescription : signType === "username" ? usernameDescription : ""}
+                        {signType === "signup" ? signupDescription : signType === "username" ? usernameDescription : emailDescription}
                     </p>
                 </div>
                 {signType === "signup" ?
@@ -48,7 +54,7 @@ export default function AuthModal({ onClose, signOption = "signin" }: AuthModalP
                             <UsernameForm userId={user.id} /> :
                             null
                 }
-                {signType !== "username" && (<div className={styles.join}>
+                {(signType === "signup" || signType === "signin") && (<div className={styles.join}>
                     <small> or </small>
                     <AuthWithButton type="button" onClick={() => googleAuthHandler()}>Sign with Google</AuthWithButton>
                 </div>)}

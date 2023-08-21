@@ -30,7 +30,6 @@ export default function useCurrentUser() {
                 SetError(true)
                 setRetry(prev => prev + 1)
             }
-
         }
     }
 
@@ -47,5 +46,5 @@ export default function useCurrentUser() {
         return () => clearInterval(interval)
     }, [error, retry])
 
-    return [user, !!user && !!user.username, setUserHandler, invalidateUser] as const
+    return [user, !!user && !!user.username && !!user.emailConfirmed, setUserHandler, invalidateUser] as const
 }

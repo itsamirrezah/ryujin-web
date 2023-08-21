@@ -1,7 +1,6 @@
 import useRegisterUser from "@/lib/service/use-register-user"
 import { ISignUpSchema, signUpSchema } from "@/lib/validation"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import SignButton from "../buttons/sign-button"
 import { SignOption } from "./auth-modal"
@@ -30,10 +29,6 @@ export default function SignUpForm({ setSignType, onClose }: SignUpFormProps) {
     async function onSubmitHandler(data: ISignUpSchema) {
         await mutate(data)
     }
-
-    useEffect(() => {
-        if (isSuccess) onClose()
-    }, [isSuccess])
 
     return (
         <form className={styles.form} onSubmit={handleSubmit(onSubmitHandler)} noValidate spellCheck={false}>
