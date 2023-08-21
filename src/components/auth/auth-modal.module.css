@@ -29,10 +29,21 @@
     font-size: var(--14);
     font-family: inherit;
     color: #000000AA;
+    margin-top: var(--12);
 }
 
 .switch > u {
     color: #8c7569;
+}
+
+.message {
+    background-color: #B22222;
+    width: 100%;
+    text-align: center;
+    color: #fff;
+    font-weight: 400;
+    padding: var(--12);
+    border-radius: var(--4);
 }
 
 .form {

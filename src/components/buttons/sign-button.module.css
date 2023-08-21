@@ -30,20 +30,28 @@
   border-color: #bbbbbb;
   border-width: 3px;
   border-left-color: #228B2299;
-  padding: var(--20) var(--20);
+  border-radius: var(--40);
+  padding: var(--12) var(--12);
   font-size:0;
   background-color: #ffffff00;
-  animation: rotating 2s 0.25s linear infinite;
+  animation: rotating 1s 0.25s linear infinite;
 }
 
 .succeed {
   background-color: #228B2299;
   border-color: #228B22;
+  color: #fff;
 }
 
 .failed {
-  background-color: #B22222B5;
+  background-color: #B22222;
   border-color: #B22222;
+  color: #fff;
+}
+
+.failed:hover{
+  background-color: #B22222B5;
+  border-color: #B22222B5;
 }
 
 @keyframes rotating {

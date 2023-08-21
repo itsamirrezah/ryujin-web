@@ -13,7 +13,7 @@ const Field = forwardRef<
     return (
         <div className={`${styles.container} ${hasError ? styles.error : ""}`}>
             <label className={styles.field} htmlFor={name}>
-                <input ref={ref} id={name} {...props} />
+                <input ref={ref} id={name} name={name} {...props} />
                 <span className={styles.placeholder}>{placeholder}</span>
             </label>
             <span className={styles.helper}>{helperText}</span>

@@ -1,7 +1,7 @@
 import useSignIn from "@/lib/service/use-signin"
 import { ISignSchema, signInSchema } from "@/lib/validation"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import SignButton from "../buttons/sign-button"
 import { SignOption } from "./auth-modal"
@@ -17,7 +17,8 @@ export default function SignInForm({ setSignType, onClose }: SignInFormProps) {
         register,
         handleSubmit,
         formState: { errors }
-    } = useForm<ISignSchema>({ resolver: zodResolver(signInSchema) })
+    } = useForm<ISignSchema>({ mode: "onBlur", resolver: zodResolver(signInSchema) })
+    console.log({ errors })
     const {
         mutate,
         isLoading,
@@ -35,18 +36,33 @@ export default function SignInForm({ setSignType, onClose }: SignInFormProps) {
     }, [isSuccess])
 
     return (
-        <form className={styles.form} onSubmit={handleSubmit(onSubmitHandler)}>
+        <form className={styles.form} onSubmit={handleSubmit(onSubmitHandler)} noValidate>
             <div className={styles.fields}>
-                <Field hasError={false} helperText="custom error message" required placeholder="Username or Email" {...register("username")} />
-                <Field hasError={false} helperText={"another custom message here"} required placeholder="Password" type="password" {...register("password")} />
+                <Field
+                    required
+                    hasError={!!errors.username}
+                    helperText={errors.username?.message}
+                    placeholder="Username or Email"
+                    {...register("username")}
+                />
+                <Field
+                    hasError={!!errors.password}
+                    helperText={errors.password?.message}
+                    required
+                    placeholder="Password"
+                    type="password"
+                    {...register("password")}
+                />
             </div>
-            <button className={styles.switch} onClick={() => setSignType("signup")}>
+            {!isLoading && <button className={styles.switch} onClick={() => setSignType("signup")}>
                 Don't have an account? <u>Sign up now</u>
-            </button>
+            </button>}
+            {isError && <p className={styles.message}>{error?.message}</p>}
             <SignButton
+                disabled={isLoading || isSuccess}
                 type="submit"
-                status={isLoading ? "loading" : isSuccess ? "succeed" : isError ? "failed" : undefined}>
-                Log In
+                status={isLoading ? "loading" : "normal"}>
+                Login
             </SignButton>
         </form>
     )

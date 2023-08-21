@@ -16,8 +16,20 @@ const signUpSchema: ZodType<ISignUpSchema> = z.object({
 })
 
 const signInSchema: ZodType<ISignSchema> = z.object({
-    username: z.string().min(6).max(20),
-    password: z.string().min(8).max(20)
+    username: z.union([
+        z.string()
+            .trim()
+            .toLowerCase()
+            .min(6, { message: "must contain at least 6 characters" })
+            .max(30, { message: "must contain less than 20 characters" })
+            .regex(/^[a-zA-Z0-9_]+$/, {
+                message: 'can only contain letters, numbers and underscores',
+            }),
+        z.string().email({ message: "enter a valid email" })
+    ]),
+    password: z.string()
+        .min(8, { message: "must contain at least 8 characters" })
+        .max(30, { message: "must contain less than 30 characters" })
 })
 
 const usernameSchema: ZodType<{ username: string }> = z.object({

@@ -1,3 +1,4 @@
+import { AxiosError } from "axios";
 import { useState } from "react";
 
 type MutationFunction<T, R> = (payload: T) => Promise<R>;
@@ -25,7 +26,8 @@ export default function useMutation<T = unknown, R = unknown>(fn: MutationFuncti
             setData(data);
             setIsSuccess(true);
         } catch (err) {
-            if (err instanceof Error) setError(err);
+            console.log({ err })
+            if (err instanceof AxiosError) setError(new Error(err.response?.data?.message));
             else setError(new Error("Unknown error"));
         } finally {
             setIsLoading(false);
