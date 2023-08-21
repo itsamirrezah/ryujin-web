@@ -1,3 +1,4 @@
+import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 
 export type FetchFunction<T> = ({ signal }: { signal: AbortSignal }) => Promise<T>;
@@ -31,8 +32,9 @@ export default function useFetch<T>(
                 const data = await fn({ signal: controller.signal });
                 setData(data);
                 setIsSuccess(true);
+                setError(undefined)
             } catch (err) {
-                if (err instanceof Error) setError(err);
+                if (err instanceof AxiosError) setError(err.response?.data);
             } finally {
                 setIsLoading(false);
             }

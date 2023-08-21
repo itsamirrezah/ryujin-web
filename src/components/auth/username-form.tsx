@@ -19,20 +19,29 @@ export default function UsernameForm({ userId }: UsernameFormProps) {
         formState: { errors }
     } = useForm<{ username: string }>({ resolver: zodResolver(usernameSchema), defaultValues: { username: "" } })
     const username = watch("username")
-    const validateUsername = useValidateUsername(username)
-    const { mutate, isSuccess, isError, isLoading } = useUpdateUsername(userId)
+    const { error, data, isSuccess: validateSuccess } = useValidateUsername(username)
+    const { mutate, isSuccess, isError, isLoading, error: updateError } = useUpdateUsername(userId)
     async function onSubmitHandler(data: { username: string }) {
         await mutate(data)
     }
 
     return (
-        <form className={styles.form} onSubmit={handleSubmit(onSubmitHandler)}>
+        <form className={styles.form} onSubmit={handleSubmit(onSubmitHandler)} spellCheck={false} noValidate>
             <div className={styles.fields}>
-                <Field required placeholder="username" {...register("username")} />
+                <Field
+                    required
+                    hasError={!!error}
+                    hasSuccess={validateSuccess}
+                    helperText={errors.username?.message || error?.message || data?.message}
+                    placeholder="username"
+                    {...register("username")}
+                />
             </div>
+            {isError && <p className={styles.message}>{updateError?.message}</p>}
             <SignButton
+                disabled={!username || !validateSuccess}
                 type="submit"
-                status={isLoading ? "loading" : isSuccess ? "succeed" : isError ? "failed" : undefined}>
+                status={isLoading ? "loading" : "normal"}>
                 Continue
             </SignButton>
         </form>

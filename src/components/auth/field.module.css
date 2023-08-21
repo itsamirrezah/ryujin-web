@@ -59,12 +59,19 @@ input:valid ~ .placeholder {
     visibility: hidden;
 }
 
-.error .helper {
+.error .helper, .success .helper {
     transform: translateY(100%);
     visibility: visible;
+}
+.success .helper {
+    color: rgb(0, 128, 0);
 }
 
 .error .placeholder {
     color: #b50706 !important;
     font-weight: 600;
+}
+
+.success .placeholder {
+    color: rgb(0,128, 0) !important;
 }
