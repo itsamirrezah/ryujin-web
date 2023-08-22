@@ -15,6 +15,7 @@ export default function useCurrentUser() {
 
     function invalidateUser() {
         SetError(false)
+        setUser(undefined)
         getCurrentUser()
     }
 
@@ -34,8 +35,9 @@ export default function useCurrentUser() {
     }
 
     useEffect(() => {
+        if (!!user) return
         getCurrentUser()
-    }, [])
+    }, [user])
 
     useEffect(() => {
         const retryDelay = 100

@@ -1,14 +1,19 @@
 import { z, ZodType } from "zod";
 
-type ISignSchema = {
+type SignSchema = {
     username: string,
     password: string
 }
 
-type ISignUpSchema = {
+type SignUpSchema = {
     email: string,
     confirm: string,
-} & ISignSchema
+} & SignSchema
+
+type UpdateUsernameSchema = {
+    username: string
+}
+
 
 const zUsername = z.string()
     .toLowerCase()
@@ -24,14 +29,14 @@ const zPassword = z.string()
 
 const zEmail = z.string().email({ message: "enter a valid email" })
 
-const signUpSchema: ZodType<ISignUpSchema> = z.object({
+const signUpSchema: ZodType<SignUpSchema> = z.object({
     username: zUsername,
     email: zEmail,
     password: zPassword,
     confirm: z.string(),
 }).refine(({ password, confirm }) => password === confirm, { message: "passwords do not match", path: ["confirm"] })
 
-const signInSchema: ZodType<ISignSchema> = z.object({
+const signInSchema: ZodType<SignSchema> = z.object({
     username: z.union([zUsername, zEmail]),
     password: zPassword
 })
@@ -42,4 +47,4 @@ const usernameSchema: ZodType<{ username: string }> = z.object({
 
 export { signUpSchema, signInSchema, usernameSchema }
 
-export type { ISignUpSchema, ISignSchema }
+export type { SignUpSchema, SignSchema, UpdateUsernameSchema }

@@ -2,7 +2,7 @@ import { AxiosError } from "axios";
 import { useState } from "react";
 
 type MutationFunction<T, R> = (payload: T) => Promise<R>;
-type MutationResult<T, R> = {
+export type MutationResult<T, R> = {
     mutate: (payload: T) => Promise<void>,
     data?: R,
     isSuccess: boolean,

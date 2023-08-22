@@ -1,38 +1,25 @@
-import useSignIn from "@/lib/service/use-signin"
-import { ISignSchema, signInSchema } from "@/lib/validation"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useEffect } from "react"
-import { useForm } from "react-hook-form"
+import { MutationResult } from "@/lib/service/use-mutation"
+import { SigninBody } from "@/lib/service/use-signin"
+import { User } from "@/lib/types/users"
+import { SignSchema } from "@/lib/validation"
+import { UseFormReturn } from "react-hook-form"
 import SignButton from "../buttons/sign-button"
-import { SignOption } from "./auth-modal"
 import styles from "./auth-modal.module.css"
 import Field from "./field"
 
 type SignInFormProps = {
-    setSignType: (option: SignOption) => void
-    onClose: () => void
+    switchSign: () => void
+    form: UseFormReturn<SignSchema>
+    handler: MutationResult<SigninBody, User>
 }
-export default function SignInForm({ setSignType, onClose }: SignInFormProps) {
-    const {
-        register,
-        handleSubmit,
-        formState: { errors }
-    } = useForm<ISignSchema>({ mode: "onBlur", resolver: zodResolver(signInSchema) })
-    const {
-        mutate,
-        isLoading,
-        isSuccess,
-        isError,
-        error
-    } = useSignIn()
 
-    async function onSubmitHandler(data: ISignSchema) {
+export default function SignInForm({ switchSign, form, handler }: SignInFormProps) {
+    const { register, handleSubmit, formState: { errors } } = form
+    const { mutate, isLoading, isSuccess, isError, error } = handler
+
+    async function onSubmitHandler(data: SignSchema) {
         await mutate({ ...data, usernameOrEmail: data.username })
     }
-
-    useEffect(() => {
-        if (isSuccess) onClose()
-    }, [isSuccess])
 
     return (
         <form className={styles.form} onSubmit={handleSubmit(onSubmitHandler)} noValidate spellCheck={false}>
@@ -55,7 +42,7 @@ export default function SignInForm({ setSignType, onClose }: SignInFormProps) {
                 />
             </div>
             {isError && <p className={styles.message}>{error?.message}</p>}
-            {!isLoading && <button className={styles.switch} onClick={() => setSignType("signup")}>
+            {!isLoading && <button type="button" className={styles.switch} onClick={() => switchSign()}>
                 Don't have an account? <u>Sign up now</u>
             </button>}
             <SignButton

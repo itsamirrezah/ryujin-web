@@ -14,8 +14,9 @@ type AuthValues = {
     setUser: (user: User) => void,
     invalidateUser: () => void
     openAuth: () => void
-    closeAuth: () => void
+    closeAuth: () => void,
 }
+
 const AuthContext = createContext({} as AuthValues)
 
 export default function AuthContextProvider({ children }: AuthProps) {
@@ -38,7 +39,7 @@ export default function AuthContextProvider({ children }: AuthProps) {
         <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_AUTH_CLIENT_ID}>
             <AuthContext.Provider value={{ user, isAuth, setUser, invalidateUser, openAuth, closeAuth }}>
                 {children}
-                {isModalShown && <AuthModal onClose={closeAuth} signOption={signOptions} />}
+                <AuthModal onClose={closeAuth} signOption={signOptions} isShown={isModalShown} />
             </AuthContext.Provider>
         </GoogleOAuthProvider>
     )

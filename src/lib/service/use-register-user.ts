@@ -4,16 +4,16 @@ import { User } from "../types/users"
 import { useEffect } from "react";
 import { useAuthContext } from "../auth";
 
-type Body = { username: string, password: string, email: string };
+export type RegisterBody = { username: string, password: string, email: string };
 export default function useRegisterUser() {
-    const { setUser } = useAuthContext()
+    const { setUser, invalidateUser } = useAuthContext()
     const url = `${import.meta.env.VITE_SERVER_BASEURL}/auth`;
-    const mutation = useMutation<Body, User>((data: Body) => axios.post(url, data, { withCredentials: true }).then(res => res.data));
+    const mutation = useMutation<RegisterBody, User>((data: RegisterBody) => axios.post(url, data, { withCredentials: true }).then(res => res.data));
     const { data, isSuccess } = mutation
 
     useEffect(() => {
         if (!data) return
-        setUser(data)
+        invalidateUser()
     }, [isSuccess, data])
     return mutation
 }

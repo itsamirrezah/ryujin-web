@@ -1,32 +1,23 @@
-import useRegisterUser from "@/lib/service/use-register-user"
-import { ISignUpSchema, signUpSchema } from "@/lib/validation"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
+import { MutationResult } from "@/lib/service/use-mutation"
+import { RegisterBody } from "@/lib/service/use-register-user"
+import { User } from "@/lib/types/users"
+import { SignUpSchema } from "@/lib/validation"
+import { UseFormReturn } from "react-hook-form"
 import SignButton from "../buttons/sign-button"
-import { SignOption } from "./auth-modal"
 import styles from "./auth-modal.module.css"
 import Field from "./field"
 
 type SignUpFormProps = {
-    setSignType: (option: SignOption) => void
-    onClose: () => void
+    switchSign: () => void,
+    form: UseFormReturn<SignUpSchema>,
+    handler: MutationResult<RegisterBody, User>
 }
 
-export default function SignUpForm({ setSignType, onClose }: SignUpFormProps) {
-    const {
-        register,
-        handleSubmit,
-        formState: { errors }
-    } = useForm<ISignUpSchema>({ mode: "onBlur", resolver: zodResolver(signUpSchema) })
-    const {
-        mutate,
-        isSuccess,
-        isError,
-        isLoading,
-        error
-    } = useRegisterUser()
+export default function SignUpForm({ switchSign, form, handler }: SignUpFormProps) {
+    const { register, handleSubmit, formState: { errors } } = form
+    const { mutate, isSuccess, isError, isLoading, error } = handler
 
-    async function onSubmitHandler(data: ISignUpSchema) {
+    async function onSubmitHandler(data: SignUpSchema) {
         await mutate(data)
     }
 
@@ -65,7 +56,7 @@ export default function SignUpForm({ setSignType, onClose }: SignUpFormProps) {
                 />
             </div>
             {isError && <p className={styles.message}>{error?.message}</p>}
-            {!isLoading && <button className={styles.switch} onClick={() => setSignType("signin")}>
+            {!isLoading && <button type="button" className={styles.switch} onClick={() => switchSign()}>
                 Already have an account? <u>Sign in</u>
             </button>}
             <SignButton

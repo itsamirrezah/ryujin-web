@@ -7,7 +7,7 @@ import { User } from "../types/users";
 const url = `${import.meta.env.VITE_SERVER_BASEURL}/auth/google`;
 
 export function useGoogleAuth() {
-    const { setUser } = useAuthContext()
+    const { setUser, invalidateUser } = useAuthContext()
     const [userInfo, setUserInfo] = useState<User>()
     const [isError, setError] = useState(false)
     const googleAuthHandler = useGoogleLogin({
@@ -16,7 +16,7 @@ export function useGoogleAuth() {
                 setError(false)
                 const res = await axios.post<User>(url, { access: token.access_token }, { withCredentials: true })
                 setUserInfo(res.data)
-                setUser(res.data)
+                invalidateUser()
             } catch {
                 setError(true)
             }
