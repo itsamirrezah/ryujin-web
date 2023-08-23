@@ -1,19 +1,23 @@
-import { AxiosError } from "axios";
 import { useState } from "react";
 
 type MutationFunction<T, R> = (payload: T) => Promise<R>;
-export type MutationResult<T, R> = {
+
+export type MutationResult<T, R, E> = {
     mutate: (payload: T) => Promise<void>,
     data?: R,
     isSuccess: boolean,
     isLoading: boolean,
-    error?: Error,
+    error?: E,
     isError: boolean
 }
 
-export default function useMutation<T = unknown, R = unknown>(fn: MutationFunction<T, R>): MutationResult<T, R> {
+export default function useMutation<
+    T = unknown,
+    R = unknown,
+    E = unknown
+>(fn: MutationFunction<T, R>): MutationResult<T, R, E> {
     const [data, setData] = useState<R>();
-    const [error, setError] = useState<Error>()
+    const [error, setError] = useState<E>()
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isSuccess, setIsSuccess] = useState<boolean>(false);
 
@@ -26,8 +30,7 @@ export default function useMutation<T = unknown, R = unknown>(fn: MutationFuncti
             setData(data);
             setIsSuccess(true);
         } catch (err) {
-            if (err instanceof AxiosError) setError(new Error(err.response?.data?.message));
-            else setError(new Error("Unknown error"));
+            setError(err as E)
         } finally {
             setIsLoading(false);
         }

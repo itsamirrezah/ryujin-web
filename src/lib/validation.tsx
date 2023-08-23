@@ -17,17 +17,18 @@ type UpdateUsernameSchema = {
 
 const zUsername = z.string()
     .toLowerCase()
-    .min(6, { message: "must contain at least 6 characters" })
-    .max(30, { message: "must contain less than 20 characters" })
+    .min(3, { message: "must contain at least 3 characters" })
+    .max(30, { message: "must contain less than 30 characters" })
     .regex(/^[a-zA-Z0-9_]+$/, {
-        message: 'can only contain letters, numbers and underscores',
+        message: "can only contain letters, numbers and underscores",
     });
 
 const zPassword = z.string()
     .min(8, { message: "must contain at least 8 characters" })
     .max(30, { message: "must contain less than 30 characters" })
 
-const zEmail = z.string().email({ message: "enter a valid email" })
+const zEmail = z.string()
+    .email({ message: "enter a valid email" })
 
 const signUpSchema: ZodType<SignUpSchema> = z.object({
     username: zUsername,
@@ -41,7 +42,7 @@ const signInSchema: ZodType<SignSchema> = z.object({
     password: zPassword
 })
 
-const usernameSchema: ZodType<{ username: string }> = z.object({
+const usernameSchema: ZodType<UpdateUsernameSchema> = z.object({
     username: zUsername
 })
 
