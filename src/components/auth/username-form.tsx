@@ -10,7 +10,7 @@ import Field from "./field"
 
 type UsernameFormProps = {
     form: UseFormReturn<UpdateUsernameSchema>,
-    handler: MutationResult<UpdateUsernameBody, User>
+    handler: MutationResult<UpdateUsernameBody, User, Error>
 }
 
 export default function UsernameForm({ form, handler }: UsernameFormProps) {
@@ -25,7 +25,7 @@ export default function UsernameForm({ form, handler }: UsernameFormProps) {
     }
 
     const hasError = !!error || !!errors.username
-    const helperText = errors.username?.message || error?.message || data?.message
+    const helperText = errors.username?.message || error?.message || `${data?.username} is available`
     return (
         <form className={styles.form} onSubmit={handleSubmit(onSubmitHandler)} spellCheck={false} noValidate>
             <div className={styles.fields}>

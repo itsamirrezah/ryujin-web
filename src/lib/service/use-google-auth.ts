@@ -7,7 +7,7 @@ import { User } from "../types/users";
 const url = `${import.meta.env.VITE_SERVER_BASEURL}/auth/google`;
 
 export function useGoogleAuth() {
-    const { setUser, invalidateUser } = useAuthContext()
+    const { invalidateUser } = useAuthContext()
     const [userInfo, setUserInfo] = useState<User>()
     const [isError, setError] = useState(false)
     const googleAuthHandler = useGoogleLogin({

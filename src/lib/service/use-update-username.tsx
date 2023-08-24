@@ -7,9 +7,10 @@ import { ApiError } from "./types";
 import useMutation from "./use-mutation";
 
 export type UpdateUsernameBody = { username: string };
+
 export default function useUpdateUsername(userId?: string) {
     const { invalidateUser } = useAuthContext()
-    const url = `${import.meta.env.VITE_SERVER_BASEURL}/users/${userId}`;
+    const url = `${import.meta.env.VITE_SERVER_BASEURL}/users/${userId}/username`;
     const mutation = useMutation<UpdateUsernameBody, User, ApiError>(
         (data: UpdateUsernameBody) =>
             axios.put(url, data, { withCredentials: true })

@@ -4,7 +4,6 @@ import { handlerError } from "./consts";
 import useFetch, { FetchFunction } from "./use-fetch";
 
 type Response = {
-    message: string,
     username: string
 }
 

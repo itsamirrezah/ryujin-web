@@ -10,7 +10,7 @@ import Field from "./field"
 type SignUpFormProps = {
     switchSign: () => void,
     form: UseFormReturn<SignUpSchema>,
-    handler: MutationResult<RegisterBody, User>
+    handler: MutationResult<RegisterBody, User, Error>
 }
 
 export default function SignUpForm({ switchSign, form, handler }: SignUpFormProps) {

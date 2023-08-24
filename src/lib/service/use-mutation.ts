@@ -2,7 +2,7 @@ import { useState } from "react";
 
 type MutationFunction<T, R> = (payload: T) => Promise<R>;
 
-export type MutationResult<T, R, E> = {
+export type MutationResult<T, R, E = unknown> = {
     mutate: (payload: T) => Promise<void>,
     data?: R,
     isSuccess: boolean,
