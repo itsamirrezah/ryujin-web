@@ -1,26 +1,29 @@
 import { useGoogleLogin } from "@react-oauth/google"
-import axios from "axios"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useAuthContext } from "../auth";
-import { User } from "../types/users";
+import useVerifyGoogleUser from "./use-verify-google-user";
 
-const url = `${import.meta.env.VITE_SERVER_BASEURL}/auth/google`;
 
 export function useGoogleAuth() {
     const { invalidateUser } = useAuthContext()
-    const [userInfo, setUserInfo] = useState<User>()
-    const [isError, setError] = useState(false)
+    const [accessToken, setAccessToken] = useState<string>("")
+    const verifyGoogleUser = useVerifyGoogleUser()
+
+    useEffect(() => {
+        if (!accessToken) return;
+        verifyGoogleUser.mutate({ access: accessToken })
+    }, [accessToken])
+
+    const { isSuccess } = verifyGoogleUser
+    useEffect(() => {
+        if (!isSuccess) return
+        invalidateUser()
+    }, [isSuccess])
+
     const googleAuthHandler = useGoogleLogin({
-        onSuccess: async (token) => {
-            try {
-                setError(false)
-                const res = await axios.post<User>(url, { access: token.access_token }, { withCredentials: true })
-                setUserInfo(res.data)
-                invalidateUser()
-            } catch {
-                setError(true)
-            }
+        onSuccess: (token) => {
+            setAccessToken(token.access_token)
         }
     })
-    return { isError, userInfo, googleAuthHandler, isSuccess: !!userInfo }
+    return { googleAuthHandler, ...verifyGoogleUser }
 }

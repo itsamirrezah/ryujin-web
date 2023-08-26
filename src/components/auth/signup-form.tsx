@@ -1,3 +1,4 @@
+import { ApiError } from "@/lib/service/types"
 import { MutationResult } from "@/lib/service/use-mutation"
 import { RegisterBody } from "@/lib/service/use-register-user"
 import { User } from "@/lib/types/users"
@@ -10,7 +11,7 @@ import Field from "./field"
 type SignUpFormProps = {
     switchSign: () => void,
     form: UseFormReturn<SignUpSchema>,
-    handler: MutationResult<RegisterBody, User, Error>
+    handler: MutationResult<RegisterBody, User, ApiError>
 }
 
 export default function SignUpForm({ switchSign, form, handler }: SignUpFormProps) {

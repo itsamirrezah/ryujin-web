@@ -1,3 +1,4 @@
+import { ApiError } from "@/lib/service/types"
 import { MutationResult } from "@/lib/service/use-mutation"
 import { UpdateUsernameBody } from "@/lib/service/use-update-username"
 import useValidateUsername from "@/lib/service/use-validate-username"
@@ -10,7 +11,7 @@ import Field from "./field"
 
 type UsernameFormProps = {
     form: UseFormReturn<UpdateUsernameSchema>,
-    handler: MutationResult<UpdateUsernameBody, User, Error>
+    handler: MutationResult<UpdateUsernameBody, User, ApiError>
 }
 
 export default function UsernameForm({ form, handler }: UsernameFormProps) {

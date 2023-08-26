@@ -34,7 +34,7 @@ export default function AuthModal({ onClose, signOption = "signup", isShown }: A
         resolver: zodResolver(usernameSchema),
         defaultValues: { username: "" }
     })
-    const { isError, userInfo, googleAuthHandler, isSuccess } = useGoogleAuth()
+    const { isError, googleAuthHandler, isSuccess } = useGoogleAuth()
     const signInHandler = useSignIn()
     const registerHandler = useRegisterUser()
     const updateUsernameHandler = useUpdateUsername(user?.id)
