@@ -1,16 +1,14 @@
-import { ButtonHTMLAttributes } from "react"
+import SignButton, { SignButtonProps } from "../buttons/sign-button";
 import Google from "../icons/google"
 import styles from "./auth-with-button.module.css"
 
-type AuthWithButtonProps = {
-    children: string
-} & ButtonHTMLAttributes<HTMLButtonElement>;
-
-export default function AuthWithButton({ children, ...rest }: AuthWithButtonProps) {
+export default function AuthWithButton({ children, ...rest }: SignButtonProps) {
+    const status = rest.status
+    const buttonStyles = `${styles.button} ${status === "loading" ? styles.loading : ""}`
     return (
-        <button className={styles.button} {...rest}>
+        <SignButton {...rest} className={buttonStyles}>
             <span className={styles.icon}><Google /></span>
             <span className={styles.text}>{children}</span>
-        </button>
+        </SignButton >
     )
 }

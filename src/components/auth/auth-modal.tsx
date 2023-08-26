@@ -34,7 +34,7 @@ export default function AuthModal({ onClose, signOption = "signup", isShown }: A
         resolver: zodResolver(usernameSchema),
         defaultValues: { username: "" }
     })
-    const { isError, googleAuthHandler, isSuccess } = useGoogleAuth()
+    const { isError, googleAuthHandler, isLoading, isSuccess } = useGoogleAuth()
     const signInHandler = useSignIn()
     const registerHandler = useRegisterUser()
     const updateUsernameHandler = useUpdateUsername(user?.id)
@@ -72,14 +72,17 @@ export default function AuthModal({ onClose, signOption = "signup", isShown }: A
                         form={{ ...updateUsernameForm }}
                         handler={{ ...updateUsernameHandler }} />
                 )}
-                {isGoogleLoginAllowed && (<div className={styles.join}>
-                    <small> or </small>
-                    <AuthWithButton
-                        type="button"
-                        onClick={() => googleAuthHandler()}>
-                        Sign with Google
-                    </AuthWithButton>
-                </div>)}
+                {isGoogleLoginAllowed && (
+                    <div className={styles.join}>
+                        <small> or </small>
+                        <AuthWithButton
+                            status={isLoading ? "loading" : "normal"}
+                            type="button"
+                            onClick={() => googleAuthHandler()}>
+                            Sign with Google
+                        </AuthWithButton>
+                    </div>
+                )}
                 {isClosable && <button className={styles.close} onClick={onClose}>
                     <Close />
                 </button>}
