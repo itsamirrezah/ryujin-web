@@ -29,6 +29,8 @@ export default function useFetch<T, E = unknown>(
             setIsSuccess(false);
             try {
                 const data = await fn({ signal: controller.signal });
+                //FIXME: just a temporary fix
+                if (!data) return;
                 setData(data);
                 setIsSuccess(true);
                 setError(undefined)

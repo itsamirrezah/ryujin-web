@@ -20,10 +20,10 @@ export function useGoogleAuth() {
         invalidateUser()
     }, [isSuccess])
 
-    const googleAuthHandler = useGoogleLogin({
+    const authWithGoogle = useGoogleLogin({
         onSuccess: (token) => {
             setAccessToken(token.access_token)
         }
     })
-    return { googleAuthHandler, ...verifyGoogleUser }
+    return { authWithGoogle, ...verifyGoogleUser }
 }
