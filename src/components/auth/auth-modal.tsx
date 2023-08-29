@@ -1,6 +1,13 @@
 import Modal from "@/components/modal/modal"
 import { useAuthContext } from "@/lib/auth"
-import { signInSchema, SignSchema, SignUpSchema, signUpSchema, UpdateUsernameSchema, usernameSchema } from "@/lib/validation"
+import {
+    signInSchema,
+    SignSchema,
+    SignUpSchema,
+    signUpSchema,
+    UpdateUsernameSchema,
+    usernameSchema
+} from "@/lib/validation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
@@ -24,7 +31,7 @@ export default function AuthModal({ onClose, signOption = "signup", isShown }: A
     const signInForm = useForm<SignSchema>({ mode: "onBlur", resolver: zodResolver(signInSchema) })
     const signUpForm = useForm<SignUpSchema>({ mode: "onBlur", resolver: zodResolver(signUpSchema) })
     const updateUsernameForm = useForm<UpdateUsernameSchema>({
-        mode: "all", resolver: zodResolver(usernameSchema),
+        mode: "onChange", resolver: zodResolver(usernameSchema),
         defaultValues: { username: "" }
     })
     const { user } = useAuthContext()

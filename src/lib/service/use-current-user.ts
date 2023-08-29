@@ -1,52 +1,20 @@
-import axios, { AxiosError } from "axios"
-import { useEffect, useState } from "react"
-import { User } from "../types/users"
+import axios from "axios";
+import { User } from "../types/users";
+import { handlerError } from "./consts";
+import useFetch from "./use-fetch";
 
+const url = `${import.meta.env.VITE_SERVER_BASEURL}/auth`;
 export default function useCurrentUser() {
-    const [user, setUser] = useState<User>()
-    const [error, SetError] = useState<boolean>(false)
-    const [retry, setRetry] = useState(0)
-
-    function setUserHandler(user: User) {
-        setUser(user)
-        SetError(false)
-        setRetry(0)
-    }
+    const { data: user, error, isLoading, isError, isSuccess, refetch } = useFetch<User>(
+        () => axios.get(url, { withCredentials: true })
+            .then(res => res.data)
+            .catch(e => handlerError(e)),
+        { retryOnFailure: 5 }
+    )
 
     function invalidateUser() {
-        SetError(false)
-        setUser(undefined)
-        getCurrentUser()
+        refetch()
     }
 
-    async function getCurrentUser() {
-        const url = `${import.meta.env.VITE_SERVER_BASEURL}/auth`;
-        try {
-            const response = await axios.get<User>(url, { withCredentials: true })
-            setUser(response.data)
-            SetError(false)
-            setRetry(0)
-        } catch (err) {
-            if (!(err instanceof AxiosError) || err.response?.status !== 403) {
-                SetError(true)
-                setRetry(prev => prev + 1)
-            }
-        }
-    }
-
-    useEffect(() => {
-        if (!!user) return
-        getCurrentUser()
-    }, [user])
-
-    useEffect(() => {
-        const retryDelay = 100
-        const retryExponent = 2
-        const retryInterval = retryDelay * Math.pow(retry + 1, retryExponent)
-        if (!error) return;
-        const interval = setInterval(() => getCurrentUser(), retryInterval)
-        return () => clearInterval(interval)
-    }, [error, retry])
-
-    return [user, !!user && !!user.username && !!user.emailConfirmed, setUserHandler, invalidateUser] as const
+    return [user, !!user && !!user.username && !!user.emailConfirmed, invalidateUser] as const
 }

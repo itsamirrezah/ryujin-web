@@ -1,7 +1,7 @@
 import useUpdateUsername from "@/lib/service/use-update-username"
 import useValidateUsername from "@/lib/service/use-validate-username"
 import { UpdateUsernameSchema } from "@/lib/validation"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { UseFormReturn } from "react-hook-form"
 import SignButton from "../buttons/sign-button"
 import styles from "./auth-modal.module.css"
@@ -14,10 +14,15 @@ type UsernameFormProps = {
 }
 
 export default function UsernameForm({ form, userId, setClosable }: UsernameFormProps) {
-    const { register, watch, handleSubmit, formState: { errors, isValidating } } = form
+    const {
+        register,
+        watch,
+        handleSubmit,
+        formState: { errors, isValidating, isValid }
+    } = form
     const { mutate, isSuccess, isLoading, isError, error: updateError } = useUpdateUsername(userId)
     const username = watch("username")
-    const isEnable = !isValidating && !errors.username && username.trim().length > 0
+    const isEnable = !isValidating && isValid
     const { error, data, isSuccess: validateSuccess } = useValidateUsername(username, isEnable)
 
     async function onSubmitHandler(data: UpdateUsernameSchema) {
