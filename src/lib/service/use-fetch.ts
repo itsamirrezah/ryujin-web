@@ -1,9 +1,16 @@
 import { useEffect, useState } from "react";
 
-export type FetchFunction<T> = ({ signal }: { signal: AbortSignal }) => Promise<T>;
+export type FetchFunction<T> = (payload: FetchFunctionPayload) => Promise<T>;
+
+type FetchFunctionPayload = {
+    signal: AbortSignal
+}
+
 type FetchConfig = {
     enabled?: boolean,
+    key?: string,
 }
+
 type FetchResult<T, E> = {
     data?: T,
     isSuccess: boolean,
@@ -14,7 +21,7 @@ type FetchResult<T, E> = {
 
 export default function useFetch<T, E = unknown>(
     fn: FetchFunction<T>,
-    { enabled = true }: FetchConfig
+    { enabled = true, key }: FetchConfig
 ): FetchResult<T, E> {
     const [data, setData] = useState<T>();
     const [error, setError] = useState<E>()
@@ -43,7 +50,7 @@ export default function useFetch<T, E = unknown>(
         if (!enabled) return
         getFetch();
         return () => controller.abort()
-    }, [fn, enabled])
+    }, [key, enabled])
 
     return { data, isSuccess, isLoading, error, isError: !!error };
 }

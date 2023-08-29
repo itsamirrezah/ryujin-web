@@ -8,16 +8,15 @@ type Response = {
     username: string
 }
 
-export default function useValidateUsername(username: string, enable: boolean) {
+export default function useValidateUsername(username: string, enabled: boolean) {
     const url = `${import.meta.env.VITE_SERVER_BASEURL}/users/check-username/${username}`;
-    const request = useCallback<FetchFunction<Response>>(
-        ({ signal }) => axios.get(url, { signal })
-            .then(res => res.data)
-            .catch(e => {
-                if (e instanceof CanceledError) return
-                handlerError(e)
-            }),
-        [username]
-    )
-    return useFetch<Response, ApiError>(request, { enabled: enable })
+    return useFetch<Response, ApiError>(
+        ({ signal }) =>
+            axios.get(url, { signal })
+                .then(res => res.data)
+                .catch(e => {
+                    if (e instanceof CanceledError) return;
+                    handlerError(e)
+                }),
+        { enabled, key: username })
 }
