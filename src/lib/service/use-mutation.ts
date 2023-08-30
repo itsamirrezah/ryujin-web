@@ -12,7 +12,7 @@ export type MutationResult<T, R, E = unknown> = {
 }
 
 export default function useMutation<
-    T = unknown,
+    T = void,
     R = unknown,
     E = unknown
 >(fn: MutationFunction<T, R>): MutationResult<T, R, E> {

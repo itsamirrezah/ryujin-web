@@ -14,12 +14,13 @@ type AuthValues = {
     invalidateUser: () => void
     openAuth: () => void
     closeAuth: () => void,
+    onLogout: (payload: any) => void
 }
 
 const AuthContext = createContext({} as AuthValues)
 
 export default function AuthContextProvider({ children }: AuthProps) {
-    const [user, isAuth, invalidateUser] = useCurrentUser()
+    const [user, isAuth, invalidateUser, onLogout] = useCurrentUser()
     const [isModalShown, setIsModalShown] = useState(false)
     const signOptions = !user ? "signup" : !user.username ? "username" : !user.emailConfirmed ? "email" : undefined
 
@@ -36,7 +37,14 @@ export default function AuthContextProvider({ children }: AuthProps) {
 
     return (
         <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_AUTH_CLIENT_ID}>
-            <AuthContext.Provider value={{ user, isAuth, invalidateUser, openAuth, closeAuth }}>
+            <AuthContext.Provider value={{
+                user,
+                isAuth,
+                invalidateUser,
+                onLogout,
+                openAuth,
+                closeAuth
+            }}>
                 {children}
                 <AuthModal onClose={closeAuth} signOption={signOptions} isShown={isModalShown} />
             </AuthContext.Provider>

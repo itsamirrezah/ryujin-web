@@ -34,6 +34,7 @@ export default function useFetch<T, E = unknown>(
     async function getFetch(conf?: { signal: AbortSignal }): Promise<any> {
         setIsLoading(true);
         setError(undefined);
+        setData(undefined);
         setIsSuccess(false);
         try {
             const data = await fn({ signal: conf?.signal });

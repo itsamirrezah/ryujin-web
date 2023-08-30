@@ -1,9 +1,11 @@
+import { useAuthContext } from "@/lib/auth"
 import LogoPrimary from "../icons/logo-primary"
 import NavItems from "../navigation/nav-items"
 import styles from "./header.module.css"
 
 
-export default function Header(){
+export default function Header() {
+    const { isAuth, onLogout } = useAuthContext()
 
     return (
         <header className={styles.container}>
@@ -15,7 +17,7 @@ export default function Header(){
                     <NavItems />
                 </ul>
             </nav>
-            <div className={styles.user}>User-Profile</div>
+            {isAuth && (<div className={styles.user}><button onClick={onLogout}>Logout</button></div>)}
         </header>
     )
 }
