@@ -4,7 +4,7 @@
 }
 
 .left {
-    margin-right: -96px;
+    margin-right: -80px;
     z-index: 1;
 }
 
@@ -13,5 +13,5 @@
 }
 
 .left > svg, .right > svg {
-    width: var(--256);
+    width: var(--224);
 }

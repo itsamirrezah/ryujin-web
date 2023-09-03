@@ -1,7 +1,5 @@
 import PlayButton from "@/components/buttons/play-button"
-import H2 from "@/components/home/h2"
 import Masters from "@/components/home/masters"
-import Ryujin from "@/components/home/ryujin"
 import { useAuthContext } from "@/lib/auth"
 import { useNavigate } from "@tanstack/router"
 import styles from "./home.module.css"
@@ -11,20 +9,15 @@ export default function HomePage() {
     const { isAuth, openAuth } = useAuthContext()
 
     return (
-        <>
-            <div className={styles.main}>
-                <div className={styles.logo}>
-                    <Ryujin />
-                    <H2>Play online and challenge your friends</H2>
-                </div>
-                <div className={styles.get_started}>
-                    <Masters />
-                    <PlayButton onClick={() => !isAuth ? openAuth() : navigate({ to: '/play' })}>Play Now</PlayButton>
-                </div>
-            </div>
+        <div className={styles.container}>
             <div>
-                <h1>Section 2</h1>
+                <div>
+                    <Masters />
+                    <h2 className={styles.title}>Ryujin</h2>
+                </div>
+                <p className={styles.description}>Welcome to the captivating world of Ryujin, a strategic board game that will challenge your tactical prowess and strategic brilliance! Set on a beautifully designed 5x5 board, Ryujin pits two players against each other, each commanding a skilled master and their four devoted students. With every turn, players select cards that dictate the movements of their pieces, offering a seamless blend of strategy and anticipation. Your objective? Either seize your opponent's temple in a thrilling conquest or eliminate all their pieces to claim victory. Ryujin beckons you to unleash your inner martial artist and outmaneuver your adversary in this thrilling game of wits and skill. Are you ready to become a true master of Ryujin?</p>
+                <PlayButton onClick={() => !isAuth ? openAuth() : navigate({ to: '/play' })}>Play Now</PlayButton>
             </div>
-        </>
+        </div>
     )
 }

@@ -88,9 +88,7 @@
 .green::before {
   background: #32CD3255;
 }
-
-.ocean { 
-  background-color: #4682B4;
+.ocean { background-color: #4682B4;
   border-color: #4682B4;
   color: #FFFFFF
 }
@@ -102,14 +100,28 @@
 }
 
 .navy {
-  background-color: #001F3FCC;
-  border-color: #001F3F;
+  background-color: #001F3F99;
+  border-color: #001F3FAA;
   color: #ffffff
 }
 
 .navy:hover {
-  background: #4169E1;
+  background: #001F3FBB;
 }
 .navy::before {
   background: #001F3F55;
+}
+
+.redtogreen {
+  background: linear-gradient(90.84deg, #C00C0CBB -40%, #009886BB 140%);
+  border-color: #001F3FAA;
+  border: 0;
+}
+
+.redtogreen:hover {
+  background: linear-gradient(90.84deg, #C00C0CFF -40%, #009886FF 140%);
+}
+
+.redtogreen::before {
+  background: linear-gradient(90.84deg, #C00C0C55 -40%, #00988655 140%);
 }
