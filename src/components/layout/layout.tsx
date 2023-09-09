@@ -14,7 +14,7 @@ export default function Layout() {
     return (
         <div className={`${styles.container} ${pageStyle}`}>
             <Header />
-            <main><Outlet /></main>
+            <Outlet />
             <Footer />
         </div>
     )

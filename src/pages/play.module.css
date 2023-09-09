@@ -1,39 +1,43 @@
 .main {
-    margin-top: var(--176);
+    margin-top: var(--48);
+    margin-bottom: var(--48);
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .game {
     display: grid;
-    grid-template-rows: 1fr;
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: minmax(100px,1fr) [board] minmax(40vh,75vh) [side] max-content minmax(100px,1fr);
+    grid-template-rows: 75vh;
+    gap: var(--16);
     align-items: center;
-    justify-items: center;
-    gap: 6%;
-    margin: 0 6%;
 }
 
-.boardlyt{
-    max-width: 666px;
-    min-width: 333px;
-    width: 100%;
+.boardlyt {
     position: relative;
+    aspect-ratio: 1/1;
+    grid-column: board / side;
 }
 
-.side{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
+.side {
+    grid-column: side / span 1;
+}
+.sideoptions {
+        display: flex;
+        flex-direction: column;
+        gap: var(--8);
 }
 
 .cards {
-    height: 100%;
     display: grid;
-    grid-template-rows: repeat(3,1fr);
+    grid-template-rows: repeat(2,1fr);
     grid-template-columns: 1fr;
     align-items: center;
     justify-items: center;
+    grid-column: side / span 1;
+    height: 100%;
 }
 
 .cardsuser {

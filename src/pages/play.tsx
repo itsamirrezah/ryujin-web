@@ -1,5 +1,4 @@
 import { usePlay } from "@/lib/play/play-context";
-import RoundButton from "@/components/round-button/round-button";
 import styles from "./play.module.css";
 import Card from "@/components/card/card";
 import SelfPlayerInfo from "@/components/play/self-player-info";
@@ -11,6 +10,7 @@ import OpponentCards from "@/components/play/opponentCards";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "@tanstack/router";
 import GameOverModal from "@/components/play/game-over-modal";
+import PlayButton from "@/components/buttons/play-button";
 
 export default function PlayPage() {
     const {
@@ -46,29 +46,30 @@ export default function PlayPage() {
     return (
         <div className={styles.main}>
             <div className={styles.game}>
-                <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                <div className={styles.boardlyt}>
                     <OpponentPlayerInfo />
-                    <div className={styles.boardlyt}>
-                        <PlayBoard />
-                        {isGameOver && <GameOverModal />}
-                    </div>
+                    <PlayBoard />
                     <SelfPlayerInfo />
                     {hasNoMoves && <button style={{ color: "#fff", padding: 4 }} onClick={onPass}>Pass Turn</button>}
+                    {isGameOver && <GameOverModal />}
                 </div>
-                <div className={styles.side}>
-                    {!hasRoom && !isGameStarted && <RoundButton onClick={() => joinRoom()}>Random</RoundButton>}
-                    {!hasRoom && !isGameStarted && <RoundButton onClick={createRoom}>With Friends</RoundButton>}
-                    {isGameStarted && <div className={styles.cards}>
-                        <div className={styles.cardsuser}>
-                            <OpponentCards />
+                {!hasRoom && !isGameStarted && (
+                    <div className={styles.side}>
+                        <div className={styles.sideoptions}>
+                            {!hasRoom && !isGameStarted && <PlayButton onClick={() => joinRoom()}>New Opponent</PlayButton>}
+                            {!hasRoom && !isGameStarted && <PlayButton onClick={createRoom}>With Friends</PlayButton>}
                         </div>
-                        <Card />
-                        <div className={styles.cardsuser}>
-                            <SelfCards />
-                        </div>
-                        {isPlaying && <button style={{ backgroundColor: "#fff" }} onClick={onResign}>Resign</button>}
-                    </div>}
-                </div>
+                    </div>
+                )}
+                {isGameStarted && <div className={styles.cards}>
+                    <div className={styles.cardsuser}>
+                        <OpponentCards />
+                    </div>
+                    <div className={styles.cardsuser}>
+                        <SelfCards />
+                    </div>
+                    {isPlaying && <button style={{ backgroundColor: "#fff" }} onClick={onResign}>Resign</button>}
+                </div>}
             </div>
         </div>
     )
