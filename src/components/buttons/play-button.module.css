@@ -1,6 +1,6 @@
 .button {
   position: relative;
-  padding: var(--8) var(--28);
+  padding: 2% 6%;
   line-height: var(--40);
   font-family: var(--font-rubik);
   font-size: var(--24);
@@ -8,13 +8,12 @@
   color: #f3f3f3; 
   font-weight: 600;
   border-radius: var(--12);
-  border-width: 2px;
-  border-style: solid;
-  border-color: #009886;
   text-transform: uppercase;
   outline: none;
   transform-style: preserve-3d;
   transition: transform 150ms cubic-bezier(0, 0, 0.58, 1), background 150ms cubic-bezier(0, 0, 0.58, 1);
+  border: 0;
+  min-width: max-content;
 }
 
 
@@ -114,8 +113,6 @@
 
 .redtogreen {
   background: linear-gradient(90.84deg, #C00C0CBB -40%, #009886BB 140%);
-  border-color: #001F3FAA;
-  border: 0;
 }
 
 .redtogreen:hover {

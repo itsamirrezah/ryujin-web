@@ -1,0 +1,53 @@
+.button {
+  padding-left: var(--8);
+  padding-right: var(--8);
+}
+
+.button::before {
+  transform: translate3d(0, 0.2em, -1em);
+}
+
+.button:hover {
+  transform: translate(0, 0.0em);
+}
+
+.button:hover::before {
+  transform: translate3d(0, 0.2em, -1em);
+}
+
+.button:active {
+  transform: translate(0, 0.1em);
+}
+
+.button:active::before {
+  transform: translate3d(0, 0, -1em);
+}
+
+.icon {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.icon > svg {
+    fill: #fff;
+}
+
+.text {
+    display: inline-block;
+    margin-left: var(--8);
+    vertical-align: middle;
+    font-size: var(--20);
+    font-weight: 700;
+}
+
+.navy {
+  background: #00477F;
+  color: #ffffff
+}
+
+.navy:hover {
+  background: #003865;
+}
+.navy::before {
+  background: #001F3F33;
+}
