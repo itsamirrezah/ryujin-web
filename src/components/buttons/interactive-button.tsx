@@ -1,10 +1,10 @@
 import { ButtonHTMLAttributes } from "react";
-import styles from "./sign-button.module.css";
+import styles from "./interactive-button.module.css";
 
-export type SignButtonProps = {
+export type InteractiveButtonProps = {
     status?: "normal" | "loading" | "succeed" | "failed"
 } & ButtonHTMLAttributes<HTMLButtonElement>
 
-export default function SignButton({ status = "normal", className, children, ...rest }: SignButtonProps) {
+export default function InteractiveButton({ status = "normal", className, children, ...rest }: InteractiveButtonProps) {
     return <button className={`${styles.button} ${styles[status]} ${className}`} {...rest}>{children}</button>;
 }

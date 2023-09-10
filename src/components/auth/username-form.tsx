@@ -3,7 +3,7 @@ import useValidateUsername from "@/lib/service/use-validate-username"
 import { UpdateUsernameSchema } from "@/lib/validation"
 import { useEffect } from "react"
 import { UseFormReturn } from "react-hook-form"
-import SignButton from "../buttons/sign-button"
+import InteractiveButton from "../buttons/interactive-button"
 import styles from "./auth-modal.module.css"
 import Field from "./field"
 
@@ -49,12 +49,12 @@ export default function UsernameForm({ form, userId, setClosable }: UsernameForm
                 />
             </div>
             {isError && <p className={styles.message}>{updateError?.message}</p>}
-            <SignButton
+            <InteractiveButton
                 disabled={!username || !validateSuccess}
                 type="submit"
                 status={isLoading ? "loading" : "normal"}>
                 Continue
-            </SignButton>
+            </InteractiveButton>
         </form>
     )
 }

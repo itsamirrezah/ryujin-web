@@ -4,7 +4,7 @@ import useSignIn from "@/lib/service/use-signin"
 import { SignSchema, SignUpSchema } from "@/lib/validation"
 import { useEffect, useState } from "react"
 import { UseFormReturn } from "react-hook-form"
-import SignButton from "../buttons/sign-button"
+import InteractiveButton from "../buttons/interactive-button"
 import { SignOption } from "./auth-modal"
 import styles from "./auth-modal.module.css"
 import AuthWithButton from "./auth-with-button"
@@ -93,12 +93,12 @@ export default function SignForm({ signInForm, signUpForm, signType, switchHandl
                 </button>
             )}
             {!googleSignMutation.isLoading && (
-                <SignButton
+                <InteractiveButton
                     disabled={isPendingAuth}
                     type="submit"
                     status={mutation.isLoading ? "loading" : "normal"}>
                     {signButtonText}
-                </SignButton>
+                </InteractiveButton>
             )}
             {!mutation.isLoading && (
                 <div className={styles.join}>

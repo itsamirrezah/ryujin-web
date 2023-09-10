@@ -1,7 +1,7 @@
 import { usePlay } from "@/lib/play/play-context"
 import { BlackOrWhite, EndGame } from "@/lib/play/types"
 import { useSelector } from "@xstate/react"
-import GameOverButton from "../buttons/game-over-button"
+import GameOverButton from "./game-over-button"
 import LogoSecondary from "../icons/logo-secondary"
 import MasterGreen from "../icons/master-green"
 import MasterRed from "../icons/master-red"

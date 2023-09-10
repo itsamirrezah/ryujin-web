@@ -9,7 +9,7 @@ import OpponentCards from "@/components/play/opponentCards";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "@tanstack/router";
 import GameOverModal from "@/components/play/game-over-modal";
-import PlayActionButton from "@/components/buttons/play-action-button";
+import SideBarButton from "@/components/play/side-bar-button";
 import DiceIcon from "@/components/icons/dice";
 import ChainIcon from "@/components/icons/chain";
 
@@ -57,8 +57,8 @@ export default function PlayPage() {
                 {!hasRoom && !isGameStarted && (
                     <div className={styles.side}>
                         <div className={styles.sideoptions}>
-                            {!hasRoom && !isGameStarted && <PlayActionButton icon={<DiceIcon />} onClick={() => joinRoom()}>Quick Match</PlayActionButton >}
-                            {!hasRoom && !isGameStarted && <PlayActionButton icon={<ChainIcon />} onClick={createRoom}>With Friends</PlayActionButton>}
+                            {!hasRoom && !isGameStarted && <SideBarButton icon={<DiceIcon />} onClick={() => joinRoom()}>Quick Match</SideBarButton>}
+                            {!hasRoom && !isGameStarted && <SideBarButton icon={<ChainIcon />} onClick={createRoom}>With Friends</SideBarButton>}
                         </div>
                     </div>
                 )}
