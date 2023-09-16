@@ -70,7 +70,6 @@ export type InvalidMoveResponse = {
 }
 
 export type GameContext = {
-    gameStarted: boolean,
     boardPosition: Position,
     roomId?: string,
     gameId?: string,
@@ -149,7 +148,7 @@ export type Events =
     | UpdateTimeEvent | InvalidMoveEvent | GameOverEvent | FlagRequestEvent
     | REJECT_FLAG | PassEvent | OpponentPassEvent
 
-export type StateOptions = "pregame" | "idle" | "idle.no_moves" | "game_over"
+export type StateOptions = "lobby" | "playing" | "playing.no_moves" | "game_over"
 
 export type State = { value: StateOptions, context: GameContext }
 

@@ -78,7 +78,6 @@ export const startGame = assign((_, e) => {
         opponentRemainingTime: e.time,
         selfTemple: e.selfColor === "w" ? "c1" : "c5",
         opponentTemple: e.selfColor === "w" ? "c5" : "c1",
-        gameStarted: true,
         lastTracked: new Date().getTime()
     }
 }) as ActionFunction<GameContext, GameStartedEvent>

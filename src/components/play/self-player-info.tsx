@@ -4,7 +4,7 @@ import PlayerInfo from "../player-info/player-info"
 
 export default function SelfPlayerInfo() {
     const { ryujinService } = usePlay()
-    const isGameStarted = useSelector(ryujinService, (state) => state.context.gameStarted)
+    const isPlaying = useSelector(ryujinService, (state) => state.matches('playing'))
     const selfRemaining = useSelector(ryujinService, (state) => state.context.selfRemainingTime)
     const selfColor = useSelector(ryujinService, (state) => state.context.selfColor)
     const selfHasTurn = useSelector(ryujinService, (state) => state.context.hasTurn)
@@ -15,9 +15,8 @@ export default function SelfPlayerInfo() {
             name={selfInfo?.username || "You"}
             remainingTime={selfRemaining}
             hasTurn={selfHasTurn}
-            isClockActive={isGameStarted}
+            isClockActive={isPlaying}
             color={selfColor}
         />
     )
-
 }

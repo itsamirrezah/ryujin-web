@@ -4,7 +4,6 @@ import { Events, GameContext, PieceType, SquareType, State } from "./types";
 
 export const ryujinMachine = createMachine<GameContext, Events, State>({
     context: {
-        gameStarted: false,
         boardPosition: DEFAULT_POSITION,
         roomId: undefined,
         gameId: undefined,
@@ -24,9 +23,9 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
         endGame: undefined,
         hasFlagInProgress: false
     },
-    initial: "pregame",
+    initial: "lobby",
     states: {
-        pregame: {
+        lobby: {
             on: {
                 PLAYER_JOIN: {
                     actions: assign({
@@ -35,14 +34,14 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
                     })
                 },
                 GAME_STARTED: {
-                    target: "idle",
+                    target: "playing",
                     actions: startGame
                 }
             }
         },
-        idle: {
+        playing: {
             initial: "hasSelfMoves",
-            id: "idle",
+            id: "play",
             states: {
                 hasSelfMoves: {
                     always: [{
@@ -93,7 +92,7 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
                 no_moves: {
                     on: {
                         PASS: {
-                            actions: assign((ctx, e) => ({ hasTurn: false })),
+                            actions: assign(() => ({ hasTurn: false })),
                             target: "normal"
                         },
                         MOVE: undefined,
@@ -129,7 +128,7 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
         game_over: {
             on: {
                 GAME_STARTED: {
-                    target: "idle",
+                    target: "playing",
                     actions: startGame
                 }
             }

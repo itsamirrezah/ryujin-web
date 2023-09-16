@@ -21,11 +21,11 @@ export default function PlayPage() {
         createRoom,
         ryujinService
     } = usePlay()
-    const isGameStarted = useSelector(ryujinService, (state) => state.context.gameStarted)
-    const isPlaying = useSelector(ryujinService, (state) => state.matches('idle'))
+    const isPlaying = useSelector(ryujinService, (state) => state.matches('playing'))
+    const isLobby = useSelector(ryujinService, (state) => state.matches('lobby'))
     const isGameOver = useSelector(ryujinService, (state) => state.matches('game_over'))
     const roomId = useSelector(ryujinService, (state) => state.context.roomId)
-    const hasNoMoves = useSelector(ryujinService, (state) => state.matches('idle.no_moves'))
+    const hasNoMoves = useSelector(ryujinService, (state) => state.matches('playing.no_moves'))
     const navigate = useNavigate()
     const param = useParams()
     const hasRoom = !!roomId
@@ -54,15 +54,15 @@ export default function PlayPage() {
                     {hasNoMoves && <button style={{ color: "#fff", padding: 4 }} onClick={onPass}>Pass Turn</button>}
                     {isGameOver && <GameOverModal />}
                 </div>
-                {!hasRoom && !isGameStarted && (
+                {isLobby && (
                     <div className={styles.side}>
                         <div className={styles.sideoptions}>
-                            {!hasRoom && !isGameStarted && <SideBarButton icon={<DiceIcon />} onClick={() => joinRoom()}>Quick Match</SideBarButton>}
-                            {!hasRoom && !isGameStarted && <SideBarButton icon={<ChainIcon />} onClick={createRoom}>With Friends</SideBarButton>}
+                            <SideBarButton icon={<DiceIcon />} onClick={() => joinRoom()}>Quick Match</SideBarButton>
+                            <SideBarButton icon={<ChainIcon />} onClick={createRoom}>With Friends</SideBarButton>
                         </div>
                     </div>
                 )}
-                {isGameStarted && <div className={styles.cards}>
+                {isPlaying && <div className={styles.cards}>
                     <div className={styles.cardsuser}>
                         <OpponentCards />
                     </div>

@@ -5,13 +5,12 @@ import PlayerInfo from "../player-info/player-info"
 
 export default function OpponentPlayerInfo() {
     const { ryujinService, onFlag } = usePlay()
-    const isGameStarted = useSelector(ryujinService, (state) => state.context.gameStarted)
     const opponentRemaining = useSelector(ryujinService, (state) => state.context.opponentRemainingTime)
     const opponentColor = useSelector(ryujinService, (state) => state.context.selfColor === "w" ? "b" : "w")
     const opponentHasTurn = useSelector(ryujinService, (state) => !state.context.hasTurn)
     const opponentInfo = useSelector(ryujinService, (state) => state.context.playersInfo?.opponent)
     const hasFlagInProgress = useSelector(ryujinService, (state) => state.context.hasFlagInProgress)
-    const isPlaying = useSelector(ryujinService, (state) => state.matches('idle'))
+    const isPlaying = useSelector(ryujinService, (state) => state.matches('playing'))
 
     useEffect(() => {
         if (hasFlagInProgress || opponentRemaining > 0 || !isPlaying) return
@@ -23,7 +22,7 @@ export default function OpponentPlayerInfo() {
             name={opponentInfo?.username || "Opponent"}
             remainingTime={opponentRemaining}
             hasTurn={opponentHasTurn}
-            isClockActive={isGameStarted}
+            isClockActive={isPlaying}
             color={opponentColor}
         />
     )
