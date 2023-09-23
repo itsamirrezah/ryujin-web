@@ -20,7 +20,14 @@ export type OpponentMovePayload = ({
 
 export type JoinRoomPayload = {
     id: string,
+    isPrivate: boolean,
     players: PlayerResponse[]
+}
+
+export type PlayerPayload = {
+    socketId: string,
+    userId: string,
+    username: string
 }
 
 export type GamePayload = {

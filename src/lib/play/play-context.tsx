@@ -23,7 +23,6 @@ const PlayContext = createContext({} as PlayValues);
 export default function PlayContextProvider({ children }: { children: ReactNode }) {
     const ryujinService = useInterpret(ryujinMachine)
     const { send } = ryujinService
-    const roomId = useSelector(ryujinService, (state) => state.context.roomId)
     const gameId = useSelector(ryujinService, (state) => state.context.gameId)
 
     useEffect(() => {
@@ -42,7 +41,7 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
                 else
                     playersInfo.opponent = player
             }
-            send({ type: "PLAYER_JOIN", players: playersInfo, roomId: room.id })
+            send({ type: "PLAYER_JOIN", players: playersInfo, roomInfo: { id: room.id, isPrivate: room.isPrivate } })
         })
 
         socket.on("START_GAME", (game) => {

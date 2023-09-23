@@ -1,7 +1,7 @@
 import PlayNowButton from "@/components/home/play-now-button"
 import Masters from "@/components/home/masters"
 import { useAuthContext } from "@/lib/auth"
-import { useNavigate } from "@tanstack/router"
+import { useNavigate } from "@tanstack/react-router"
 import styles from "./home.module.css"
 
 export default function HomePage() {

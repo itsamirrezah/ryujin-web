@@ -1,12 +1,11 @@
-import { usePlay } from "@/lib/play/play-context";
-import styles from "./play.module.css";
-import SelfPlayerInfo from "@/components/play/self-player-info";
-import OpponentPlayerInfo from "@/components/play/opponent-player-info";
-import PlayBoard from "@/components/play/play-board";
-import { useSelector } from "@xstate/react";
-import GameOverModal from "@/components/play/game-over-modal";
+import { usePlay } from "@/lib/play/play-context"
+import { useSelector } from "@xstate/react"
+import GameOverModal from "./game-over-modal"
+import OpponentPlayerInfo from "./opponent-player-info"
+import PlayBoard from "./play-board"
+import SelfPlayerInfo from "./self-player-info"
 
-export default function PlayPage({ sideBar }: { sideBar: JSX.Element }) {
+export default function Play() {
     const {
         joinRoom,
         onResign,
@@ -54,3 +53,4 @@ export default function PlayPage({ sideBar }: { sideBar: JSX.Element }) {
     )
 }
 
+}

@@ -5,7 +5,7 @@ import { Events, GameContext, PieceType, SquareType, State } from "./types";
 export const ryujinMachine = createMachine<GameContext, Events, State>({
     context: {
         boardPosition: DEFAULT_POSITION,
-        roomId: undefined,
+        roomInfo: undefined,
         gameId: undefined,
         playersInfo: undefined,
         selfColor: undefined,
@@ -30,7 +30,7 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
                 PLAYER_JOIN: {
                     actions: assign({
                         playersInfo: (_, e) => e.players,
-                        roomId: (_, e) => e.roomId
+                        roomInfo: (_, e) => e.roomInfo
                     })
                 },
                 GAME_STARTED: {

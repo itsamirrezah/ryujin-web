@@ -1,4 +1,5 @@
 import { EventFrom, StateFrom } from "xstate";
+import { JoinRoomPayload } from "../socket";
 import { ryujinMachine } from "./ryujin-machine";
 
 export type PieceType = "wP" | "wK" | "bP" | "bK";
@@ -10,10 +11,6 @@ export type SquareType =
     "a1" | "b1" | "c1" | "d1" | "e1"
 export type Position = { [key in SquareType]?: PieceType }
 export type BlackOrWhite = "w" | "b";
-export type RoomResponse = {
-    id: string;
-    players: PlayerResponse[];
-}
 export type PlayerResponse = {
     socketId: string,
     userId: string,
@@ -53,6 +50,8 @@ export type MoveResponse = {
     selectedCard: CardType
 }
 
+export type RoomInfo = Pick<JoinRoomPayload, "id" | "isPrivate">
+
 export type CardType = {
     name: string,
     options: number[],
@@ -69,9 +68,10 @@ export type InvalidMoveResponse = {
     payload: GameResponse
 }
 
+
 export type GameContext = {
     boardPosition: Position,
-    roomId?: string,
+    roomInfo?: RoomInfo,
     gameId?: string,
     playersInfo?: Record<"self" | "opponent", PlayerResponse>
     selfColor?: BlackOrWhite
@@ -93,7 +93,7 @@ export type GameContext = {
 export type PlayerJoinEvent = {
     type: "PLAYER_JOIN",
     players: Record<"self" | "opponent", PlayerResponse>,
-    roomId: string
+    roomInfo: RoomInfo
 }
 
 export type GameStartedEvent = {
