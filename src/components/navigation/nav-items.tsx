@@ -1,4 +1,4 @@
-import { Link, useRouter } from "@tanstack/react-router"
+import { Link, useRouter } from "@tanstack/router"
 import styles from "./nav-items.module.css"
 
 const navItems = [
@@ -8,14 +8,14 @@ const navItems = [
     { title: "About", to: "/about" }
 ] as const
 
-export default function NavItems() {
+export default function NavItems(){
     const router = useRouter()
 
     return (
         <>
             {navItems.map(item => (
                 <li key={item.to}>
-                    <Link to={item.to} className={`${styles.item} ${router.state.location.pathname === item.to ? styles.active : ""}`}>{item.title}</Link>
+                    <Link to={item.to} className={`${styles.item} ${router.state.currentLocation.pathname === item.to ? styles.active: ""}`}>{item.title}</Link>
                 </li>
             ))}
         </>
