@@ -7,7 +7,7 @@ import { useSelector } from "@xstate/react";
 import SelfCards from "@/components/play/selfCards";
 import OpponentCards from "@/components/play/opponentCards";
 import { useEffect } from "react";
-import { useNavigate, useParams } from "@tanstack/router";
+import { useNavigate, useParams } from "@tanstack/react-router";
 import GameOverModal from "@/components/play/game-over-modal";
 import SideBarButton from "@/components/play/side-bar-button";
 import DiceIcon from "@/components/icons/dice";
@@ -27,7 +27,7 @@ export default function PlayPage() {
     const roomId = useSelector(ryujinService, (state) => state.context.roomId)
     const hasNoMoves = useSelector(ryujinService, (state) => state.matches('playing.no_moves'))
     const navigate = useNavigate()
-    const param = useParams()
+    const param = useParams({ from: "/play" })
     const hasRoom = !!roomId
 
     useEffect(() => {

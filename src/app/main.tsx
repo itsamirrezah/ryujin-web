@@ -1,6 +1,6 @@
 import AuthContextProvider from '@/lib/auth'
 import { router } from "@/lib/router"
-import { RouterProvider } from '@tanstack/router'
+import { RouterProvider } from '@tanstack/react-router'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './global.css'

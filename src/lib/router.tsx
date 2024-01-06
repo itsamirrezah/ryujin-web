@@ -2,9 +2,9 @@ import Layout from "@/components/layout/layout";
 import PlayContextProvider from "./play/play-context";
 import HomePage from "@/pages/home";
 import PlayPage from "@/pages/play";
-import { RootRoute, Router, Route } from "@tanstack/router";
+import { Router, Route, RootRoute } from "@tanstack/react-router";
 
-declare module '@tanstack/router' {
+declare module '@tanstack/react-router' {
     interface Register {
         router: typeof router
     }

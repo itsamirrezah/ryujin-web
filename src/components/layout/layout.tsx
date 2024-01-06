@@ -1,13 +1,13 @@
 import Header from "../header/header"
 import styles from "./layout.module.css"
-import { Outlet, useRouter } from "@tanstack/router"
+import { Outlet, useRouterState } from "@tanstack/react-router"
 import Footer from "../footer/footer"
 
 export default function Layout() {
-    const router = useRouter()
+    const state = useRouterState()
 
     let pageStyle = ""
-    const pathname = router.state.currentLocation.pathname
+    const pathname = state.location.pathname
     if (pathname === "/") pageStyle = styles.home
     else if (pathname.startsWith("/play")) pageStyle = styles.play
 
