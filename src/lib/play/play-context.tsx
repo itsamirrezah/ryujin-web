@@ -14,7 +14,7 @@ type PlayValues = {
     onFlag: () => void,
     onResign: () => void,
     onRematch: () => void
-    createRoom: () => void,
+    onInviteFriend: () => void,
     ryujinService: InterpreterFrom<typeof ryujinMachine>
 }
 
@@ -121,12 +121,14 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
     }, [])
 
     function onQuickMatch() {
-        const paylaod = roomId ? { roomId } : undefined
+        // const paylaod = roomId ? { roomId } : undefined
         send({ type: "QUICK_MATCH" })
-        socket.emitWithAck("JOIN_ROOM", paylaod);
+        // socket.emitWithAck("JOIN_ROOM", paylaod);
+        socket.emitWithAck("JOIN_ROOM");
     }
 
-    function createRoom() {
+    function onInviteFriend() {
+        send({ type: "INVITE_FRIEND" })
         socket.emit("CREATE_ROOM")
     }
 
@@ -176,7 +178,7 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
             onFlag,
             onResign,
             onRematch,
-            createRoom,
+            onInviteFriend,
             ryujinService
         }}>
             {children}

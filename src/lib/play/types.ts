@@ -166,7 +166,7 @@ export type Events =
     | REJECT_FLAG | PassEvent | OpponentPassEvent | QuickMatchEvent | InviteFriendEvent
     | OpponentJoinEvent | OpponentJoinFailedEvent
 
-export type StateOptions = "lobby" | "lobby.idle" | "lobby.waitForOpponent" | "lobby.waitForOpponent"
+export type StateOptions = "lobby" | "lobby.idle" | "lobby.waitForOpponent" | "lobby.waitForFriend"
     | "playing" | "playing.no_moves" | "game_over"
 
 export type State = { value: StateOptions, context: GameContext }

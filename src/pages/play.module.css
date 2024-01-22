@@ -20,20 +20,6 @@
     grid-column: board / side;
 }
 
-.side {
-    grid-column: side / span 1;
-    background: #EBD5B433;
-    border-radius: var(--10);
-    padding: 7% 4%;
-    min-width: max-content;
-
-}
-.sideoptions {
-    display: flex;
-    flex-direction: column;
-    gap: var(--12);
-}
-
 .cards {
     display: grid;
     grid-template-rows: repeat(2,1fr);

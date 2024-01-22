@@ -38,26 +38,8 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
                         }
                     }
                 },
-                waitForOpponent: {
-                    on: {
-                        OPPONENT_JOINED: {
-                            target: "#play"
-                        },
-                        OPPONENT_JOINED_FAILED: {
-                            target: "idle"
-                        }
-                    }
-                },
-                waitForFriend: {
-                    on: {
-                        OPPONENT_JOINED: {
-                            target: "idle"
-                        },
-                        OPPONENT_JOINED_FAILED: {
-                            target: "#play"
-                        }
-                    }
-                }
+                waitForOpponent: {},
+                waitForFriend: {}
             },
             on: {
                 PLAYER_JOIN: {
