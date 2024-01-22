@@ -4,9 +4,9 @@ import { Events, GameContext, PieceType, SquareType, State } from "./types";
 
 export const ryujinMachine = createMachine<GameContext, Events, State>({
     context: {
-        boardPosition: DEFAULT_POSITION,
         roomId: undefined,
         gameId: undefined,
+        boardPosition: DEFAULT_POSITION,
         playersInfo: undefined,
         selfColor: undefined,
         hasTurn: false,
@@ -26,6 +26,39 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
     initial: "lobby",
     states: {
         lobby: {
+            initial: "idle",
+            states: {
+                idle: {
+                    on: {
+                        QUICK_MATCH: {
+                            target: "waitForOpponent"
+                        },
+                        INVITE_FRIEND: {
+                            target: "waitForFriend"
+                        }
+                    }
+                },
+                waitForOpponent: {
+                    on: {
+                        OPPONENT_JOINED: {
+                            target: "#play"
+                        },
+                        OPPONENT_JOINED_FAILED: {
+                            target: "idle"
+                        }
+                    }
+                },
+                waitForFriend: {
+                    on: {
+                        OPPONENT_JOINED: {
+                            target: "idle"
+                        },
+                        OPPONENT_JOINED_FAILED: {
+                            target: "#play"
+                        }
+                    }
+                }
+            },
             on: {
                 PLAYER_JOIN: {
                     actions: assign({

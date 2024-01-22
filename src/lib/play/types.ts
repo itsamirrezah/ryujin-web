@@ -90,11 +90,28 @@ export type GameContext = {
     hasFlagInProgress: boolean
 }
 
+export type QuickMatchEvent = {
+    type: "QUICK_MATCH"
+}
+
+export type InviteFriendEvent = {
+    type: "INVITE_FRIEND"
+}
+
+export type OpponentJoinEvent = {
+    type: "OPPONENT_JOINED"
+}
+
+export type OpponentJoinFailedEvent = {
+    type: "OPPONENT_JOINED_FAILED"
+}
+
 export type PlayerJoinEvent = {
     type: "PLAYER_JOIN",
     players: Record<"self" | "opponent", PlayerResponse>,
     roomId: string
 }
+
 
 export type GameStartedEvent = {
     type: "GAME_STARTED",
@@ -146,9 +163,11 @@ export type Events =
     | PlayerJoinEvent | GameStartedEvent | SelectCardEvent | SelectPieceEvent
     | MoveEvent | OpponentMoveEvent | MoveConfirmedEvent | TickEvent
     | UpdateTimeEvent | InvalidMoveEvent | GameOverEvent | FlagRequestEvent
-    | REJECT_FLAG | PassEvent | OpponentPassEvent
+    | REJECT_FLAG | PassEvent | OpponentPassEvent | QuickMatchEvent | InviteFriendEvent
+    | OpponentJoinEvent | OpponentJoinFailedEvent
 
-export type StateOptions = "lobby" | "playing" | "playing.no_moves" | "game_over"
+export type StateOptions = "lobby" | "lobby.idle" | "lobby.waitForOpponent" | "lobby.waitForOpponent"
+    | "playing" | "playing.no_moves" | "game_over"
 
 export type State = { value: StateOptions, context: GameContext }
 

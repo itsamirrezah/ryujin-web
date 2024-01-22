@@ -18,7 +18,7 @@ function stringifyEndgame(gameOver: EndGame, selfColor: BlackOrWhite) {
 }
 
 export default function GameOverModal() {
-    const { ryujinService, onRematch, joinRoom } = usePlay()
+    const { ryujinService, onRematch, onQuickMatch: joinRoom } = usePlay()
     const gameOver = useSelector(ryujinService, (state) => state.context.endGame)
     const selfColor = useSelector(ryujinService, (state) => state.context.selfColor)
     const playerInfo = useSelector(ryujinService, (state) => state.context.playersInfo)

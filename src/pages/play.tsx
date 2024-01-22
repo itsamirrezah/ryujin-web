@@ -9,13 +9,12 @@ import OpponentCards from "@/components/play/opponentCards";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import GameOverModal from "@/components/play/game-over-modal";
-import SideBarButton from "@/components/play/side-bar-button";
-import DiceIcon from "@/components/icons/dice";
+import SideBarButton from "@/components/play/side-bar-button"; import DiceIcon from "@/components/icons/dice";
 import ChainIcon from "@/components/icons/chain";
 
 export default function PlayPage() {
     const {
-        joinRoom,
+        onQuickMatch,
         onResign,
         onPass,
         createRoom,
@@ -30,14 +29,15 @@ export default function PlayPage() {
     const param = useParams({ from: "/play" })
     const hasRoom = !!roomId
 
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            if (!hasRoom && !!param.roomId && roomId !== param.roomId) {
-                joinRoom(param.roomId);
-            }
-        }, 500)
-        return () => clearTimeout(timer)
-    }, [])
+    //FIXME
+    // useEffect(() => {
+    //     const timer = setTimeout(() => {
+    //         if (!hasRoom && !!param.roomId && roomId !== param.roomId) {
+    //             joinRoom(param.roomId);
+    //         }
+    //     }, 500)
+    //     return () => clearTimeout(timer)
+    // }, [])
 
 
     useEffect(() => {
@@ -57,7 +57,7 @@ export default function PlayPage() {
                 {isLobby && (
                     <div className={styles.side}>
                         <div className={styles.sideoptions}>
-                            <SideBarButton icon={<DiceIcon />} onClick={() => joinRoom()}>Quick Match</SideBarButton>
+                            <SideBarButton icon={<DiceIcon />} onClick={() => onQuickMatch()}>Quick Match</SideBarButton>
                             <SideBarButton icon={<ChainIcon />} onClick={createRoom}>With Friends</SideBarButton>
                         </div>
                     </div>

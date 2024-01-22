@@ -6,7 +6,7 @@ import { ryujinMachine } from "./ryujin-machine";
 import { CardType, PieceType, PlayerResponse, SquareType } from "./types";
 
 type PlayValues = {
-    joinRoom: (roomId?: string) => void,
+    onQuickMatch: () => void,
     onCardSelected: (card: CardType) => void,
     onPieceSelected: (piece: PieceType, square: SquareType) => void,
     onMove: (from: SquareType, to: SquareType, selectedCard: CardType) => void,
@@ -32,7 +32,6 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
         }
         socket.on("connect", () => { })
         socket.on("disconnect", () => { })
-
         socket.on("JOIN_ROOM", (room) => {
             let playersInfo = {} as Record<"self" | "opponent", PlayerResponse>
             for (let i = 0; i < room.players.length; i++) {
@@ -121,8 +120,9 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
         }
     }, [])
 
-    function joinRoom(roomId?: string) {
+    function onQuickMatch() {
         const paylaod = roomId ? { roomId } : undefined
+        send({ type: "QUICK_MATCH" })
         socket.emitWithAck("JOIN_ROOM", paylaod);
     }
 
@@ -168,7 +168,7 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
 
     return (
         <PlayContext.Provider value={{
-            joinRoom,
+            onQuickMatch,
             onCardSelected,
             onPieceSelected,
             onMove,
