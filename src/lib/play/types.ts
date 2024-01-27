@@ -98,12 +98,9 @@ export type InviteFriendEvent = {
     type: "INVITE_FRIEND"
 }
 
-export type OpponentJoinEvent = {
-    type: "OPPONENT_JOINED"
-}
-
-export type OpponentJoinFailedEvent = {
-    type: "OPPONENT_JOINED_FAILED"
+export type JoinFriendEvent = {
+    type: "JOIN_FRIEND"
+    roomId: string
 }
 
 export type PlayerJoinEvent = {
@@ -164,9 +161,9 @@ export type Events =
     | MoveEvent | OpponentMoveEvent | MoveConfirmedEvent | TickEvent
     | UpdateTimeEvent | InvalidMoveEvent | GameOverEvent | FlagRequestEvent
     | REJECT_FLAG | PassEvent | OpponentPassEvent | QuickMatchEvent | InviteFriendEvent
-    | OpponentJoinEvent | OpponentJoinFailedEvent
+    | JoinFriendEvent
 
-export type StateOptions = "lobby" | "lobby.idle" | "lobby.waitForOpponent" | "lobby.waitForFriend"
+export type StateOptions = "lobby" | "lobby.idle" | "lobby.waitForOpponent" | "lobby.waitForFriend" | "lobby.joinFriend"
     | "playing" | "playing.no_moves" | "game_over"
 
 export type State = { value: StateOptions, context: GameContext }

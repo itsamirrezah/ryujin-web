@@ -35,11 +35,16 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
                         },
                         INVITE_FRIEND: {
                             target: "waitForFriend"
+                        },
+                        JOIN_FRIEND: {
+                            actions: assign({ roomId: (_, e) => e.roomId }),
+                            target: "joinFriend"
                         }
                     }
                 },
                 waitForOpponent: {},
-                waitForFriend: {}
+                waitForFriend: {},
+                joinFriend: {}
             },
             on: {
                 PLAYER_JOIN: {

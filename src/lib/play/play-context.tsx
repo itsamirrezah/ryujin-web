@@ -6,7 +6,7 @@ import { ryujinMachine } from "./ryujin-machine";
 import { CardType, PieceType, PlayerResponse, SquareType } from "./types";
 
 type PlayValues = {
-    onQuickMatch: () => void,
+    onQuickMatch: (roomId?: string) => void,
     onCardSelected: (card: CardType) => void,
     onPieceSelected: (piece: PieceType, square: SquareType) => void,
     onMove: (from: SquareType, to: SquareType, selectedCard: CardType) => void,
@@ -15,6 +15,7 @@ type PlayValues = {
     onResign: () => void,
     onRematch: () => void
     onInviteFriend: () => void,
+    onJoinFriend: (roomId: string) => void,
     ryujinService: InterpreterFrom<typeof ryujinMachine>
 }
 
@@ -23,7 +24,6 @@ const PlayContext = createContext({} as PlayValues);
 export default function PlayContextProvider({ children }: { children: ReactNode }) {
     const ryujinService = useInterpret(ryujinMachine)
     const { send } = ryujinService
-    const roomId = useSelector(ryujinService, (state) => state.context.roomId)
     const gameId = useSelector(ryujinService, (state) => state.context.gameId)
 
     useEffect(() => {
@@ -120,16 +120,19 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
         }
     }, [])
 
-    function onQuickMatch() {
-        // const paylaod = roomId ? { roomId } : undefined
+    function onQuickMatch(roomId?: string) {
+        const paylaod = roomId ? { roomId } : undefined
         send({ type: "QUICK_MATCH" })
-        // socket.emitWithAck("JOIN_ROOM", paylaod);
-        socket.emitWithAck("JOIN_ROOM");
+        socket.emitWithAck("JOIN_ROOM", paylaod);
     }
 
     function onInviteFriend() {
         send({ type: "INVITE_FRIEND" })
         socket.emit("CREATE_ROOM")
+    }
+
+    function onJoinFriend(roomId: string) {
+        send({ type: "JOIN_FRIEND", roomId })
     }
 
     function onCardSelected(card: CardType) {
@@ -179,6 +182,7 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
             onResign,
             onRematch,
             onInviteFriend,
+            onJoinFriend,
             ryujinService
         }}>
             {children}

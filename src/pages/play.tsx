@@ -7,7 +7,7 @@ import { useSelector } from "@xstate/react";
 import SelfCards from "@/components/play/selfCards";
 import OpponentCards from "@/components/play/opponentCards";
 import { useEffect } from "react";
-import { useNavigate, useParams } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import GameOverModal from "@/components/play/game-over-modal";
 import Lobby from "@/components/play/lobby";
 
@@ -19,25 +19,14 @@ export default function PlayPage() {
     } = usePlay()
     const isPlaying = useSelector(ryujinService, (state) => state.matches('playing'))
     const isGameOver = useSelector(ryujinService, (state) => state.matches('game_over'))
-    const roomId = useSelector(ryujinService, (state) => state.context.roomId)
+    const gameId = useSelector(ryujinService, (state) => state.context.gameId)
     const hasNoMoves = useSelector(ryujinService, (state) => state.matches('playing.no_moves'))
     const navigate = useNavigate()
-    const param = useParams({ from: "/play" })
-    const hasRoom = !!roomId
-    //FIXME
-    // useEffect(() => {
-    //     const timer = setTimeout(() => {
-    //         if (!hasRoom && !!param.roomId && roomId !== param.roomId) {
-    //             joinRoom(param.roomId);
-    //         }
-    //     }, 500)
-    //     return () => clearTimeout(timer)
-    // }, [])
 
-
-    // useEffect(() => {
-    //     if (roomId) navigate({ to: "/play/$roomId", params: { roomId: roomId } })
-    // }, [roomId])
+    useEffect(() => {
+        if (!isPlaying || !gameId) return;
+        navigate({ to: "/play/$gameId", params: { gameId } })
+    }, [isPlaying, gameId])
 
     return (
         <div className={styles.main}>
