@@ -24,7 +24,7 @@ export default function Lobby() {
 
     async function onCopyHandler() {
         if (!roomId) return;
-        const shareLink = `${import.meta.env.VITE_BASE_URL}/join/${roomId}`
+        const shareLink = `${import.meta.env.VITE_BASE_URL}/play?join=${roomId}`
         await navigator.clipboard.writeText(shareLink)
     }
 

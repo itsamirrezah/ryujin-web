@@ -1,10 +1,9 @@
 import Layout from "@/components/layout/layout";
-import PlayContextProvider, { usePlay } from "./play/play-context";
+import PlayContextProvider from "./play/play-context";
 import HomePage from "@/pages/home";
 import PlayPage from "@/pages/play";
-import { Router, Route, RootRoute, redirect, useSearch } from "@tanstack/react-router";
+import { Router, Route, RootRoute, redirect } from "@tanstack/react-router";
 import axios from "axios";
-import { useEffect } from "react";
 
 declare module '@tanstack/react-router' {
     interface Register {
@@ -20,7 +19,7 @@ const indexRoute = new Route({
     component: HomePage
 })
 
-const playRoute = new Route({
+export const playRoute = new Route({
     getParentRoute: () => root,
     path: '/play',
     validateSearch: (search: Record<string, unknown>) => {
@@ -37,7 +36,7 @@ const playRoute = new Route({
             throw redirect({ to: "/play", search: {} })
         }
     },
-    component: () => <PlayContextProvider><WrappedPlay /></PlayContextProvider>
+    component: () => <PlayContextProvider><PlayPage /></PlayContextProvider>
 })
 
 const playRoomRoute = new Route({
@@ -62,15 +61,3 @@ const routeTree = root.addChildren([
 ])
 
 export const router = new Router({ routeTree })
-
-function WrappedPlay() {
-    const { join } = useSearch({ from: playRoute.fullPath })
-    const { onJoinFriend } = usePlay()
-
-    useEffect(() => {
-        if (!join) return;
-        onJoinFriend(join)
-    }, [join])
-
-    return <PlayPage />
-}
