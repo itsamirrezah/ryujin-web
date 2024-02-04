@@ -1,5 +1,6 @@
 import { usePlay } from "@/lib/play/play-context"
 import { useSelector } from "@xstate/react"
+import Card from "../card/card"
 import GameOverModal from "./game-over-modal"
 import Lobby from "./lobby"
 import OpponentPlayerInfo from "./opponent-player-info"
@@ -36,7 +37,7 @@ export default function Play() {
                 <div className={styles.cardsuser}>
                     <SelfCards />
                 </div>
-                {isPlaying && <button style={{ backgroundColor: "#fff" }} onClick={onResign}>Resign</button>}
+                {/*{isPlaying && <button style={{ backgroundColor: "#fff" }} onClick={onResign}>Resign</button>}*/}
             </div>}
         </>
     )

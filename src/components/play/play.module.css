@@ -5,12 +5,13 @@
 }
 
 .cards {
-    display: grid;
-    grid-template-rows: repeat(2,1fr);
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
     align-items: center;
     justify-items: center;
     grid-column: side / span 1;
+    row-gap: 3%;
     height: 100%;
 }
 
