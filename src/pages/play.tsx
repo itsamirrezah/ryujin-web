@@ -28,9 +28,7 @@ export default function PlayPage() {
 
     return (
         <div className={styles.main}>
-            <div className={styles.game}>
-                <Play />
-            </div>
+            <Play />
         </div>
     )
 }

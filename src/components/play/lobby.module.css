@@ -4,10 +4,17 @@
     border-radius: var(--10);
     padding: 7% 4%;
     min-width: max-content;
-
 }
+
 .sideoptions {
     display: flex;
     flex-direction: column;
     gap: var(--12);
+}
+
+@media only screen and (max-device-width: 768px) and (orientation: portrait){
+    .side {
+        grid-row: bottom;
+        grid-column: board;
+    }
 }

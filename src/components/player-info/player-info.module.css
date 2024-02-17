@@ -1,7 +1,7 @@
 .info {
     display: flex;
     justify-content: space-between;
-    font-size: var(--18);
+    font-size: var(--20);
     align-items: center;
     color: #fff;
     font-family: var(--font-marker);

@@ -1,6 +1,13 @@
+.game {
+    display: grid;
+    grid-template-columns: 1fr [board] minmax(30rem, 70vh) [side] minmax(45rem, 1fr) 1fr;
+    gap: var(--32);
+    align-items: center;
+    width: 100%;
+}
+
 .boardlyt {
     position: relative;
-    aspect-ratio: 1/1;
     grid-column: board / side;
 }
 
@@ -8,14 +15,42 @@
     display: flex;
     flex-direction: column;
     justify-content: space-around;
-    align-items: center;
     justify-items: center;
     grid-column: side / span 1;
     row-gap: 3%;
-    height: 100%;
+    align-self: stretch;
 }
 
-.cardsuser {
-    display: flex;
-    gap: 20px;
+.cardmobile {
+    display: none;
+}
+
+@media only screen and (max-width: 1024px) {
+    .game {
+        grid-template-columns: 1fr [board] minmax(min-content, 70vh) [side] minmax(19rem, 1.2fr) 1fr;
+    }
+}
+@media only screen and (max-width: 768px) and (orientation: portrait){
+    .game {
+        grid-template-columns: minmax(0.8rem, 1fr) [board] minmax(min-content,50vh) [side] min-content minmax(0.8rem,1fr);
+        grid-template-rows: [top] minmax(4rem, max-content) [board] 1fr [bottom] minmax(4rem, max-content);
+        gap: 1%;
+    }
+
+    .cardmobile {
+        display: block;
+        grid-column: board;
+    }
+
+    .cardmobile:first-child{
+        grid-row: top;
+    }
+
+    .cardmobile:last-child{
+        grid-row: bottom;
+    }
+
+    .cards {
+        display: none;
+    }
 }

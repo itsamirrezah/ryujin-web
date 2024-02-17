@@ -21,7 +21,10 @@ export default function Play() {
     const hasNoMoves = useSelector(ryujinService, (state) => state.matches('playing.no_moves'))
 
     return (
-        <>
+        <div className={styles.game}>
+            {isPlaying && <div className={styles.cardmobile}>
+                <OpponentCards />
+            </div>}
             <div className={styles.boardlyt}>
                 <OpponentPlayerInfo />
                 <PlayBoard />
@@ -29,16 +32,15 @@ export default function Play() {
                 {hasNoMoves && <button style={{ color: "#fff", padding: 4 }} onClick={onPass}>Pass Turn</button>}
                 {isGameOver && <GameOverModal />}
             </div>
+            {isPlaying && <div className={styles.cardmobile}>
+                <SelfCards />
+            </div>}
             <Lobby />
             {isPlaying && <div className={styles.cards}>
-                <div className={styles.cardsuser}>
-                    <OpponentCards />
-                </div>
-                <div className={styles.cardsuser}>
-                    <SelfCards />
-                </div>
-                {/*{isPlaying && <button style={{ backgroundColor: "#fff" }} onClick={onResign}>Resign</button>}*/}
+                <OpponentCards />
+                <SelfCards />
             </div>}
-        </>
+            {/*{isPlaying && <button style={{ backgroundColor: "#fff" }} onClick={onResign}>Resign</button>}*/}
+        </div>
     )
 }

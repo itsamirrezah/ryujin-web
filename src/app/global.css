@@ -68,7 +68,6 @@
 
 body {
     font-size: var(--16);
-    min-height: 100vh;
     position: relative;
 }
 

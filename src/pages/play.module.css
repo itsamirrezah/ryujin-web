@@ -6,11 +6,3 @@
     justify-content: center;
     align-items: center;
 }
-
-.game {
-    display: grid;
-    grid-template-columns: minmax(100px,1fr) [board] minmax(40vh,70vh) [side] minmax(min-content, 35rem) minmax(100px,1fr);
-    gap: var(--32);
-    align-items: center;
-}
-

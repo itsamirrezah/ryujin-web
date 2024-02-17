@@ -4,7 +4,7 @@
     padding: var(--12);
     border-radius: var(--10);
     display: flex;
-    width: var(--224);
+    width: 50%;
     gap: 2%;
     cursor: pointer;
 }
@@ -48,10 +48,9 @@
     width: 100%;
 }
 
-@media(max-width: 1280px) {
+@media only screen and (max-width: 1024px) {
     .card {
         flex-direction: column;
-        max-width: var(--112);
         padding: var(--4);
     }
     .logo {
@@ -59,7 +58,18 @@
     }
 
     .title {
-        font-size: var(--16);
+        font-size: var(--14);
         flex: 1;
+    }
+}
+
+@media(max-width: 768px) and (orientation: portrait){
+    .card {
+        flex-direction: row;
+    }
+
+    .title {
+        font-size: var(--14);
+        flex: 0 0 60%;
     }
 }

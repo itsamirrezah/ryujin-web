@@ -12,7 +12,7 @@
 .footer > small {
     font-family: var(--font-lato);
     font-size: var(--12);
-    line-height: var(--18);
+    line-height: var(--16);
     text-transform: uppercase;
     letter-spacing: 0.125em;
 }
