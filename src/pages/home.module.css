@@ -5,6 +5,8 @@
     flex: 1;
     color: #eee;
     background: linear-gradient(90.84deg, #C00C0CB0 10.73%, #009886B0 100%);
+    padding-top: var(--48);
+    padding-bottom: var(--48);
 }
 
 .container > div {
@@ -38,4 +40,24 @@
 
 .get_started {
     gap: var(--32)
+}
+
+@media only screen and (max-width: 768px) {
+    .container > div {
+        max-width: unset;
+        padding: 0 7%;
+    }
+    
+    .title {
+        font-size: var(--48);
+    }
+
+    .description {
+        font-size: var(--14);
+        font-weight: 200;
+    }
+
+    .playbtn {
+        width: 100%;
+    }
 }
