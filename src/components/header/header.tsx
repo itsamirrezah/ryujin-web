@@ -4,6 +4,7 @@ import { Link } from "@tanstack/react-router"
 import { useState } from "react"
 import Hamburger from "../icons/hamburger"
 import LogoPrimary from "../icons/logo-primary"
+import SignoutIcon from "../icons/sign-out"
 import styles from "./header.module.css"
 
 
@@ -41,7 +42,11 @@ export default function Header() {
                     ))}
                 </ul>
             </nav>
-            {isAuth && (<div className={styles.user}><button onClick={onLogout}>Logout</button></div>)}
+            {isAuth && (
+                <button className={styles.logout} onClick={onLogout}>
+                    <SignoutIcon />
+                </button>
+            )}
         </header>
     )
 }

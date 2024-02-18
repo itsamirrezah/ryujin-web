@@ -19,15 +19,13 @@
 }
 
 .hamburger > svg {
-        fill: #FFCECE;
+        fill: #fff;
 }
-
-/* .container > nav { */
-/*     flex-grow: 1; */
-/* } */
 
 .navigation {
     display: flex;
+    flex: 1;
+    justify-content: center;
 }
 
 .navigation > ul {
@@ -48,8 +46,12 @@
     color: #ffffff
 }
 
-.user {
-    /* display: none; */
+.logout {
+    width: var(--24);
+}
+
+.logout > svg {
+        fill: #fff
 }
 
 @media only screen and (max-width: 1024px) {
