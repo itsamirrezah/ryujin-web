@@ -1,0 +1,49 @@
+.waitforopponent {
+    color: #fff;
+    font-weight: 700;
+    font-size: var(--20);
+    gap: 2%;
+    text-align: center;
+    font-family: var(--font-rubik);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--8);
+}
+
+.ripple {
+    width: var(--56);
+    height: var(--56);
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translate(0%,-50%);
+}
+
+.cancelbtn {
+    font-size: var(--14);
+    font-family: var(--font-rubik);
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.cancelbtn:hover {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+@media only screen and (max-width: 1024px){
+    .waitforopponent {
+        font-size: var(--14);
+    }
+
+    .ripple {
+        width: var(--36);
+        height: var(--36);
+    }
+}
+
+@media only screen and (max-width: 768px){
+    .waitforopponent {
+        font-size: var(--16);
+        text-align: center;
+    }
+}

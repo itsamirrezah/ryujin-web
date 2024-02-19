@@ -3,7 +3,6 @@
     background: #EBD5B433;
     border-radius: var(--10);
     padding: 7% 4%;
-    min-width: max-content;
 }
 
 .sideoptions {
@@ -12,7 +11,17 @@
     gap: var(--12);
 }
 
-@media only screen and (max-device-width: 768px) and (orientation: portrait){
+.waitforfriend {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    row-gap: var(--8);
+    font-size: var(--14);
+    color: #CCCCCC;
+    font-weight: 500;
+}
+
+@media only screen and (max-width: 768px) and (orientation: portrait){
     .side {
         grid-row: bottom;
         grid-column: board;

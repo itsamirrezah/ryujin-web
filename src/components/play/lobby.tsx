@@ -6,6 +6,10 @@ import SideBarButton from "./side-bar-button";
 import styles from "./lobby.module.css"
 import CopyIcon from "../icons/copy";
 import RocketIcon from "../icons/rocket";
+import Ripple from "../ripple/ripple";
+import { useEffect, useState } from "react";
+import WaitForOpponent from "./wait-for-opponent";
+
 
 export default function Lobby() {
     const {
@@ -37,9 +41,9 @@ export default function Lobby() {
                         <SideBarButton icon={<ChainIcon />} onClick={onInviteFriend}>With Friends</SideBarButton>
                     </>
                 }
-                {isWaitForOpponent && <div>Wait For Opponent </div>}
+                {isWaitForOpponent && <WaitForOpponent />}
                 {isWaitForFriend && (
-                    <div style={{ display: "flex", flexDirection: "column", textAlign: "center", rowGap: 8, fontSize: 14, color: "#CCCCCC", fontWeight: 500 }}>
+                    <div className={styles.waitforfriend}>
                         <SideBarButton onClick={onCopyHandler} icon={<CopyIcon />}>{"Copy Link"}</SideBarButton>
                         <span>Share this link with your friend</span>
                     </div>

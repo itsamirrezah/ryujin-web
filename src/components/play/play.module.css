@@ -27,7 +27,7 @@
 
 @media only screen and (max-width: 1024px) {
     .game {
-        grid-template-columns: 1fr [board] minmax(min-content, 70vh) [side] minmax(19rem, 1.2fr) 1fr;
+        grid-template-columns: 1fr [board] minmax(min-content, 70vh) [side] minmax(21rem, 1.2fr) 1fr;
     }
 }
 @media only screen and (max-width: 768px) and (orientation: portrait){
