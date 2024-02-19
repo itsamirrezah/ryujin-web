@@ -1,20 +1,20 @@
 .info {
     display: flex;
     justify-content: space-between;
-    font-size: var(--20);
     align-items: center;
     color: #fff;
-    font-family: var(--font-marker);
+    font-family: var(--font-mukta);
+    font-weight: 400;
     padding: 0 var(--8);
 }
 
 .clock {
     border-radius: 4px;
     padding: var(--4) var(--8);
-    font-size: 24px;
+    font-size: var(--16);
     font-weight: 600;
     display: flex;
-    gap: 8px;
+    gap: var(--8);
     font-family: var(--font-lato);
     align-items: center;
     opacity: 1;

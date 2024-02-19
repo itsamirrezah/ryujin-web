@@ -77,8 +77,20 @@
 }
 
 .join > small {
-    font-family: inherit;
+    font-family: var(--font-marker) ;
     font-size: var(--12);
     font-style: italic;
     font-weight: 500;
+}
+
+@media only screen and (max-width: 768px){
+    .container {
+        max-width: unset;
+        min-width: unset;
+        height: 100%;
+        overflow: scroll;
+        padding-left: 4%;
+        padding-right: 4%;
+        gap: var(--4);
+    }
 }

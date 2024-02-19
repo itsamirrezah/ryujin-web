@@ -1,6 +1,7 @@
 import { usePlay } from "@/lib/play/play-context"
 import { useSelector } from "@xstate/react"
 import Card from "../card/card"
+import FlagIcon from "../icons/flag"
 import GameOverModal from "./game-over-modal"
 import Lobby from "./lobby"
 import OpponentPlayerInfo from "./opponent-player-info"
@@ -19,10 +20,11 @@ export default function Play() {
     const isPlaying = useSelector(ryujinService, (state) => state.matches('playing'))
     const isGameOver = useSelector(ryujinService, (state) => state.matches('game_over'))
     const hasNoMoves = useSelector(ryujinService, (state) => state.matches('playing.no_moves'))
+    const shouldLoadCards = isPlaying || isGameOver
 
     return (
         <div className={styles.game}>
-            {isPlaying && <div className={styles.cardmobile}>
+            {shouldLoadCards && <div className={styles.cardmobile}>
                 <OpponentCards />
             </div>}
             <div className={styles.boardlyt}>
@@ -32,15 +34,17 @@ export default function Play() {
                 {hasNoMoves && <button style={{ color: "#fff", padding: 4 }} onClick={onPass}>Pass Turn</button>}
                 {isGameOver && <GameOverModal />}
             </div>
-            {isPlaying && <div className={styles.cardmobile}>
+            {shouldLoadCards && <div className={styles.cardmobile}>
                 <SelfCards />
             </div>}
             <Lobby />
-            {isPlaying && <div className={styles.cards}>
+            {shouldLoadCards && <div className={styles.cards}>
                 <OpponentCards />
                 <SelfCards />
             </div>}
-            {/*{isPlaying && <button style={{ backgroundColor: "#fff" }} onClick={onResign}>Resign</button>}*/}
-        </div>
+            {isPlaying && <button style={{ width: "2rem" }} onClick={onResign}>
+                <FlagIcon />
+            </button>}
+        </div >
     )
 }
