@@ -1,5 +1,6 @@
 import AuthModal from "@/components/auth/auth-modal";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import { useNavigate, useRouter } from "@tanstack/react-router";
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import useCurrentUser from "./service/use-current-user";
 import { User } from "./types/users";
@@ -11,6 +12,7 @@ type AuthProps = {
 type AuthValues = {
     user?: User,
     isAuth: boolean,
+    isAuthLoadingDone: boolean
     invalidateUser: () => void
     openAuth: () => void
     closeAuth: () => void,
@@ -20,7 +22,7 @@ type AuthValues = {
 const AuthContext = createContext({} as AuthValues)
 
 export default function AuthContextProvider({ children }: AuthProps) {
-    const [user, isAuth, invalidateUser, onLogout] = useCurrentUser()
+    const [isAuthLoadingDone, user, isAuth, invalidateUser, onLogout] = useCurrentUser()
     const [isModalShown, setIsModalShown] = useState(false)
     const signOptions = !user ? "signup" : !user.username ? "username" : !user.emailConfirmed ? "email" : undefined
 
@@ -32,7 +34,9 @@ export default function AuthContextProvider({ children }: AuthProps) {
     }
 
     useEffect(() => {
-        if (isAuth) closeAuth()
+        if (isAuth) {
+            closeAuth()
+        }
     }, [isAuth])
 
     return (
@@ -40,6 +44,7 @@ export default function AuthContextProvider({ children }: AuthProps) {
             <AuthContext.Provider value={{
                 user,
                 isAuth,
+                isAuthLoadingDone,
                 invalidateUser,
                 onLogout,
                 openAuth,

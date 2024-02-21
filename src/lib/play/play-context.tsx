@@ -2,6 +2,7 @@ import { socket } from "@/lib/socket";
 import { useInterpret, useSelector } from "@xstate/react";
 import { createContext, ReactNode, useContext, useEffect } from "react";
 import { InterpreterFrom } from "xstate";
+import { useAuthContext } from "../auth";
 import { ryujinMachine } from "./ryujin-machine";
 import { CardType, PieceType, PlayerResponse, SquareType } from "./types";
 
@@ -23,13 +24,11 @@ const PlayContext = createContext({} as PlayValues);
 
 export default function PlayContextProvider({ children }: { children: ReactNode }) {
     const ryujinService = useInterpret(ryujinMachine)
+    const { isAuth } = useAuthContext()
     const { send } = ryujinService
     const gameId = useSelector(ryujinService, (state) => state.context.gameId)
 
     useEffect(() => {
-        if (!socket.connected) {
-            socket.connect();
-        }
         socket.on("connect", () => { })
         socket.on("disconnect", () => { })
         socket.on("JOIN_ROOM", (room) => {
@@ -120,15 +119,21 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
         }
     }, [])
 
-    function onQuickMatch(roomId?: string) {
+    useEffect(() => {
+        if (!socket.connected && isAuth) {
+            socket.connect()
+        }
+    }, [isAuth, socket])
+
+    async function onQuickMatch(roomId?: string) {
         const paylaod = roomId ? { roomId } : undefined
+        await socket.emitWithAck("JOIN_ROOM", paylaod);
         send({ type: "QUICK_MATCH" })
-        socket.emitWithAck("JOIN_ROOM", paylaod);
     }
 
-    function onInviteFriend() {
+    async function onInviteFriend() {
+        await socket.emitWithAck("CREATE_ROOM")
         send({ type: "INVITE_FRIEND" })
-        socket.emit("CREATE_ROOM")
     }
 
     function onJoinFriend(roomId: string) {
@@ -183,7 +188,7 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
             onRematch,
             onInviteFriend,
             onJoinFriend,
-            ryujinService
+            ryujinService,
         }}>
             {children}
         </PlayContext.Provider>

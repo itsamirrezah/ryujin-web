@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { User } from "../types/users";
 import { handlerError } from "./consts";
 import useFetch from "./use-fetch";
@@ -7,7 +7,6 @@ import useLogout from "./use-logout";
 
 const url = `${import.meta.env.VITE_SERVER_BASEURL}/auth`;
 export default function useCurrentUser() {
-    const [user, SetUser] = useState<User>()
     const logout = useLogout()
     const { data, error, isLoading, isError, isSuccess, refetch } = useFetch<User>(
         () => axios.get(url, { withCredentials: true })
@@ -15,6 +14,7 @@ export default function useCurrentUser() {
             .catch(e => handlerError(e)),
         { retryOnFailure: 5 }
     )
+    const hasDone = !isLoading && (!!error || !!data)
 
     function invalidateUser() {
         refetch()
@@ -28,16 +28,12 @@ export default function useCurrentUser() {
         refetch()
     }, [logout.isSuccess])
 
-    useEffect(() => {
-        if (isLoading) return;
-        SetUser(data)
-    }, [data, isLoading])
 
     useEffect(() => {
-        if (!user) return;
+        if (!data) return;
         const interval = setTimeout(invalidateUser, 9000)
         return () => clearInterval(interval)
-    }, [user])
+    }, [data])
 
-    return [user, !!user && !!user.username && !!user.emailConfirmed, invalidateUser, onLogout] as const
+    return [hasDone, data, !!data && !!data.username && !!data.emailConfirmed, invalidateUser, onLogout] as const
 }

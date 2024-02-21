@@ -6,9 +6,8 @@ import SideBarButton from "./side-bar-button";
 import styles from "./lobby.module.css"
 import CopyIcon from "../icons/copy";
 import RocketIcon from "../icons/rocket";
-import Ripple from "../ripple/ripple";
-import { useEffect, useState } from "react";
 import WaitForOpponent from "./wait-for-opponent";
+import { useAuthContext } from "@/lib/auth";
 
 
 export default function Lobby() {
@@ -17,6 +16,7 @@ export default function Lobby() {
         onInviteFriend,
         ryujinService
     } = usePlay()
+    const { isAuth, openAuth } = useAuthContext()
     const isIdle = useSelector(ryujinService, (state) => state.matches('lobby.idle'))
     const isWaitForOpponent = useSelector(ryujinService, (state) => state.matches('lobby.waitForOpponent'))
     const isWaitForFriend = useSelector(ryujinService, (state) => state.matches('lobby.waitForFriend'))
@@ -37,8 +37,8 @@ export default function Lobby() {
             <div className={styles.sideoptions}>
                 {isIdle &&
                     <>
-                        <SideBarButton icon={<DiceIcon />} onClick={() => onQuickMatch()}>Quick Match</SideBarButton>
-                        <SideBarButton icon={<ChainIcon />} onClick={onInviteFriend}>With Friends</SideBarButton>
+                        <SideBarButton icon={<DiceIcon />} onClick={() => !isAuth ? openAuth() : onQuickMatch()}>Quick Match</SideBarButton>
+                        <SideBarButton icon={<ChainIcon />} onClick={() => !isAuth ? openAuth() : onInviteFriend()}>With Friends</SideBarButton>
                     </>
                 }
                 {isWaitForOpponent && <WaitForOpponent />}
@@ -48,7 +48,7 @@ export default function Lobby() {
                         <span>Share this link with your friend</span>
                     </div>
                 )}
-                {isJoinFriend && <SideBarButton icon={<RocketIcon />} onClick={() => onQuickMatch(roomId)}>Join Game</SideBarButton>}
+                {isJoinFriend && <SideBarButton icon={<RocketIcon />} onClick={() => !isAuth ? openAuth() : onQuickMatch(roomId)}>Join Game</SideBarButton>}
             </div>
         </div>)
 }
