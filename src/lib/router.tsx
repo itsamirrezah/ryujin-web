@@ -4,6 +4,7 @@ import HomePage from "@/pages/home";
 import PlayPage from "@/pages/play";
 import { Router, Route, RootRoute, redirect } from "@tanstack/react-router";
 import axios from "axios";
+import { z } from "zod";
 
 declare module '@tanstack/react-router' {
     interface Register {
@@ -19,13 +20,14 @@ const indexRoute = new Route({
     component: HomePage
 })
 
+const joinSearchSchema = z.object({
+    join: z.string().optional()
+})
+
 export const playRoute = new Route({
     getParentRoute: () => root,
     path: '/play',
-    validateSearch: (search: Record<string, unknown>) => {
-        if (search.join) return { join: search.join as string || "" }
-        return {}
-    },
+    validateSearch: (search: Record<string, unknown>) => joinSearchSchema.parse(search),
     beforeLoad: async ({ search }) => {
         const { join } = search
         if (!join) return;
