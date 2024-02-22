@@ -17,6 +17,7 @@ type PlayValues = {
     onRematch: () => void
     onInviteFriend: () => void,
     onJoinFriend: (roomId: string) => void,
+    onCancelJoin: () => void,
     ryujinService: InterpreterFrom<typeof ryujinMachine>
 }
 
@@ -136,6 +137,11 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
         send({ type: "INVITE_FRIEND" })
     }
 
+    async function onCancelJoin() {
+        await socket.emitWithAck("CANCEL_JOIN")
+        send({ type: "CANCEL_JOIN" })
+    }
+
     function onJoinFriend(roomId: string) {
         send({ type: "JOIN_FRIEND", roomId })
     }
@@ -189,6 +195,7 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
             onInviteFriend,
             onJoinFriend,
             ryujinService,
+            onCancelJoin
         }}>
             {children}
         </PlayContext.Provider>

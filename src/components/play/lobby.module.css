@@ -3,6 +3,7 @@
     background: #EBD5B433;
     border-radius: var(--10);
     padding: 7% 4%;
+    position: relative;
 }
 
 .sideoptions {
@@ -21,9 +22,28 @@
     font-weight: 500;
 }
 
+.backbtn {
+    width: var(--16);
+    position: absolute;
+    left: 5%;
+    top: 5%
+}
+
+.backbtn > svg {
+    fill: #CCCCCC;
+}
+
+@media only screen and (max-width: 1024px){
+    .side {
+        padding-top: 15%;
+        padding-bottom: 10%;
+    }
+}
+
 @media only screen and (max-width: 768px) and (orientation: portrait){
     .side {
         grid-row: bottom;
         grid-column: board;
+        padding: 7% 4%;
     }
 }

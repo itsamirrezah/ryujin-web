@@ -1,3 +1,4 @@
+import { usePlay } from "@/lib/play/play-context"
 import { useEffect, useState } from "react"
 import Ripple from "../ripple/ripple"
 import styles from "./wait-for-opponent.module.css"
@@ -17,6 +18,7 @@ const waitForOpponentMessages = [
 
 ]
 export default function WaitForOpponent() {
+    const { onCancelJoin } = usePlay()
 
     const [waitForOpponentMsg, setWaitForOpponentMsg] = useState(waitForOpponentMessages[0])
     const [dot, setDot] = useState("")
@@ -43,7 +45,7 @@ export default function WaitForOpponent() {
             <div className={styles.ripple}>
                 <Ripple />
             </div>
-            <button className={styles.cancelbtn}>cancel</button>
+            <button onClick={onCancelJoin} className={styles.cancelbtn}>cancel</button>
         </div>
     )
 }

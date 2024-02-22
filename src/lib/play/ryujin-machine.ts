@@ -56,6 +56,9 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
                 GAME_STARTED: {
                     target: "playing",
                     actions: startGame
+                },
+                CANCEL_JOIN: {
+                    target: "lobby"
                 }
             }
         },

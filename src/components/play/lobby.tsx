@@ -8,13 +8,15 @@ import CopyIcon from "../icons/copy";
 import RocketIcon from "../icons/rocket";
 import WaitForOpponent from "./wait-for-opponent";
 import { useAuthContext } from "@/lib/auth";
+import BackIcon from "../icons/back-icon";
 
 
 export default function Lobby() {
     const {
         onQuickMatch,
         onInviteFriend,
-        ryujinService
+        ryujinService,
+        onCancelJoin
     } = usePlay()
     const { isAuth, openAuth } = useAuthContext()
     const isIdle = useSelector(ryujinService, (state) => state.matches('lobby.idle'))
@@ -44,6 +46,9 @@ export default function Lobby() {
                 {isWaitForOpponent && <WaitForOpponent />}
                 {isWaitForFriend && (
                     <div className={styles.waitforfriend}>
+                        <button onClick={onCancelJoin} className={styles.backbtn}>
+                            <BackIcon />
+                        </button>
                         <SideBarButton onClick={onCopyHandler} icon={<CopyIcon />}>{"Copy Link"}</SideBarButton>
                         <span>Share this link with your friend</span>
                     </div>

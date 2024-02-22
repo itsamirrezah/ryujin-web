@@ -46,7 +46,7 @@ export type AckMovePayload = {
 export type ServerEvents = {
     JOIN_ROOM: (payload: JoinRoomPayload) => void
     START_GAME: (payload: GamePayload) => void
-    OPPONENT_MOVED: (payload: OpponentMovePayload) => void,
+    OPPONENT_MOVED: (payload: OpponentMovePayload) => void
     END_GAME: (payload: EndGamePayload) => void
     ACK_MOVE: (payload: AckMovePayload) => void
     REJ_MOVE: (payload: RejMovePayload) => void
@@ -55,11 +55,12 @@ export type ServerEvents = {
 
 export type ClientEvents = {
     JOIN_ROOM: (payload?: { roomId: string }) => void;
+    CANCEL_JOIN: () => void;
     MOVE: (payload: { playerId: string, gameId: string, from: SquareType, to: SquareType, selectedCard: CardType }) => void;
     OPPONENT_FLAG: (gameId: string) => void;
     RESIGNATION: (payload: { playerId: string, gameId: string }) => void;
-    CREATE_ROOM: () => void,
-    PASS: (payload: { playerId: string, gameId: string }) => void
-    REMATCH: (payload: { playerId: string, gameId: string }) => void
+    CREATE_ROOM: () => void;
+    PASS: (payload: { playerId: string, gameId: string }) => void;
+    REMATCH: (payload: { playerId: string, gameId: string }) => void;
 
 }

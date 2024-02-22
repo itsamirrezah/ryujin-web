@@ -103,6 +103,10 @@ export type JoinFriendEvent = {
     roomId: string
 }
 
+export type CancelJoinEvent = {
+    type: "CANCEL_JOIN",
+}
+
 export type PlayerJoinEvent = {
     type: "PLAYER_JOIN",
     players: Record<"self" | "opponent", PlayerResponse>,
@@ -161,7 +165,7 @@ export type Events =
     | MoveEvent | OpponentMoveEvent | MoveConfirmedEvent | TickEvent
     | UpdateTimeEvent | InvalidMoveEvent | GameOverEvent | FlagRequestEvent
     | REJECT_FLAG | PassEvent | OpponentPassEvent | QuickMatchEvent | InviteFriendEvent
-    | JoinFriendEvent
+    | JoinFriendEvent | CancelJoinEvent
 
 export type StateOptions = "lobby" | "lobby.idle" | "lobby.waitForOpponent" | "lobby.waitForFriend" | "lobby.joinFriend"
     | "playing" | "playing.no_moves" | "game_over"
