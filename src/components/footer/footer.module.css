@@ -2,19 +2,45 @@
     position: absolute;
     bottom: 0;
     width: 100%;
-    background-color: rgba(72, 72, 72, 0.53);
+    background-color: rgba(0, 0, 0, 0.5);
     background-blend-mode: multiply;
-    color: #ffffff;
-    text-align: center;
     padding: var(--4);
+    display: flex;
+    justify-content: center;
+    gap: var(--8);
+    font-family: var(--font-rubik);
 }
 
 .footer > small {
-    font-family: var(--font-lato);
+    color: #ffffff;
     font-size: var(--12);
     line-height: var(--16);
     text-transform: uppercase;
     letter-spacing: 0.125em;
+}
+
+.link {
+    display: flex;
+    gap: var(--4);
+    color: #ccc;
+}
+
+.link:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+.link:hover .icon > svg {
+    fill: #fff;
+}
+
+.icon {
+    width: var(--16);
+    height: var(--16);
+}
+
+.icon > svg {
+    fill: #ccc
 }
 
 @media only screen and (max-width: 1024px) {

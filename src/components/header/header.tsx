@@ -2,6 +2,7 @@ import { useAuthContext } from "@/lib/auth"
 import useOutsideClick from "@/lib/use-outside-click"
 import { Link } from "@tanstack/react-router"
 import { useState } from "react"
+import GithubIcon from "../icons/github-icon"
 import Hamburger from "../icons/hamburger"
 import LogoPrimary from "../icons/logo-primary"
 import SignoutIcon from "../icons/sign-out"
@@ -41,6 +42,12 @@ export default function Header() {
                         </li>
                     ))}
                 </ul>
+                <div className={styles.links}>
+                    <a href="https://github.com/itsamirrezah/ryujin-web" target="_blank" className={styles.link}>
+                        <div className={styles.icon}><GithubIcon /></div>
+                        Github
+                    </a>
+                </div>
             </nav>
             {isAuth && (
                 <button className={styles.logout} onClick={onLogout}>

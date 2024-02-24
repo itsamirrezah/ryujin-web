@@ -30,7 +30,6 @@
 
 .navigation > ul {
     display: flex;
-    justify-content: center;
     gap: var(--28);
 }
 
@@ -54,6 +53,10 @@
         fill: #fff
 }
 
+.links {
+    display: none;
+}
+
 @media only screen and (max-width: 1024px) {
 
     .container {
@@ -75,7 +78,7 @@
         left: 0;
         z-index: 50;
         height: 100%;
-        background: #000;
+        background: #000000CC;
         transform: translateX(-100%);
         transition-property: transform;
         transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
@@ -85,8 +88,7 @@
 
     .navigation {
         flex-direction: column;
-        justify-content: center;
-        align-items: center;
+        justify-content: space-between;
     }
      
     .navigation > ul {
@@ -95,5 +97,32 @@
 
     .navopen {
         transform: translateX(0)
+    }
+
+    .links {
+        display: block;
+    }
+    .link {
+        display: flex;
+        gap: var(--4);
+        color: #ccc;
+    }
+
+    .link:hover {
+        color: #fff;
+        text-decoration: underline;
+    }
+
+    .link:hover .icon > svg {
+        fill: #fff;
+    }
+
+    .icon {
+        width: var(--16);
+        height: var(--16);
+    }
+
+    .icon > svg {
+        fill: #ccc
     }
 }

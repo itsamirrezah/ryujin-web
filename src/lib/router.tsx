@@ -35,7 +35,7 @@ export const playRoute = new Route({
             await axios.get(`${import.meta.env.VITE_SERVER_BASEURL}/play/validate-room/${join}`)
             return;
         } catch {
-            throw redirect({ to: "/play", search: {} })
+            throw redirect({ to: "/play" })
         }
     },
     component: () => <PlayContextProvider><PlayPage /></PlayContextProvider>
@@ -59,7 +59,8 @@ const aboutRoute = new Route({
 const routeTree = root.addChildren([
     indexRoute,
     playRoute.addChildren([playRoomRoute]),
-    rulesRoute, aboutRoute
+    rulesRoute,
+    aboutRoute
 ])
 
 export const router = new Router({ routeTree })
