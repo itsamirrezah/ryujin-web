@@ -73,5 +73,5 @@ export default function useFetch<T, E = unknown>(
         return () => clearTimeout(timeout)
     }, [retry])
 
-    return { data, isSuccess, isLoading, error, isError: !!error, refetch: getFetch };
+    return { data: data, isSuccess, isLoading, error, isError: !!error, refetch: getFetch };
 }

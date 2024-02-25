@@ -23,7 +23,7 @@ export default function UsernameForm({ form, userId, setClosable }: UsernameForm
     const { mutate, isSuccess, isLoading, isError, error: updateError } = useUpdateUsername(userId)
     const username = watch("username")
     const isEnable = !isValidating && isValid
-    const { error, data, isSuccess: validateSuccess } = useValidateUsername(username, isEnable)
+    const { error, data: data, isSuccess: validateSuccess } = useValidateUsername(username, isEnable)
 
     async function onSubmitHandler(data: UpdateUsernameSchema) {
         await mutate(data)

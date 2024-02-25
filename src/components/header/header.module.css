@@ -45,12 +45,16 @@
     color: #ffffff
 }
 
-.logout {
-    width: var(--24);
+.action {
+    width: var(--20);
 }
 
-.logout > svg {
-        fill: #fff
+.action > svg {
+        fill: #ccc
+}
+
+.action:hover > svg {
+    fill: #fff
 }
 
 .links {

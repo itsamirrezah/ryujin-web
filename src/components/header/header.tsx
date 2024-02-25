@@ -6,6 +6,7 @@ import GithubIcon from "../icons/github-icon"
 import Hamburger from "../icons/hamburger"
 import LogoPrimary from "../icons/logo-primary"
 import SignoutIcon from "../icons/sign-out"
+import TriangleExclamation from "../icons/triangle-exclamation"
 import styles from "./header.module.css"
 
 
@@ -17,7 +18,7 @@ const navItems = [
 ] as const
 
 export default function Header() {
-    const { isAuth, onLogout } = useAuthContext()
+    const { isAuth, onLogout, openAuth, user } = useAuthContext()
     const [isNavOpen, setNavOpen] = useState(false)
     const outsideRef = useOutsideClick(() => setNavOpen(false))
 
@@ -50,8 +51,13 @@ export default function Header() {
                 </div>
             </nav>
             {isAuth && (
-                <button className={styles.logout} onClick={onLogout}>
+                <button className={styles.action} onClick={onLogout}>
                     <SignoutIcon />
+                </button>
+            )}
+            {!isAuth && user && (
+                <button className={styles.action} onClick={openAuth}>
+                    <TriangleExclamation />
                 </button>
             )}
         </header>
