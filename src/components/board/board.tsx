@@ -4,9 +4,10 @@ import { BoardContextProvider } from "./board-context"
 import Sqaures from "./squares"
 import { BoardProps } from "./board-context"
 import { useEffect, useRef, useState } from "react"
+import DragLayer from "./drag-layer"
 
 export default function Board(props: Omit<BoardProps, "children" | "boardWidth" | "animationDuration">) {
-    const [boardWidth, setBoardWith] = useState<number>()
+    const [boardWidth, setBoardWith] = useState<number>(0)
     const ref = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
@@ -14,7 +15,7 @@ export default function Board(props: Omit<BoardProps, "children" | "boardWidth" 
         let timer: NodeJS.Timeout
         const resizeObserver = new ResizeObserver(() => {
             if (timer) clearTimeout(timer)
-            timer = setTimeout(() => setBoardWith(ref.current?.offsetWidth), 200)
+            timer = setTimeout(() => ref.current && setBoardWith(ref.current.offsetWidth), 200)
         });
         resizeObserver.observe(ref.current)
         return () => {
@@ -31,6 +32,7 @@ export default function Board(props: Omit<BoardProps, "children" | "boardWidth" 
                 {...props}>
                 <DndProvider backend={HTML5Backend}>
                     <Sqaures />
+                    <DragLayer />
                 </DndProvider>
             </BoardContextProvider>
         </div>

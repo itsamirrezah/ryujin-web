@@ -1,17 +1,10 @@
 import { DEFAULT_POSITION } from "@/lib/play/consts";
 import { BlackOrWhite, PieceType, Position, SquareType } from "@/lib/play/types";
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
-
-type Move = {
-    from: SquareType,
-    to: SquareType
-}
-
-type Coord = { x: number, y: number }
-type Coordinates = { [key in SquareType]?: Coord }
+import { Coord, Coordinates, Move } from "./types";
 
 export type BoardProps = {
-    boardWidth?: number,
+    boardWidth: number,
     animationDuration: number,
     currentPosition?: Position
     currentView?: BlackOrWhite,
@@ -31,7 +24,7 @@ type BoardValues = {
     onPieceDrag: RequiredBoardProps["onPieceDrag"]
     onMoveHandler: (to: SquareType, isDrop?: boolean) => void,
     moveOptions: RequiredBoardProps["moveOptions"],
-    boardWidth?: number,
+    boardWidth: number,
     animationDuration: number,
     selectedSquare?: SquareType,
     nextMove?: Move,

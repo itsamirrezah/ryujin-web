@@ -1,5 +1,6 @@
 import { PieceType, SquareType } from "@/lib/play/types";
 import { CSSProperties, useEffect, useState } from "react";
+import { getEmptyImage } from "react-dnd-html5-backend";
 import { useDrag } from "react-dnd";
 import { useBoard } from "./board-context";
 import { DEFAULT_PIECES, DND_ITEM_TYPE } from "./consts";
@@ -45,17 +46,19 @@ export default function Piece({ piece, square }: PieceProps) {
 
     }, [nextMove])
 
-    const [{ isDragging, canDrag }, ref] = useDrag(() => ({
+    const [{ isDragging, canDrag }, ref, preview] = useDrag(() => ({
         type: DND_ITEM_TYPE,
         item: () => {
             onPieceSelected(piece, square)
-            return { from: square }
+            return { from: square, piece: piece }
         },
         collect: (monitor) => ({
             isDragging: monitor.isDragging(),
             canDrag: isPieceDraggable(piece)
         }),
     }), [piece, isPieceDraggable, onPieceDrag])
+
+    preview(getEmptyImage(), { captureDraggingState: true });
 
     return (
         <div

@@ -1,5 +1,5 @@
 import { SquareType } from "@/lib/play/types"
-import { Dispatch, ReactNode, useEffect, useRef } from "react"
+import { ReactNode, useEffect, useRef } from "react"
 import { useDrop } from "react-dnd"
 import HitOption from "../icons/hit-option"
 import MoveOption from "../icons/move-option"
@@ -7,7 +7,6 @@ import { useBoard } from "./board-context"
 import { DND_ITEM_TYPE } from "./consts"
 import styles from "./square.module.css"
 
-export type DndItem = { from: SquareType };
 
 type SquareProps = {
     square: SquareType,
