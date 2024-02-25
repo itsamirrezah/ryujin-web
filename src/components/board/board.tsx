@@ -5,10 +5,16 @@ import Sqaures from "./squares"
 import { BoardProps } from "./board-context"
 import { useEffect, useRef, useState } from "react"
 import DragLayer from "./drag-layer"
+import { TouchBackend } from "react-dnd-touch-backend"
 
 export default function Board(props: Omit<BoardProps, "children" | "boardWidth" | "animationDuration">) {
     const [boardWidth, setBoardWith] = useState<number>(0)
+    const [isTouchSupport, setIsTouchSupport] = useState(false)
     const ref = useRef<HTMLDivElement>(null)
+
+    useEffect(() => {
+        setIsTouchSupport("ontouchstart" in window || !!window.navigator.maxTouchPoints);
+    }, [])
 
     useEffect(() => {
         if (!ref.current) return;
@@ -30,7 +36,7 @@ export default function Board(props: Omit<BoardProps, "children" | "boardWidth" 
                 boardWidth={boardWidth}
                 animationDuration={300}
                 {...props}>
-                <DndProvider backend={HTML5Backend}>
+                <DndProvider backend={isTouchSupport ? TouchBackend : HTML5Backend}>
                     <Sqaures />
                     <DragLayer />
                 </DndProvider>
