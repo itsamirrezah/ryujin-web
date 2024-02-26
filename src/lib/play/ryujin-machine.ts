@@ -24,6 +24,14 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
         hasFlagInProgress: false
     },
     initial: "lobby",
+    on: {
+        PLAYER_JOIN: {
+            actions: assign({
+                playersInfo: (_, e) => e.players,
+                roomId: (_, e) => e.roomId
+            })
+        },
+    },
     states: {
         lobby: {
             initial: "idle",
@@ -47,12 +55,6 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
                 joinFriend: {}
             },
             on: {
-                PLAYER_JOIN: {
-                    actions: assign({
-                        playersInfo: (_, e) => e.players,
-                        roomId: (_, e) => e.roomId
-                    })
-                },
                 GAME_STARTED: {
                     target: "playing",
                     actions: startGame
@@ -145,7 +147,7 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
                 },
                 REJECT_FLAG: {
                     actions: assign({ hasFlagInProgress: false }),
-                }
+                },
             },
         },
         game_over: {
@@ -153,9 +155,14 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
                 GAME_STARTED: {
                     target: "playing",
                     actions: startGame
+                },
+                QUICK_MATCH: {
+                    target: "lobby.waitForOpponent"
+                },
+                CANCEL_JOIN: {
+                    target: "lobby"
                 }
-            }
+            },
         }
     }
 })
-

@@ -180,6 +180,7 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
     function onRematch() {
         if (!gameId) return
         socket.emit("REMATCH", { playerId: socket.id, gameId })
+        send({ type: "QUICK_MATCH" })
     }
 
     return (

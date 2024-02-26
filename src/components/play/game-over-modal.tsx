@@ -18,7 +18,7 @@ function stringifyEndgame(gameOver: EndGame, selfColor: BlackOrWhite) {
 }
 
 export default function GameOverModal() {
-    const { ryujinService, onRematch, onQuickMatch: joinRoom } = usePlay()
+    const { ryujinService, onRematch, onQuickMatch, onCancelJoin } = usePlay()
     const gameOver = useSelector(ryujinService, (state) => state.context.endGame)
     const selfColor = useSelector(ryujinService, (state) => state.context.selfColor)
     const playerInfo = useSelector(ryujinService, (state) => state.context.playersInfo)
@@ -39,11 +39,18 @@ export default function GameOverModal() {
                     </div>
                     <span>{`${selfPoint} - ${oppPoint}`}</span>
                 </div>
-                <PlayerResult color={selfColor === "w" ? "b" : "w"} name={playerInfo.opponent.username} />
+                <PlayerResult color={selfColor === "w" ? "b" : "w"} name={playerInfo?.opponent?.username || "Opponent"} />
             </div>
-            <div className={styles.action}>
-                <GameOverButton onClick={() => joinRoom()}>New Game</GameOverButton>
-                <GameOverButton onClick={onRematch}>Rematch</GameOverButton>
+            <div className={styles.actions}>
+                <div className={styles.action}>
+                    <GameOverButton onClick={() => onQuickMatch()}>New Opponent</GameOverButton>
+                </div>
+                <div className={styles.action}>
+                    <GameOverButton onClick={onRematch} disabled={!playerInfo?.opponent}>Rematch</GameOverButton>
+                </div>
+                <div className={styles.action}>
+                    <GameOverButton onClick={onCancelJoin}>Back to lobby</GameOverButton>
+                </div>
             </div>
         </div>
     )

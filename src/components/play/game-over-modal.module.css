@@ -60,7 +60,7 @@
     text-overflow: ellipsis;
     overflow: hidden;
     font-family: var(--font-rubik);
-    font-weight: 400;
+    font-weight: 600;
     font-size: var(--14);
     width: 100%;
     text-align: center;
@@ -87,13 +87,22 @@
     fill: #303456;
 }
 
-.action {
+.actions {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     gap: var(--8);
     margin-top: var(--16);
-    margin-left: var(--12);
-    margin-right: var(--12);
+    margin-left: var(--8);
+    margin-right: var(--8);
+}
+
+.action {
+    flex: 1 0 45%;
+}
+
+.action:last-child {
+    flex: 1;
 }
 
 .player {
@@ -111,5 +120,3 @@
 .player-b {
     background-color: #01C1AA30;
 }
-
-
