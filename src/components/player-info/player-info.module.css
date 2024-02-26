@@ -31,3 +31,15 @@
 .clocknotactive {
     opacity: 0.5;
 }
+
+.clocknotactive > .icon {
+    opacity: 0;
+}
+
+.icon {
+    width: var(--14);
+}
+
+.icon > svg {
+    fill: #ddd;
+}
