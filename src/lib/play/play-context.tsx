@@ -32,7 +32,7 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
     useEffect(() => {
         socket.on("connect", () => { })
         socket.on("disconnect", () => { })
-        socket.on("JOIN_ROOM", (room) => {
+        socket.on("UPDATE_PLAYERS", (room) => {
             let playersInfo = {} as Record<"self" | "opponent", PlayerResponse>
             for (let i = 0; i < room.players.length; i++) {
                 const player = room.players[i]
@@ -41,7 +41,7 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
                 else
                     playersInfo.opponent = player
             }
-            send({ type: "PLAYER_JOIN", players: playersInfo, roomId: room.id })
+            send({ type: "UPDATE_PLAYERS", players: playersInfo, roomId: room.id })
         })
 
         socket.on("START_GAME", (game) => {
@@ -58,7 +58,7 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
             })
         })
 
-        socket.on("ACK_MOVE", (payload) => {
+        socket.on("MOVE_CONFIRMED", (payload) => {
             const { replacedCard, whiteRemaining, blackRemaining } = payload
             send({ type: "MOVE_CONFIRMED", replacedCard })
             send({ type: "UPDATE_TIME", white: whiteRemaining, black: blackRemaining })
@@ -73,11 +73,11 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
             send({ type: "UPDATE_TIME", white: whiteRemaining, black: blackRemaining })
         })
 
-        socket.on("REJ_MOVE", (rejMove) => {
+        socket.on("MOVE_REJECTED", (rejMove) => {
             const { whiteId, whiteCards, blackCards, boardPosition, turnId, whiteRemaining, blackRemaining } = rejMove
             const [selfCards, opponentCards] = socket.id === whiteId ? [whiteCards, blackCards] : [blackCards, whiteCards]
             send({
-                type: "INVALID_MOVE",
+                type: "MOVE_REJECTED",
                 boardPosition: boardPosition,
                 selfColor: socket.id === whiteId ? "w" : "b",
                 hasTurn: socket.id === turnId,
@@ -87,8 +87,8 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
             send({ type: "UPDATE_TIME", white: whiteRemaining, black: blackRemaining })
         })
 
-        socket.on("REJ_FLAG", (time) => {
-            send({ type: "REJECT_FLAG" })
+        socket.on("TIMEOUT_REJECTED", (time) => {
+            send({ type: "TIMEOUT_REJECTED" })
             send({ type: "UPDATE_TIME", white: time.whiteRemaining, black: time.blackRemaining })
         })
 
@@ -113,13 +113,13 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
         return () => {
             socket.off("connect");
             socket.off("disconnect");
-            socket.off("JOIN_ROOM");
+            socket.off("UPDATE_PLAYERS");
             socket.off("START_GAME")
             socket.off("OPPONENT_MOVED")
-            socket.off("REJ_MOVE")
+            socket.off("MOVE_REJECTED")
             socket.off("END_GAME")
-            socket.off("ACK_MOVE")
-            socket.off("REJ_FLAG")
+            socket.off("MOVE_CONFIRMED")
+            socket.off("TIMEOUT_REJECTED")
             socket.off("OPPONENT_REMATCH")
             socket.disconnect()
         }
@@ -143,8 +143,8 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
     }
 
     async function onCancelJoin() {
-        await socket.emitWithAck("CANCEL_JOIN")
-        send({ type: "CANCEL_JOIN" })
+        await socket.emitWithAck("LEAVE_ROOM")
+        send({ type: "LEAVE_ROOM" })
     }
 
     function onJoinFriend(roomId: string) {
@@ -167,14 +167,14 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
 
     function onPass() {
         if (!gameId) return
-        send({ type: "PASS" })
-        socket.emit("PASS", { playerId: socket.id, gameId })
+        send({ type: "PASS_TURN" })
+        socket.emit("PASS_TURN", { playerId: socket.id, gameId })
     }
 
     function onFlag() {
         if (!gameId) return
-        send({ type: "FLAG_REQUEST" })
-        socket.emit("OPPONENT_FLAG", gameId)
+        send({ type: "CLAIM_OPPONENT_TIMEOUT" })
+        socket.emit("CLAIM_OPPONENT_TIMEOUT", gameId)
     }
 
     function onResign() {
@@ -184,7 +184,7 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
 
     function onRematch() {
         if (!gameId) return
-        socket.emit("REMATCH", { playerId: socket.id, gameId })
+        socket.emit("REQUEST_REMATCH", { playerId: socket.id, gameId })
         send({ type: "QUICK_MATCH" })
     }
 

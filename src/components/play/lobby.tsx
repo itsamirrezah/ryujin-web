@@ -10,7 +10,6 @@ import WaitForOpponent from "./wait-for-opponent";
 import { useAuthContext } from "@/lib/auth";
 import BackIcon from "../icons/back-icon";
 
-
 export default function Lobby() {
     const {
         onQuickMatch,
@@ -20,9 +19,9 @@ export default function Lobby() {
     } = usePlay()
     const { isAuth, openAuth } = useAuthContext()
     const isIdle = useSelector(ryujinService, (state) => state.matches('lobby.idle'))
-    const isWaitForOpponent = useSelector(ryujinService, (state) => state.matches('lobby.waitForOpponent'))
-    const isWaitForFriend = useSelector(ryujinService, (state) => state.matches('lobby.waitForFriend'))
-    const isJoinFriend = useSelector(ryujinService, (state) => state.matches('lobby.joinFriend'))
+    const isWaitForOpponent = useSelector(ryujinService, (state) => state.matches('lobby.waitingForOpponent'))
+    const isWaitForFriend = useSelector(ryujinService, (state) => state.matches('lobby.waitingForFriend'))
+    const isJoinFriend = useSelector(ryujinService, (state) => state.matches('lobby.friendInJoinLobby'))
     const roomId = useSelector(ryujinService, (state) => state.context.roomId)
     const isLobby = isIdle || isWaitForFriend || isWaitForOpponent || isJoinFriend
 

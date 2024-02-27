@@ -103,16 +103,15 @@ export type JoinFriendEvent = {
     roomId: string
 }
 
-export type CancelJoinEvent = {
-    type: "CANCEL_JOIN",
+export type LeaveRoomEvent = {
+    type: "LEAVE_ROOM",
 }
 
-export type PlayerJoinEvent = {
-    type: "PLAYER_JOIN",
+export type UpdatePlayersEvent = {
+    type: "UPDATE_PLAYERS",
     players: Record<"self" | "opponent", PlayerResponse>,
     roomId: string
 }
-
 
 export type GameStartedEvent = {
     type: "GAME_STARTED",
@@ -138,8 +137,8 @@ export type OpponentMoveEvent = {
 export type MoveConfirmedEvent = { type: "MOVE_CONFIRMED", replacedCard: CardType }
 export type TickEvent = { type: "TICK", interval: number }
 export type UpdateTimeEvent = { type: "UPDATE_TIME", white: number, black: number }
-export type InvalidMoveEvent = {
-    type: "INVALID_MOVE",
+export type MoveRejectedEvent = {
+    type: "MOVE_REJECTED",
     boardPosition: Position,
     selfColor: BlackOrWhite,
     hasTurn: boolean,
@@ -159,22 +158,27 @@ export type GameOverEvent = {
 export type OpponentRematch = {
     type: "OPPONENT_REMATCH"
 }
-export type FlagRequestEvent = { type: "FLAG_REQUEST" }
-export type REJECT_FLAG = { type: "REJECT_FLAG" }
-export type PassEvent = { type: "PASS" }
-export type OpponentPassEvent = { type: "OPPONENT_PASS" }
-export type Events =
-    | PlayerJoinEvent | GameStartedEvent | SelectCardEvent | SelectPieceEvent
-    | MoveEvent | OpponentMoveEvent | MoveConfirmedEvent | TickEvent
-    | UpdateTimeEvent | InvalidMoveEvent | GameOverEvent | FlagRequestEvent
-    | REJECT_FLAG | PassEvent | OpponentPassEvent | QuickMatchEvent | InviteFriendEvent
-    | JoinFriendEvent | CancelJoinEvent | OpponentRematch
+export type ClaimOpponentTimeoutEvent = { type: "CLAIM_OPPONENT_TIMEOUT" }
 
-export type StateOptions = "lobby" | "lobby.idle" | "lobby.waitForOpponent" | "lobby.waitForFriend" | "lobby.joinFriend"
-    | "playing" | "playing.no_moves" | "game_over" | "game_over.idle" | "game_over.rematchRequest"
+export type TimeoutRejectedEvent = { type: "TIMEOUT_REJECTED" }
+
+export type PassTurnEvent = { type: "PASS_TURN" }
+
+export type OpponentPassEvent = { type: "OPPONENT_PASS" }
+
+export type Events =
+    | UpdatePlayersEvent | GameStartedEvent | SelectCardEvent | SelectPieceEvent
+    | MoveEvent | OpponentMoveEvent | MoveConfirmedEvent | TickEvent
+    | UpdateTimeEvent | MoveRejectedEvent | GameOverEvent | ClaimOpponentTimeoutEvent
+    | TimeoutRejectedEvent | PassTurnEvent | OpponentPassEvent | QuickMatchEvent | InviteFriendEvent
+    | JoinFriendEvent | LeaveRoomEvent | OpponentRematch
+
+export type StateOptions =
+    | "lobby" | "lobby.idle" | "lobby.waitingForOpponent" | "lobby.waitingForFriend" | "lobby.friendInJoinLobby"
+    | "playing" | "playing.isOutOfMoves" | "playing.normal" | "playing.noMove" | "playing.pendingMove"
+    | "gameOver" | "gameOver.idle" | "gameOver.opponentRematchRequest"
 
 export type State = { value: StateOptions, context: GameContext }
-
 export type RyujinState = StateFrom<typeof ryujinMachine>
 export type RyujinEvent = EventFrom<typeof ryujinMachine>
 

@@ -193,5 +193,6 @@ export const gameOver = assign((_, e) => {
         endGame,
         selfRemainingTime: selfColor === "w" ? whiteRemainingTime : blackRemainingTime,
         opponentRemainingTime: selfColor === "w" ? blackRemainingTime : whiteRemainingTime,
+        hasFlagInProgress: false,
     }
 }) as ActionFunction<GameContext, GameOverEvent>

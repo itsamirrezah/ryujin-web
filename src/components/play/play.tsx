@@ -18,8 +18,8 @@ export default function Play() {
         ryujinService
     } = usePlay()
     const isPlaying = useSelector(ryujinService, (state) => state.matches('playing'))
-    const isGameOver = useSelector(ryujinService, (state) => state.matches('game_over'))
-    const hasNoMoves = useSelector(ryujinService, (state) => state.matches('playing.no_moves'))
+    const isGameOver = useSelector(ryujinService, (state) => state.matches('gameOver'))
+    const hasNoMoves = useSelector(ryujinService, (state) => state.matches('playing.noMove'))
     const shouldLoadCards = isPlaying || isGameOver
 
     return (

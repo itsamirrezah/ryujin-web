@@ -25,7 +25,7 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
     },
     initial: "lobby",
     on: {
-        PLAYER_JOIN: {
+        UPDATE_PLAYERS: {
             actions: assign({
                 playersInfo: (_, e) => e.players,
                 roomId: (_, e) => e.roomId
@@ -39,36 +39,36 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
                 idle: {
                     on: {
                         QUICK_MATCH: {
-                            target: "waitForOpponent"
+                            target: "waitingForOpponent"
                         },
                         INVITE_FRIEND: {
-                            target: "waitForFriend"
+                            target: "waitingForFriend"
                         },
                         JOIN_FRIEND: {
                             actions: assign({ roomId: (_, e) => e.roomId }),
-                            target: "joinFriend"
+                            target: "friendInJoinLobby"
                         }
                     }
                 },
-                waitForOpponent: {},
-                waitForFriend: {},
-                joinFriend: {}
+                waitingForOpponent: {},
+                waitingForFriend: {},
+                friendInJoinLobby: {}
             },
             on: {
                 GAME_STARTED: {
                     target: "playing",
                     actions: startGame
                 },
-                CANCEL_JOIN: {
+                LEAVE_ROOM: {
                     target: "lobby"
                 }
             }
         },
         playing: {
-            initial: "hasSelfMoves",
+            initial: "isOutOfMoves",
             id: "play",
             states: {
-                hasSelfMoves: {
+                isOutOfMoves: {
                     always: [{
                         cond: (ctx) => {
                             const { hasTurn, selfCards, boardPosition, selfColor } = ctx
@@ -85,7 +85,7 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
                             }
                             return true
                         },
-                        target: "no_moves",
+                        target: "noMove",
                     },
                     { target: "normal" }
                     ],
@@ -97,26 +97,26 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
                 },
                 normal: {
                     on: {
-                        MOVE: { actions: move, target: "proposed_move" },
-                        OPPONENT_MOVED: { actions: opponentMove, target: "hasSelfMoves" },
-                        OPPONENT_PASS: { actions: assign(() => ({ hasTurn: true })), target: "hasSelfMoves" }
+                        MOVE: { actions: move, target: "pendingMove" },
+                        OPPONENT_MOVED: { actions: opponentMove, target: "isOutOfMoves" },
+                        OPPONENT_PASS: { actions: assign(() => ({ hasTurn: true })), target: "isOutOfMoves" }
                     }
                 },
-                proposed_move: {
+                pendingMove: {
                     on: {
                         MOVE_CONFIRMED: { actions: moveConfirmed, target: 'normal' },
-                        INVALID_MOVE: {
+                        MOVE_REJECTED: {
                             actions: assign((_, e) => e),
-                            target: 'hasSelfMoves'
+                            target: 'isOutOfMoves'
                         },
                         TICK: undefined,
                         SELECT_CARD: undefined,
                         SELECT_PIECE: undefined
                     }
                 },
-                no_moves: {
+                noMove: {
                     on: {
-                        PASS: {
+                        PASS_TURN: {
                             actions: assign(() => ({ hasTurn: false })),
                             target: "normal"
                         },
@@ -141,26 +141,26 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
                 SELECT_PIECE: { actions: selectPiece },
                 TICK: { actions: tick },
                 UPDATE_TIME: { actions: updateTime },
-                GAME_OVER: { actions: gameOver, target: "game_over" },
-                FLAG_REQUEST: {
+                GAME_OVER: { actions: gameOver, target: "gameOver" },
+                CLAIM_OPPONENT_TIMEOUT: {
                     actions: assign({ hasFlagInProgress: true })
                 },
-                REJECT_FLAG: {
+                TIMEOUT_REJECTED: {
                     actions: assign({ hasFlagInProgress: false }),
                 },
             },
         },
-        game_over: {
+        gameOver: {
             initial: "idle",
             states: {
                 idle: {
                     on: {
                         OPPONENT_REMATCH: {
-                            target: "rematchRequest"
+                            target: "opponentRematchRequest"
                         }
                     }
                 },
-                rematchRequest: {},
+                opponentRematchRequest: {},
             },
             on: {
                 GAME_STARTED: {
@@ -168,9 +168,9 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
                     actions: startGame
                 },
                 QUICK_MATCH: {
-                    target: "lobby.waitForOpponent"
+                    target: "lobby.waitingForOpponent"
                 },
-                CANCEL_JOIN: {
+                LEAVE_ROOM: {
                     target: "lobby"
                 },
             },
