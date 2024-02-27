@@ -6,6 +6,7 @@ import LogoSecondary from "../icons/logo-secondary"
 import MasterGreen from "../icons/master-green"
 import MasterRed from "../icons/master-red"
 import styles from "./game-over-modal.module.css"
+import CheckIcon from "../icons/check"
 
 function stringifyEndgame(gameOver: EndGame, selfColor: BlackOrWhite) {
     const { result, by } = gameOver
@@ -20,6 +21,7 @@ function stringifyEndgame(gameOver: EndGame, selfColor: BlackOrWhite) {
 export default function GameOverModal() {
     const { ryujinService, onRematch, onQuickMatch, onCancelJoin } = usePlay()
     const gameOver = useSelector(ryujinService, (state) => state.context.endGame)
+    const hasOpponentRequestRematch = useSelector(ryujinService, (state) => state.matches("game_over.rematchRequest"))
     const selfColor = useSelector(ryujinService, (state) => state.context.selfColor)
     const playerInfo = useSelector(ryujinService, (state) => state.context.playersInfo)
     if (!gameOver || !selfColor || !playerInfo) return null
@@ -41,6 +43,12 @@ export default function GameOverModal() {
                 </div>
                 <PlayerResult color={selfColor === "w" ? "b" : "w"} name={playerInfo?.opponent?.username || "Opponent"} />
             </div>
+            <div style={{ visibility: hasOpponentRequestRematch && !!playerInfo.opponent ? "visible" : "hidden" }} className={styles.alert}>
+                Good game! Rematch?
+                <button className={styles.alerticon} onClick={onRematch}>
+                    <CheckIcon />
+                </button>
+            </div>
             <div className={styles.actions}>
                 <div className={styles.action}>
                     <GameOverButton onClick={() => onQuickMatch()}>New Opponent</GameOverButton>
@@ -52,7 +60,7 @@ export default function GameOverModal() {
                     <GameOverButton onClick={onCancelJoin}>Back to lobby</GameOverButton>
                 </div>
             </div>
-        </div>
+        </div >
     )
 }
 

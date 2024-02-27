@@ -106,6 +106,10 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
             })
         })
 
+        socket.on("OPPONENT_REMATCH", () => {
+            send({ type: "OPPONENT_REMATCH" })
+        })
+
         return () => {
             socket.off("connect");
             socket.off("disconnect");
@@ -116,6 +120,7 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
             socket.off("END_GAME")
             socket.off("ACK_MOVE")
             socket.off("REJ_FLAG")
+            socket.off("OPPONENT_REMATCH")
             socket.disconnect()
         }
     }, [])

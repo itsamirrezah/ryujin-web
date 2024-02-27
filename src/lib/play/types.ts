@@ -156,6 +156,9 @@ export type GameOverEvent = {
     whiteRemainingTime: number,
     blackRemainingTime: number
 }
+export type OpponentRematch = {
+    type: "OPPONENT_REMATCH"
+}
 export type FlagRequestEvent = { type: "FLAG_REQUEST" }
 export type REJECT_FLAG = { type: "REJECT_FLAG" }
 export type PassEvent = { type: "PASS" }
@@ -165,10 +168,10 @@ export type Events =
     | MoveEvent | OpponentMoveEvent | MoveConfirmedEvent | TickEvent
     | UpdateTimeEvent | InvalidMoveEvent | GameOverEvent | FlagRequestEvent
     | REJECT_FLAG | PassEvent | OpponentPassEvent | QuickMatchEvent | InviteFriendEvent
-    | JoinFriendEvent | CancelJoinEvent
+    | JoinFriendEvent | CancelJoinEvent | OpponentRematch
 
 export type StateOptions = "lobby" | "lobby.idle" | "lobby.waitForOpponent" | "lobby.waitForFriend" | "lobby.joinFriend"
-    | "playing" | "playing.no_moves" | "game_over"
+    | "playing" | "playing.no_moves" | "game_over" | "game_over.idle" | "game_over.rematchRequest"
 
 export type State = { value: StateOptions, context: GameContext }
 

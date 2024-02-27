@@ -52,6 +52,7 @@
     display: flex;
     justify-content: space-evenly;
     align-items: center;
+    margin-bottom: var(--4);
 }
 
 .player > span {
@@ -92,7 +93,7 @@
     flex-wrap: wrap;
     justify-content: center;
     gap: var(--8);
-    margin-top: var(--16);
+    margin-top: var(--8);
     margin-left: var(--8);
     margin-right: var(--8);
 }
@@ -119,4 +120,21 @@
 
 .player-b {
     background-color: #01C1AA30;
+}
+
+.alert {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-style: italic;
+    gap: var(--8);
+    font-size: var(--14);
+    visibility: visible;
+}
+
+.alerticon {
+    display: inline-block;
+    width: var(--14);
+    height: var(--14);
+    transition: all 0.2s;
 }

@@ -151,6 +151,17 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
             },
         },
         game_over: {
+            initial: "idle",
+            states: {
+                idle: {
+                    on: {
+                        OPPONENT_REMATCH: {
+                            target: "rematchRequest"
+                        }
+                    }
+                },
+                rematchRequest: {},
+            },
             on: {
                 GAME_STARTED: {
                     target: "playing",
@@ -161,7 +172,7 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
                 },
                 CANCEL_JOIN: {
                     target: "lobby"
-                }
+                },
             },
         }
     }

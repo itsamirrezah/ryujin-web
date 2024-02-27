@@ -51,6 +51,7 @@ export type ServerEvents = {
     ACK_MOVE: (payload: AckMovePayload) => void
     REJ_MOVE: (payload: RejMovePayload) => void
     REJ_FLAG: (payload: TimePayload) => void
+    OPPONENT_REMATCH: () => void;
 }
 
 export type ClientEvents = {
@@ -62,5 +63,4 @@ export type ClientEvents = {
     CREATE_ROOM: () => void;
     PASS: (payload: { playerId: string, gameId: string }) => void;
     REMATCH: (payload: { playerId: string, gameId: string }) => void;
-
 }
