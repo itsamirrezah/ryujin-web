@@ -9,23 +9,24 @@ import styles from "./game-over-modal.module.css"
 import CheckIcon from "../icons/check"
 
 function stringifyEndgame(gameOver: EndGame, selfColor: BlackOrWhite) {
-    const { result, by } = gameOver
-    if (result === "draw") return ["Draw!", `by ${by}`, null, 0.5, 0.5]
+    const { result: strResult, by } = gameOver
+    if (strResult === "draw") return ["Draw!", `by ${by}`, null, 0.5, 0.5]
     const { playerWonColor } = gameOver
     const title = `You ${selfColor === playerWonColor ? "Won" : "Lost"}`
     const description = by === "abandon" ? "opponent left the game" : `by ${by}`
-    const playerResult = selfColor === playerWonColor ? [1, 0] : [0, 1]
-    return [title, description, playerWonColor, ...playerResult]
+    const result = selfColor === playerWonColor ? [1, 0] : [0, 1]
+    return [title, description, playerWonColor, ...result]
 }
 
 export default function GameOverModal() {
-    const { ryujinService, onRematch, onQuickMatch, onCancelJoin } = usePlay()
+    const { ryujinService, onRematch, onQuickMatch, onCancelJoin, prevOpponent } = usePlay()
     const gameOver = useSelector(ryujinService, (state) => state.context.endGame)
     const hasOpponentRequestRematch = useSelector(ryujinService, (state) => state.matches("gameOver.opponentRematchRequest"))
     const selfColor = useSelector(ryujinService, (state) => state.context.selfColor)
     const playerInfo = useSelector(ryujinService, (state) => state.context.playersInfo)
     if (!gameOver || !selfColor || !playerInfo) return null
     const [title, description, wonColor, selfPoint, oppPoint] = stringifyEndgame(gameOver, selfColor)
+    const visibleRematchStyle = hasOpponentRequestRematch && !!playerInfo.opponent ? styles.visible : ""
 
     return (
         <div className={styles.container}>
@@ -41,9 +42,13 @@ export default function GameOverModal() {
                     </div>
                     <span>{`${selfPoint} - ${oppPoint}`}</span>
                 </div>
-                <PlayerResult color={selfColor === "w" ? "b" : "w"} name={playerInfo?.opponent?.username || "Opponent"} />
+                <PlayerResult
+                    color={selfColor === "w" ? "b" : "w"}
+                    name={playerInfo?.opponent?.username || prevOpponent?.username || "Opponent"}
+                />
             </div>
-            <div style={{ visibility: hasOpponentRequestRematch && !!playerInfo.opponent ? "visible" : "hidden" }} className={styles.alert}>
+            <div
+                className={`${styles.alert} ${visibleRematchStyle}`}>
                 Good game! Rematch?
                 <button className={styles.alerticon} onClick={onRematch}>
                     <CheckIcon />

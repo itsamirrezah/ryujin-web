@@ -4,7 +4,7 @@ import { useEffect } from "react"
 import PlayerInfo from "../player-info/player-info"
 
 export default function OpponentPlayerInfo() {
-    const { ryujinService, onFlag } = usePlay()
+    const { ryujinService, onClaimOpponentTimeout, prevOpponent } = usePlay()
     const opponentRemaining = useSelector(ryujinService, (state) => state.context.opponentRemainingTime)
     const opponentColor = useSelector(ryujinService, (state) => state.context.selfColor === "w" ? "b" : "w")
     const opponentHasTurn = useSelector(ryujinService, (state) => !state.context.hasTurn)
@@ -14,12 +14,12 @@ export default function OpponentPlayerInfo() {
 
     useEffect(() => {
         if (hasFlagInProgress || opponentRemaining > 0 || !isPlaying) return
-        onFlag()
+        onClaimOpponentTimeout()
     }, [opponentRemaining, hasFlagInProgress, isPlaying])
 
     return (
         <PlayerInfo
-            name={opponentInfo?.username || "Opponent"}
+            name={opponentInfo?.username || prevOpponent?.username || "Opponent"}
             remainingTime={opponentRemaining}
             hasTurn={opponentHasTurn}
             isClockActive={isPlaying}

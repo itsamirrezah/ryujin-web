@@ -1,6 +1,6 @@
 import { socket } from "@/lib/socket";
 import { useInterpret, useSelector } from "@xstate/react";
-import { createContext, ReactNode, useContext, useEffect } from "react";
+import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { InterpreterFrom } from "xstate";
 import { useAuthContext } from "../auth";
 import { ryujinMachine } from "./ryujin-machine";
@@ -11,13 +11,14 @@ type PlayValues = {
     onCardSelected: (card: CardType) => void,
     onPieceSelected: (piece: PieceType, square: SquareType) => void,
     onMove: (from: SquareType, to: SquareType, selectedCard: CardType) => void,
-    onPass: () => void
-    onFlag: () => void,
+    onPassTurn: () => void
+    onClaimOpponentTimeout: () => void,
     onResign: () => void,
     onRematch: () => void
     onInviteFriend: () => void,
     onJoinFriend: (roomId: string) => void,
     onCancelJoin: () => void,
+    prevOpponent?: PlayerResponse,
     ryujinService: InterpreterFrom<typeof ryujinMachine>
 }
 
@@ -28,33 +29,37 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
     const { isAuth } = useAuthContext()
     const { send } = ryujinService
     const gameId = useSelector(ryujinService, (state) => state.context.gameId)
+    const [prevOpponent, setPrevOpponent] = useState<PlayerResponse>()
 
     useEffect(() => {
         socket.on("connect", () => { })
         socket.on("disconnect", () => { })
-        socket.on("UPDATE_PLAYERS", (room) => {
+        socket.on("UPDATE_PLAYERS", (payload) => {
             let playersInfo = {} as Record<"self" | "opponent", PlayerResponse>
-            for (let i = 0; i < room.players.length; i++) {
-                const player = room.players[i]
+            for (let i = 0; i < payload.players.length; i++) {
+                const player = payload.players[i]
                 if (player.socketId === socket.id)
                     playersInfo.self = player
                 else
                     playersInfo.opponent = player
             }
-            send({ type: "UPDATE_PLAYERS", players: playersInfo, roomId: room.id })
+            if (playersInfo?.opponent) {
+                setPrevOpponent(playersInfo.opponent)
+            }
+            send({ type: "UPDATE_PLAYERS", players: playersInfo, roomId: payload.id })
         })
 
-        socket.on("START_GAME", (game) => {
-            const [selfCards, opponentCards] = socket.id === game.whiteId ? [game.whiteCards, game.blackCards] : [game.blackCards, game.whiteCards]
+        socket.on("START_GAME", (payload) => {
+            const [selfCards, opponentCards] = socket.id === payload.whiteId ? [payload.whiteCards, payload.blackCards] : [payload.blackCards, payload.whiteCards]
             send({
                 type: "GAME_STARTED",
-                id: game.id,
-                boardPosition: game.boardPosition,
-                selfColor: socket.id === game.whiteId ? "w" : "b",
-                hasTurn: socket.id === game.turnId,
+                id: payload.id,
+                boardPosition: payload.boardPosition,
+                selfColor: socket.id === payload.whiteId ? "w" : "b",
+                hasTurn: socket.id === payload.turnId,
                 selfCards: selfCards as [CardType, CardType],
                 opponentCard: opponentCards as [CardType, CardType],
-                time: game.gameTime
+                time: payload.gameTime
             })
         })
 
@@ -64,17 +69,17 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
             send({ type: "UPDATE_TIME", white: whiteRemaining, black: blackRemaining })
         })
 
-        socket.on("OPPONENT_MOVED", (move) => {
-            const { whiteRemaining, blackRemaining } = move
-            if (move.type === "move")
-                send({ type: "OPPONENT_MOVED", from: move.from, to: move.to, selectedCard: move.selectedCard, replacedCard: move.replacedCard })
-            else if (move.type === "pass")
+        socket.on("OPPONENT_MOVED", (payload) => {
+            const { whiteRemaining, blackRemaining } = payload
+            if (payload.type === "move")
+                send({ type: "OPPONENT_MOVED", from: payload.from, to: payload.to, selectedCard: payload.selectedCard, replacedCard: payload.replacedCard })
+            else if (payload.type === "pass")
                 send({ type: "OPPONENT_PASS" })
             send({ type: "UPDATE_TIME", white: whiteRemaining, black: blackRemaining })
         })
 
-        socket.on("MOVE_REJECTED", (rejMove) => {
-            const { whiteId, whiteCards, blackCards, boardPosition, turnId, whiteRemaining, blackRemaining } = rejMove
+        socket.on("MOVE_REJECTED", (payload) => {
+            const { whiteId, whiteCards, blackCards, boardPosition, turnId, whiteRemaining, blackRemaining } = payload
             const [selfCards, opponentCards] = socket.id === whiteId ? [whiteCards, blackCards] : [blackCards, whiteCards]
             send({
                 type: "MOVE_REJECTED",
@@ -87,22 +92,22 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
             send({ type: "UPDATE_TIME", white: whiteRemaining, black: blackRemaining })
         })
 
-        socket.on("TIMEOUT_REJECTED", (time) => {
+        socket.on("TIMEOUT_REJECTED", (payload) => {
             send({ type: "TIMEOUT_REJECTED" })
-            send({ type: "UPDATE_TIME", white: time.whiteRemaining, black: time.blackRemaining })
+            send({ type: "UPDATE_TIME", white: payload.whiteRemaining, black: payload.blackRemaining })
         })
 
-        socket.on("END_GAME", (game) => {
-            const [selfCards, opponentCards] = socket.id === game.whiteId ? [game.whiteCards, game.blackCards] : [game.blackCards, game.whiteCards]
+        socket.on("END_GAME", (payload) => {
+            const [selfCards, opponentCards] = socket.id === payload.whiteId ? [payload.whiteCards, payload.blackCards] : [payload.blackCards, payload.whiteCards]
             send({
                 type: "GAME_OVER",
-                boardPosition: game.boardPosition,
-                selfColor: socket.id === game.whiteId ? "w" : "b",
+                boardPosition: payload.boardPosition,
+                selfColor: socket.id === payload.whiteId ? "w" : "b",
                 selfCards: selfCards as [CardType, CardType],
                 opponentCards: opponentCards as [CardType, CardType],
-                endGame: game.endGame,
-                whiteRemainingTime: game.whiteRemaining,
-                blackRemainingTime: game.blackRemaining
+                endGame: payload.endGame,
+                whiteRemainingTime: payload.whiteRemaining,
+                blackRemainingTime: payload.blackRemaining
             })
         })
 
@@ -165,13 +170,13 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
         socket.emit("MOVE", { playerId: socket.id, gameId, from, to, selectedCard })
     }
 
-    function onPass() {
+    function onPassTurn() {
         if (!gameId) return
         send({ type: "PASS_TURN" })
         socket.emit("PASS_TURN", { playerId: socket.id, gameId })
     }
 
-    function onFlag() {
+    function onClaimOpponentTimeout() {
         if (!gameId) return
         send({ type: "CLAIM_OPPONENT_TIMEOUT" })
         socket.emit("CLAIM_OPPONENT_TIMEOUT", gameId)
@@ -194,14 +199,15 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
             onCardSelected,
             onPieceSelected,
             onMove,
-            onPass,
-            onFlag,
+            onPassTurn,
+            onClaimOpponentTimeout,
             onResign,
             onRematch,
             onInviteFriend,
             onJoinFriend,
             ryujinService,
-            onCancelJoin
+            onCancelJoin,
+            prevOpponent
         }}>
             {children}
         </PlayContext.Provider>

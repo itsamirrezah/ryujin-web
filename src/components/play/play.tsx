@@ -14,7 +14,7 @@ import SelfCards from "./selfCards"
 export default function Play() {
     const {
         onResign,
-        onPass,
+        onPassTurn,
         ryujinService
     } = usePlay()
     const isPlaying = useSelector(ryujinService, (state) => state.matches('playing'))
@@ -31,7 +31,7 @@ export default function Play() {
                 <OpponentPlayerInfo />
                 <PlayBoard />
                 <SelfPlayerInfo />
-                {hasNoMoves && <button style={{ color: "#fff", padding: 4 }} onClick={onPass}>Pass Turn</button>}
+                {hasNoMoves && <button style={{ color: "#fff", padding: 4 }} onClick={onPassTurn}>Pass Turn</button>}
                 {isGameOver && <GameOverModal />}
             </div>
             {shouldLoadCards && <div className={styles.cardmobile}>

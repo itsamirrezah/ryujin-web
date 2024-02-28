@@ -22,7 +22,7 @@
 }
 
 .button:active {
-    letter-spacing: 0.15em;
+    letter-spacing: 0.12em;
 }
 
 .button:disabled {
