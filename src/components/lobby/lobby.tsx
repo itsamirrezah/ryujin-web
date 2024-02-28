@@ -20,10 +20,11 @@ export default function Lobby() {
     const { isAuth, openAuth } = useAuthContext()
     const isIdle = useSelector(ryujinService, (state) => state.matches('lobby.idle'))
     const isWaitForOpponent = useSelector(ryujinService, (state) => state.matches('lobby.waitingForOpponent'))
+    const isWaitForRematch = useSelector(ryujinService, (state) => state.matches('lobby.waitingForRematch'))
     const isWaitForFriend = useSelector(ryujinService, (state) => state.matches('lobby.waitingForFriend'))
     const isJoinFriend = useSelector(ryujinService, (state) => state.matches('lobby.friendInJoinLobby'))
     const roomId = useSelector(ryujinService, (state) => state.context.roomId)
-    const isLobby = isIdle || isWaitForFriend || isWaitForOpponent || isJoinFriend
+    const isLobby = isIdle || isWaitForFriend || isWaitForOpponent || isJoinFriend || isWaitForRematch
 
     if (!isLobby) return null;
 
@@ -38,11 +39,19 @@ export default function Lobby() {
             <div className={styles.sideoptions}>
                 {isIdle &&
                     <>
-                        <SideBarButton icon={<DiceIcon />} onClick={() => !isAuth ? openAuth() : onQuickMatch()}>Quick Match</SideBarButton>
-                        <SideBarButton icon={<ChainIcon />} onClick={() => !isAuth ? openAuth() : onInviteFriend()}>With Friends</SideBarButton>
+                        <SideBarButton
+                            icon={<DiceIcon />}
+                            onClick={() => !isAuth ? openAuth() : onQuickMatch()}>
+                            Quick Match
+                        </SideBarButton>
+                        <SideBarButton
+                            icon={<ChainIcon />}
+                            onClick={() => !isAuth ? openAuth() : onInviteFriend()}>
+                            With Friends
+                        </SideBarButton>
                     </>
                 }
-                {isWaitForOpponent && <WaitForOpponent />}
+                {(isWaitForOpponent || isWaitForRematch) && <WaitForOpponent />}
                 {isWaitForFriend && (
                     <div className={styles.waitforfriend}>
                         <button onClick={onCancelJoin} className={styles.backbtn}>
@@ -52,7 +61,13 @@ export default function Lobby() {
                         <span>Share this link with your friend</span>
                     </div>
                 )}
-                {isJoinFriend && <SideBarButton icon={<RocketIcon />} onClick={() => !isAuth ? openAuth() : onQuickMatch(roomId)}>Join Game</SideBarButton>}
+                {isJoinFriend && (
+                    <SideBarButton
+                        icon={<RocketIcon />}
+                        onClick={() => !isAuth ? openAuth() : onQuickMatch(roomId)}>
+                        Join Game
+                    </SideBarButton>
+                )}
             </div>
         </div>)
 }

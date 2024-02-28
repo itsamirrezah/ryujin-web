@@ -46,11 +46,15 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
             if (playersInfo?.opponent) {
                 setPrevOpponent(playersInfo.opponent)
             }
+
             send({ type: "UPDATE_PLAYERS", players: playersInfo, roomId: payload.id })
         })
 
         socket.on("START_GAME", (payload) => {
-            const [selfCards, opponentCards] = socket.id === payload.whiteId ? [payload.whiteCards, payload.blackCards] : [payload.blackCards, payload.whiteCards]
+            const [selfCards, opponentCards] =
+                socket.id === payload.whiteId
+                    ? [payload.whiteCards, payload.blackCards]
+                    : [payload.blackCards, payload.whiteCards]
             send({
                 type: "GAME_STARTED",
                 id: payload.id,
@@ -72,7 +76,13 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
         socket.on("OPPONENT_MOVED", (payload) => {
             const { whiteRemaining, blackRemaining } = payload
             if (payload.type === "move")
-                send({ type: "OPPONENT_MOVED", from: payload.from, to: payload.to, selectedCard: payload.selectedCard, replacedCard: payload.replacedCard })
+                send({
+                    type: "OPPONENT_MOVED",
+                    from: payload.from,
+                    to: payload.to,
+                    selectedCard: payload.selectedCard,
+                    replacedCard: payload.replacedCard
+                })
             else if (payload.type === "pass")
                 send({ type: "OPPONENT_PASS" })
             send({ type: "UPDATE_TIME", white: whiteRemaining, black: blackRemaining })
@@ -80,7 +90,9 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
 
         socket.on("MOVE_REJECTED", (payload) => {
             const { whiteId, whiteCards, blackCards, boardPosition, turnId, whiteRemaining, blackRemaining } = payload
-            const [selfCards, opponentCards] = socket.id === whiteId ? [whiteCards, blackCards] : [blackCards, whiteCards]
+            const [selfCards, opponentCards] = socket.id === whiteId
+                ? [whiteCards, blackCards]
+                : [blackCards, whiteCards]
             send({
                 type: "MOVE_REJECTED",
                 boardPosition: boardPosition,
@@ -98,7 +110,9 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
         })
 
         socket.on("END_GAME", (payload) => {
-            const [selfCards, opponentCards] = socket.id === payload.whiteId ? [payload.whiteCards, payload.blackCards] : [payload.blackCards, payload.whiteCards]
+            const [selfCards, opponentCards] = socket.id === payload.whiteId
+                ? [payload.whiteCards, payload.blackCards]
+                : [payload.blackCards, payload.whiteCards]
             send({
                 type: "GAME_OVER",
                 boardPosition: payload.boardPosition,
@@ -190,7 +204,7 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
     function onRematch() {
         if (!gameId) return
         socket.emit("REQUEST_REMATCH", { playerId: socket.id, gameId })
-        send({ type: "QUICK_MATCH" })
+        send({ type: "REMATCH" })
     }
 
     return (

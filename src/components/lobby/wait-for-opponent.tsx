@@ -15,8 +15,8 @@ const waitForOpponentMessages = [
     "For a day",
     "That I will crawl away",
     "♪ Guitar Solo ♪"
-
 ]
+
 export default function WaitForOpponent() {
     const { onCancelJoin } = usePlay()
 

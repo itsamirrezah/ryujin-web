@@ -1,5 +1,17 @@
 import { assign, createMachine } from "xstate";
-import { DEFAULT_POSITION, gameOver, getCardOptions, move, moveConfirmed, opponentMove, selectCard, selectPiece, startGame, tick, updateTime } from "./consts";
+import {
+    DEFAULT_POSITION,
+    gameOver,
+    getCardOptions,
+    move,
+    moveConfirmed,
+    opponentMove,
+    selectCard,
+    selectPiece,
+    startGame,
+    tick,
+    updateTime
+} from "./consts";
 import { Events, GameContext, PieceType, SquareType, State } from "./types";
 
 export const ryujinMachine = createMachine<GameContext, Events, State>({
@@ -52,7 +64,15 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
                 },
                 waitingForOpponent: {},
                 waitingForFriend: {},
-                friendInJoinLobby: {}
+                friendInJoinLobby: {},
+                waitingForRematch: {
+                    on: {
+                        UPDATE_PLAYERS: [{
+                            target: "idle",
+                            cond: (_, e) => !e.players?.opponent
+                        }]
+                    },
+                },
             },
             on: {
                 GAME_STARTED: {
@@ -166,6 +186,9 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
                 GAME_STARTED: {
                     target: "playing",
                     actions: startGame
+                },
+                REMATCH: {
+                    target: "lobby.waitingForRematch"
                 },
                 QUICK_MATCH: {
                     target: "lobby.waitingForOpponent"
