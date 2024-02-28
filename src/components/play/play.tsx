@@ -9,6 +9,7 @@ import PlayBoard from "./play-board"
 import styles from "./play.module.css"
 import SelfPlayerInfo from "./self-player-info"
 import SelfCards from "./selfCards"
+import HandIcon from "../icons/hand"
 
 export default function Play() {
     const {
@@ -30,7 +31,6 @@ export default function Play() {
                 <OpponentPlayerInfo />
                 <PlayBoard />
                 <SelfPlayerInfo />
-                {hasNoMoves && <button style={{ color: "#fff", padding: 4 }} onClick={onPassTurn}>Pass Turn</button>}
                 {isGameOver && <GameOverModal />}
             </div>
             {shouldLoadCards && <div className={styles.cardmobile}>
@@ -41,9 +41,16 @@ export default function Play() {
                 <OpponentCards />
                 <SelfCards />
             </div>}
-            {isPlaying && <button style={{ width: "2rem" }} onClick={onResign}>
-                <FlagIcon />
-            </button>}
-        </div >
+            {isPlaying && (
+                <div className={styles.control}>
+                    <button onClick={onResign}>
+                        <FlagIcon />
+                    </button>
+                    {hasNoMoves && (<button onClick={onPassTurn}>
+                        <HandIcon />
+                    </button>)}
+                </div>
+            )}
+        </div>
     )
 }

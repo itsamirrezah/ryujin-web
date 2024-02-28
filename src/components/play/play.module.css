@@ -1,6 +1,7 @@
 .game {
     display: grid;
-    grid-template-columns: 1fr [board] minmax(30rem, 70vh) [side] minmax(45rem, 1fr) 1fr;
+    grid-template-columns: 1fr [board] auto [side] minmax(45rem, 1fr) 1fr;
+    grid-template-rows: [main] min-content [bottom] min-content;
     gap: var(--32);
     align-items: center;
     width: 100%;
@@ -9,6 +10,8 @@
 .boardlyt {
     position: relative;
     grid-column: board / side;
+    min-width: 30rem;
+    max-width: 70vh;
 }
 
 .cards {
@@ -25,6 +28,37 @@
     display: none;
 }
 
+.control {
+    display: flex;
+    gap: var(--8);
+    padding-top: var(--4);
+    padding-bottom: var(--4);
+    background-color: #00000022;
+    justify-content: center;
+    grid-row: bottom;
+    grid-column: board;
+}
+
+.control > button {
+    border-radius: 8px;
+    padding: var(--8);
+
+}
+
+.control > button:hover {
+    background-color: #00000099;
+}
+
+.control > button > svg {
+    width: var(--20);
+    height: var(--20);
+    fill: #ccc;
+}
+
+.control > button:hover > svg {
+    fill: #fff;
+}
+
 @media only screen and (max-width: 1024px) {
     .game {
         grid-template-columns: 1fr [board] minmax(min-content, 70vh) [side] minmax(21rem, 1.2fr) 1fr;
@@ -33,8 +67,8 @@
 @media only screen and (max-width: 768px) and (orientation: portrait){
     .game {
         grid-template-columns: minmax(0.8rem, 1fr) [board] minmax(min-content,50vh) [side] min-content minmax(0.8rem,1fr);
-        grid-template-rows: [top] minmax(4rem, max-content) [board] 1fr [bottom] minmax(4rem, max-content);
-        gap: 1%;
+        grid-template-rows: [top] minmax(4rem, max-content) [board] 1fr [bottom] minmax(4rem, max-content) [control] min-content;
+        gap: var(--4);
     }
 
     .cardmobile {
@@ -52,5 +86,10 @@
 
     .cards {
         display: none;
+    }
+    
+    .control {
+        margin-top: var(--16);
+        grid-row: control;
     }
 }
