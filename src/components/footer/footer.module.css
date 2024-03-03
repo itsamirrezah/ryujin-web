@@ -1,3 +1,7 @@
+:root {
+    --footer-height: var(--24);
+}
+
 .footer {
     position: absolute;
     bottom: 0;
@@ -9,6 +13,7 @@
     justify-content: center;
     gap: var(--8);
     font-family: var(--font-rubik);
+    height: var(--footer-height);
 }
 
 .footer > small {

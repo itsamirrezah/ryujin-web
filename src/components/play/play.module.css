@@ -1,8 +1,13 @@
+:root {
+    --player-info-height: var(--28);
+    --board-width: calc(100vh - calc(var(--header-height)*2) - calc(var(--footer-height)*2) - calc(var(--player-info-height) * 2));
+}
+
 .game {
     display: grid;
-    grid-template-columns: 1fr [board] auto [side] minmax(45rem, 1fr) 1fr;
+    grid-template-columns: 1fr [board] minmax(min-content, var(--board-width)) [side] minmax(45rem, 1fr) 1fr;
     grid-template-rows: [main] min-content [bottom] min-content;
-    gap: var(--32);
+    column-gap: var(--32);
     align-items: center;
     width: 100%;
 }
@@ -10,16 +15,14 @@
 .boardlyt {
     position: relative;
     grid-column: board / side;
-    min-width: 30rem;
-    max-width: 70vh;
 }
 
 .cards {
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    justify-content: space-between;
     justify-items: center;
-    grid-column: side / span 1;
+    grid-column: side;
     row-gap: 3%;
     align-self: stretch;
 }
@@ -35,7 +38,7 @@
     padding-bottom: var(--4);
     background-color: #00000022;
     justify-content: center;
-    grid-row: bottom;
+    /* grid-row: bottom; */
     grid-column: board;
 }
 
@@ -61,12 +64,17 @@
 
 @media only screen and (max-width: 1024px) {
     .game {
-        grid-template-columns: 1fr [board] minmax(min-content, 70vh) [side] minmax(21rem, 1.2fr) 1fr;
+        grid-template-columns: 1fr [board] minmax(min-content, var(--board-width)) [side] minmax(21rem, 1.2fr) 1fr;
     }
 }
 @media only screen and (max-width: 768px) and (orientation: portrait){
+    :root{
+        --player-cards: 10rem; /*temporary*/
+        --board-width: calc(100vh - calc(var(--header-height)*2) - calc(var(--player-info-height) * 2) - calc(var(--player-cards) * 2));
+    }
+
     .game {
-        grid-template-columns: minmax(0.8rem, 1fr) [board] minmax(min-content,50vh) [side] min-content minmax(0.8rem,1fr);
+        grid-template-columns: minmax(0.8rem, 1fr) [board] minmax(min-content,var(--board-width)) [side] min-content minmax(0.8rem,1fr);
         grid-template-rows: [top] minmax(4rem, max-content) [board] 1fr [bottom] minmax(4rem, max-content) [control] min-content;
         gap: var(--4);
     }
