@@ -1,20 +1,23 @@
 :root {
     --player-info-height: var(--28);
-    --board-width: calc(100vh - calc(var(--header-height)*2) - calc(var(--footer-height)*2) - calc(var(--player-info-height) * 2));
+    --min-sidebar: 35rem;
+    --max-sidebar: 45rem;
+    --board-width: min(calc(100vw - var(--min-sidebar) - 4vmin - 2rem),calc(100vh - calc(var(--header-height) * 1) - calc(var(--footer-height) * 1) - calc(var(--player-info-height) * 2) - 1rem));
+    --side-width: min(calc(100vw - var(--board-width) - 4vmin - 2rem),var(--max-sidebar));
 }
 
 .game {
     display: grid;
-    grid-template-columns: 1fr [board] minmax(min-content, var(--board-width)) [side] minmax(45rem, 1fr) 1fr;
-    grid-template-rows: [main] min-content [bottom] min-content;
-    column-gap: var(--32);
+    grid-template-columns: [board] minmax(min-content, var(--board-width)) [side] minmax(min-content,var(--side-width));
+    grid-template-rows: [main] min-content [control] min-content;
+    column-gap: 2vmin;
     align-items: center;
-    width: 100%;
+    grid-column: main;
 }
 
 .boardlyt {
     position: relative;
-    grid-column: board / side;
+    grid-column: board;
 }
 
 .cards {
@@ -23,8 +26,15 @@
     justify-content: space-between;
     justify-items: center;
     grid-column: side;
-    row-gap: 3%;
     align-self: stretch;
+    padding-top: var(--player-info-height);
+    padding-bottom: var(--player-info-height);
+    grid-row: main;
+}
+
+.cards > div {
+    display: flex;
+    gap: var(--4);
 }
 
 .cardmobile {
@@ -38,8 +48,8 @@
     padding-bottom: var(--4);
     background-color: #00000022;
     justify-content: center;
-    /* grid-row: bottom; */
     grid-column: board;
+    grid-row: control;
 }
 
 .control > button {
@@ -63,19 +73,16 @@
 }
 
 @media only screen and (max-width: 1024px) {
-    .game {
-        grid-template-columns: 1fr [board] minmax(min-content, var(--board-width)) [side] minmax(21rem, 1.2fr) 1fr;
+    :root {
+        --min-sidebar: 15rem;
+        --max-sidebar: min(calc(var(--board-width) - calc(var(--player-info-height) * 2)),20rem); 
     }
 }
-@media only screen and (max-width: 768px) and (orientation: portrait){
-    :root{
-        --player-cards: 10rem; /*temporary*/
-        --board-width: calc(100vh - calc(var(--header-height)*2) - calc(var(--player-info-height) * 2) - calc(var(--player-cards) * 2));
-    }
 
+@media only screen and (max-width: 768px) and (orientation: portrait){
     .game {
         grid-template-columns: minmax(0.8rem, 1fr) [board] minmax(min-content,var(--board-width)) [side] min-content minmax(0.8rem,1fr);
-        grid-template-rows: [top] minmax(4rem, max-content) [board] 1fr [bottom] minmax(4rem, max-content) [control] min-content;
+        grid-template-rows: [opp-cards] minmax(10rem, max-content) [board] 1fr [self-cards] minmax(4rem, max-content) [control] min-content;
         gap: var(--4);
     }
 
@@ -85,11 +92,11 @@
     }
 
     .cardmobile:first-child{
-        grid-row: top;
+        grid-row: opp-cards;
     }
 
     .cardmobile:last-child{
-        grid-row: bottom;
+        grid-row: self-cards;
     }
 
     .cards {

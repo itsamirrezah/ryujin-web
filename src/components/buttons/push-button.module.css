@@ -13,7 +13,6 @@
   transform-style: preserve-3d;
   transition: transform 150ms cubic-bezier(0, 0, 0.58, 1), background 150ms cubic-bezier(0, 0, 0.58, 1);
   border: 0;
-  min-width: max-content;
 }
 
 .button::before {

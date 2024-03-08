@@ -2,7 +2,8 @@
     margin-top: var(--header-height);
     margin-bottom: var(--footer-height);
     flex: 1;
-    display: flex;
     justify-content: center;
     align-items: center;
+    display: grid;
+    grid-template-columns: 1vw 1fr [main] auto 1fr 1vw
 }

@@ -1,19 +1,21 @@
 .card {
     background-color: #EBD5B4EA;
     background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.3294) 11.45%, rgba(255, 214, 0, 0.1566) 139.13%);
-    padding: var(--12);
+    padding: 2%;
     border-radius: var(--10);
     display: flex;
-    width: 50%;
     gap: 2%;
     cursor: pointer;
+    align-items: center;
+    min-width: 0;
+    flex: 1;
 }
 .selected {
     box-shadow: inset 0 0 0 var(--4) #2ECF3E;
 }
 
 .board {
-    flex: 1;
+    flex: 0 0 35%;
     min-width: 0;
 }
 
@@ -22,14 +24,14 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    flex: 0 0 60%;
+    flex: 1;
     min-width: 0;
     overflow: hidden;
     font-size: var(--20);
 }
 
 .logo {
-    width: 90%; 
+    width: 60%; 
 }
 
 .logo svg {
@@ -53,6 +55,12 @@
         flex-direction: column;
         padding: var(--4);
     }
+
+    .board {
+        width: 100%;
+        min-width: 0;
+    }
+
     .logo {
         display: none;
     }

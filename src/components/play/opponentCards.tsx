@@ -7,7 +7,7 @@ export default function OpponentCards() {
     const opponentCards = useSelector(ryujinService, (state) => state.context.opponentCards)
     const optionColors = useSelector(ryujinService, (state) => state.context.selfColor === "w" ? "b" : "w")
     return (
-        <div style={{ display: "flex", gap: "2%" }}>
+        <div>
             {opponentCards?.map(c => (
                 <Card
                     key={c.name}
