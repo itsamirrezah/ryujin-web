@@ -44,6 +44,7 @@
 @media only screen and (max-width: 768px) and (orientation: portrait){
     .side {
         grid-column: board;
+        grid-row: control;
         padding: 7% 4%;
     }
 }

@@ -76,6 +76,11 @@
         flex-direction: row;
     }
 
+    .board {
+        max-width: calc(var(--max-card-height) - var(--4));
+        min-width: var(--48);
+    }
+
     .title {
         font-size: var(--14);
         flex: 0 0 60%;

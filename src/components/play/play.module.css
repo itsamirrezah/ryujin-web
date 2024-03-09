@@ -2,7 +2,7 @@
     --player-info-height: var(--28);
     --min-sidebar: 35rem;
     --max-sidebar: 45rem;
-    --board-width: min(calc(100vw - var(--min-sidebar) - 4vmin - 2rem),calc(100vh - calc(var(--header-height) * 1) - calc(var(--footer-height) * 1) - calc(var(--player-info-height) * 2) - 1rem));
+    --board-width: min(calc(100vw - var(--min-sidebar) - 4vmin - 2rem),calc(100vh - var(--header-height) - var(--footer-height) - calc(var(--player-info-height) * 2) - 1rem));
     --side-width: min(calc(100vw - var(--board-width) - 4vmin - 2rem),var(--max-sidebar));
 }
 
@@ -80,15 +80,25 @@
 }
 
 @media only screen and (max-width: 768px) and (orientation: portrait){
+    :root {
+        --row-gap: var(--4);
+        --max-card-height: var(--80);
+        --board-width: calc(100vh - var(--header-height) - var(--footer-height) - calc(var(--player-info-height) * 2) - calc(var(--max-card-height) * 2) - var(--row-gap) - 1rem);
+    }
     .game {
-        grid-template-columns: minmax(0.8rem, 1fr) [board] minmax(min-content,var(--board-width)) [side] min-content minmax(0.8rem,1fr);
-        grid-template-rows: [opp-cards] minmax(10rem, max-content) [board] 1fr [self-cards] minmax(4rem, max-content) [control] min-content;
-        gap: var(--4);
+        grid-template-columns: [board] minmax(min-content,var(--board-width)); 
+        grid-template-rows: [opp-cards] min-content [board] min-content [self-cards] min-content [control] min-content;
+        row-gap: var(--row-gap);
     }
 
     .cardmobile {
         display: block;
         grid-column: board;
+    }
+
+    .cardmobile > div {
+        display: flex;
+        gap: var(--4);
     }
 
     .cardmobile:first-child{
