@@ -14,6 +14,7 @@ import { useForm } from "react-hook-form"
 import Close from "../icons/close"
 import styles from "./auth-modal.module.css"
 import { authModalPrompts } from "./consts"
+import EmailConfirmationHandler from "./email-confirmation-handler"
 import SignForm from "./sign-form"
 import UsernameForm from "./username-form"
 
@@ -67,6 +68,7 @@ export default function AuthModal({ onClose, signOption = "signup", isShown }: A
                         userId={user.id}
                     />
                 )}
+                {signType === "email" && <EmailConfirmationHandler />}
                 {isClosable && (
                     <button className={styles.close} onClick={onClose}>
                         <Close />
