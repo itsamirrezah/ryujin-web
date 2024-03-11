@@ -50,6 +50,11 @@
     color: #ffffff
 }
 
+.actions {
+    display: flex;
+    gap: var(--16);
+}
+
 .action {
     width: var(--20);
 }

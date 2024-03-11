@@ -33,6 +33,7 @@
   font-size:0;
   background-color: #ffffff00;
   animation: rotating 1s 0.25s linear infinite;
+  cursor: unset;
 }
 
 .succeed {

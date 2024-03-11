@@ -50,16 +50,18 @@ export default function Header() {
                     </a>
                 </div>
             </nav>
-            {isAuth && (
-                <button className={styles.action} onClick={onLogout}>
-                    <SignoutIcon />
-                </button>
-            )}
-            {!isAuth && user && (
-                <button className={styles.action} onClick={openAuth}>
-                    <TriangleExclamation />
-                </button>
-            )}
+            <div className={styles.actions}>
+                {!isAuth && user && (
+                    <button className={styles.action} onClick={openAuth}>
+                        <TriangleExclamation />
+                    </button>
+                )}
+                {user && (
+                    <button className={styles.action} onClick={onLogout}>
+                        <SignoutIcon />
+                    </button>
+                )}
+            </div>
         </header>
     )
 }

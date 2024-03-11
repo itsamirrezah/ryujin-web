@@ -2,6 +2,7 @@ import useConfirmEmailAvailability from "@/lib/service/use-confirm-email-availab
 import useSendConfirmationEmail from "@/lib/service/use-send-confirmation-email";
 import { useEffect, useState } from "react";
 import InteractiveButton from "../buttons/interactive-button";
+import styles from "./email-confirmation-handler.module.css"
 
 export default function EmailConfirmationHandler() {
     const [timeToNextRequest, setTimeToNextRequest] = useState(-1)
@@ -39,13 +40,15 @@ export default function EmailConfirmationHandler() {
     }, [timeToNextRequest])
 
     return (
-        <div>
+        <div className={styles.container}>
             <InteractiveButton
                 onClick={sendConfirmationEmailHandler}
-                disabled={!isConfirmButtonAvailable}>
-                Resend Email
+                disabled={!isConfirmButtonAvailable}
+                status={!isAvailable.data?.isValid ? "loading" : "normal"}
+            >
+                Resend Link
             </InteractiveButton>
-            {timeToNextRequest > 0 && <div>{`wait for ${timeToNextRequest} seconds.`}</div>}
+            {timeToNextRequest > 0 && <span>{`Please wait ${timeToNextRequest} seconds before sending another request.`}</span>}
         </div>
     )
 }

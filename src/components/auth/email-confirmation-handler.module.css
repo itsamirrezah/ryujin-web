@@ -1,0 +1,10 @@
+.container {
+    align-self: stretch;
+    text-align: center;
+}
+
+.container > span {
+    margin-top: var(--4);
+    display: block;
+    color: #808080;
+}
