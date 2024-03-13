@@ -93,3 +93,7 @@ a {
 input:focus {
     outline: none;
 }
+
+fieldset {
+    border: none;
+}

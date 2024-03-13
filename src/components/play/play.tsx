@@ -17,6 +17,7 @@ export default function Play() {
         onPassTurn,
         ryujinService
     } = usePlay()
+    const isLobby = useSelector(ryujinService, (state) => state.matches('lobby'))
     const isPlaying = useSelector(ryujinService, (state) => state.matches('playing'))
     const isGameOver = useSelector(ryujinService, (state) => state.matches('gameOver'))
     const hasNoMoves = useSelector(ryujinService, (state) => state.matches('playing.noMove'))
@@ -36,7 +37,7 @@ export default function Play() {
             {shouldLoadCards && <div className={styles.cardmobile}>
                 <SelfCards />
             </div>}
-            <Lobby />
+            {isLobby && <Lobby />}
             {shouldLoadCards && <div className={styles.cards}>
                 <OpponentCards />
                 <SelfCards />
