@@ -19,7 +19,7 @@
 }
 
 
-.title {
+.app-title {
     font-family: var(--font-row);
     font-size: var(--72);
     font-weight: 700;
@@ -27,7 +27,7 @@
     text-align: center;
 }
 
-.description {
+.app-description {
     font-family: var(--font-rubik);
     text-align: justify;
     font-weight: 100;
@@ -42,22 +42,48 @@
     gap: var(--32)
 }
 
+.masters {
+    display: flex;
+    justify-content: center;
+}
+
+.left-master {
+    margin-right: -80px;
+    z-index: 1;
+}
+
+.right-master {
+    z-index: 2;
+}
+
+.left-master > svg, .right-master > svg {
+    width: var(--224);
+}
+
 @media only screen and (max-width: 768px) {
     .container > div {
         max-width: unset;
         padding: 0 7%;
     }
     
-    .title {
+    .app-title {
         font-size: var(--48);
     }
 
-    .description {
+    .app-description {
         font-size: var(--14);
         font-weight: 200;
     }
 
-    .playbtn {
+    .play-btn {
         width: 100%;
+    }
+
+    .left-master > svg, .right-master > svg {
+        width: var(--176);
+    }
+
+    .left-master {
+        margin-right: -56px;
     }
 }

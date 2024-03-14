@@ -31,12 +31,12 @@ export default function GameOverModal() {
     return (
         <div className={styles.container}>
             <div className={`${styles.header} ${styles[`header-${wonColor}`]}`}>
-                <div className={styles.title}>{title}</div>
-                <div className={styles.description}>{description}</div>
+                <div className={styles.resultTitle}>{title}</div>
+                <div className={styles.resultDescription}>{description}</div>
             </div>
-            <div className={styles.result}>
+            <div className={styles.main}>
                 <PlayerResult color={selfColor} name={playerInfo.self.username} />
-                <div className={styles.middle}>
+                <div className={styles.score}>
                     <div className={styles.logo}>
                         <LogoSecondary />
                     </div>
@@ -50,11 +50,11 @@ export default function GameOverModal() {
             <div
                 className={`${styles.alert} ${visibleRematchStyle}`}>
                 Good game! Rematch?
-                <button className={styles.alerticon} onClick={onRematch}>
+                <button className={styles.alertBtn} onClick={onRematch}>
                     <CheckIcon />
                 </button>
             </div>
-            <div className={styles.actions}>
+            <div className={styles.playActions}>
                 <div className={styles.action}>
                     <GameOverButton onClick={() => onQuickMatch()}>New Opponent</GameOverButton>
                 </div>

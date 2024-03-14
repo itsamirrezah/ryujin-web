@@ -64,7 +64,7 @@ export default function Piece({ piece, square }: PieceProps) {
         <div
             ref={canDrag ? ref : undefined}
             style={animationStyle}
-            className={`${styles.piece} ${isDragging ? styles.dragging : ""}`}
+            className={`${styles.piece} ${isDragging ? styles.isDragging : ""}`}
             onClick={() => canDrag ? onPieceSelected(piece, square) : null}>
             <PieceComponent />
         </div >

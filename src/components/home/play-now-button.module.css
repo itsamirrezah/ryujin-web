@@ -1,11 +1,11 @@
-.redtogreen {
+.bg-red-to-green {
   background: linear-gradient(90.84deg, #C00C0CBB -40%, #009886BB 140%);
 }
 
-.redtogreen:hover {
+.bg-red-to-green:hover {
   background: linear-gradient(90.84deg, #C00C0CFF -40%, #009886FF 140%);
 }
 
-.redtogreen::before {
+.bg-red-to-green::before {
   background: linear-gradient(90.84deg, #C00C0C55 -40%, #00988655 140%);
 }

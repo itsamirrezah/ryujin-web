@@ -5,11 +5,8 @@ import Footer from "../footer/footer"
 
 export default function Layout() {
     const state = useRouterState()
-
-    let pageStyle = ""
     const pathname = state.location.pathname
-    if (pathname === "/") pageStyle = styles.home
-    else if (pathname.startsWith("/play")) pageStyle = styles.play
+    const pageStyle = pathname === "/" ? styles.homePage : pathname.startsWith("/play") ? styles.playPage : ""
 
     return (
         <div className={`${styles.container} ${pageStyle}`}>

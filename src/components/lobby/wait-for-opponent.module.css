@@ -1,4 +1,4 @@
-.waitforopponent {
+.container {
     color: #fff;
     font-weight: 700;
     font-size: var(--20);
@@ -11,7 +11,7 @@
     gap: var(--8);
 }
 
-.ripple {
+.ripple-effect {
     width: var(--56);
     height: var(--56);
     position: absolute;
@@ -20,29 +20,29 @@
     transform: translate(0%,-50%);
 }
 
-.cancelbtn {
+.cancel-btn {
     font-size: var(--14);
     font-family: var(--font-rubik);
     color: rgba(255, 255, 255, 0.6);
 }
 
-.cancelbtn:hover {
+.cancel-btn:hover {
     color: rgba(255, 255, 255, 0.9);
 }
 
 @media only screen and (max-width: 1024px){
-    .waitforopponent {
+    .container {
         font-size: var(--14);
     }
 
-    .ripple {
+    .ripple-effect {
         width: var(--36);
         height: var(--36);
     }
 }
 
 @media only screen and (max-width: 768px){
-    .waitforopponent {
+    .container {
         font-size: var(--16);
         text-align: center;
     }

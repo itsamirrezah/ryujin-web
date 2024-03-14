@@ -54,7 +54,7 @@ export default function Lobby() {
     return (
         <div className={styles.side}>
             {isIdle && (
-                <div className={styles.sideoptions}>
+                <div className={styles.sideActions}>
                     {!isCustomSelected ? (
                         <>
                             <SideBarButton
@@ -72,7 +72,7 @@ export default function Lobby() {
                         <div>
                             <fieldset>
                                 <legend>Time Control: </legend>
-                                <div className={styles.timecontrol} role="radiogroup">
+                                <div className={styles.timeControl} role="radiogroup">
                                     <label>
                                         <input
                                             type="radio"
@@ -81,7 +81,7 @@ export default function Lobby() {
                                             checked={selectedTimeControl === 3}
                                             onChange={timeControlHandlerHandler}
                                         />
-                                        <span className={styles.timecontrolbtn}>3 min</span>
+                                        <span className={styles.timeControlBtn}>3 min</span>
                                     </label>
                                     <label>
                                         <input
@@ -91,7 +91,7 @@ export default function Lobby() {
                                             checked={selectedTimeControl === 5}
                                             onChange={timeControlHandlerHandler}
                                         />
-                                        <span className={styles.timecontrolbtn}>5 min</span>
+                                        <span className={styles.timeControlBtn}>5 min</span>
                                     </label>
                                     <label>
                                         <input
@@ -101,13 +101,13 @@ export default function Lobby() {
                                             checked={selectedTimeControl === 8}
                                             onChange={timeControlHandlerHandler}
                                         />
-                                        <span className={styles.timecontrolbtn}>8 min</span>
+                                        <span className={styles.timeControlBtn}>8 min</span>
                                     </label>
                                 </div>
                             </fieldset>
                             <fieldset>
                                 <legend>Select Number of Cards:</legend>
-                                <div className={styles.numberofcards}>
+                                <div className={styles.numberOfCards}>
                                     <label htmlFor="card-number">Number of Cards:</label>
                                     <input
                                         onChange={(e) => setSelectedNumberOfCard(+e.target.value)}
@@ -131,9 +131,9 @@ export default function Lobby() {
                         </div>
                     )}
                     <div className={styles.custom}>
-                        <button className={styles.custombtn} onClick={customSelectedHandler}>
+                        <button className={styles.customBtn} onClick={customSelectedHandler}>
                             <span>Custom</span>
-                            <span className={styles.customicon}>
+                            <span className={styles.customIcon}>
                                 <ArrowIcon />
                             </span>
                         </button>
@@ -142,8 +142,8 @@ export default function Lobby() {
             )}
             {(isWaitForOpponent || isWaitForRematch) && <WaitForOpponent />}
             {isWaitForFriend && (
-                <div className={styles.waitforfriend}>
-                    <button onClick={onCancelJoin} className={styles.backbtn}>
+                <div className={styles.waitForFriend}>
+                    <button onClick={onCancelJoin} className={styles.backBtn}>
                         <ArrowIcon />
                     </button>
                     <SideBarButton onClick={onCopyHandler} icon={<CopyIcon />}>{"Copy Link"}</SideBarButton>
@@ -151,7 +151,7 @@ export default function Lobby() {
                 </div>
             )}
             {isJoinFriend && (
-                <div className={styles.joinfriend}>
+                <div className={styles.joinFriend}>
                     <SideBarButton
                         icon={<RocketIcon />}
                         onClick={() => !isAuth ? openAuth() : onQuickMatch(roomId)}>

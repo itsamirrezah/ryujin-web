@@ -24,18 +24,18 @@
     letter-spacing: 0.125em;
 }
 
-.link {
+.links {
     display: flex;
     gap: var(--4);
     color: #ccc;
 }
 
-.link:hover {
+.links:hover {
     color: #fff;
     text-decoration: underline;
 }
 
-.link:hover .icon > svg {
+.links:hover .icon > svg {
     fill: #fff;
 }
 

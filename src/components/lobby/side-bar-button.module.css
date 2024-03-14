@@ -48,6 +48,7 @@
 .navy:hover {
   background: #003865;
 }
+
 .navy::before {
   background: #001F3F33;
 }

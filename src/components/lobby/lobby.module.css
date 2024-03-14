@@ -7,13 +7,13 @@
     min-width: max-content;
 }
 
-.sideoptions {
+.side-actions {
     display: flex;
     flex-direction: column;
     gap: var(--12);
 }
 
-.waitforfriend {
+.wait-for-friend {
     display: flex;
     flex-direction: column;
     text-align: center;
@@ -23,19 +23,19 @@
     font-weight: 500;
 }
 
-.joinfriend {
+.join-friend {
     display: flex;
     flex-direction: column;
 }
 
-.backbtn {
+.back-btn {
     width: var(--16);
     position: absolute;
     left: 5%;
     top: 5%
 }
 
-.backbtn > svg {
+.back-btn > svg {
     fill: #CCCCCC;
 }
 
@@ -45,7 +45,7 @@
     align-items: center;
 }
 
-.custombtn {
+.custom-btn {
     font-size: var(--14);
     font-family: var(--font-rubik);
     color: rgba(255, 255, 255, 0.8);
@@ -55,28 +55,28 @@
     gap: var(--8);
 }
 
-.custombtn:hover {
+.custom-btn:hover {
     color: rgba(255, 255, 255, 1);
 }
 
-.customicon {
+.custom-icon {
     width: var(--12);
     fill: rgba(255, 255, 255, 0.8);
     transform: rotate(-90deg);
 }
 
-.custombtn:hover > .customicon {
+.custom-btn:hover > .custom-icon {
     fill: rgba(255, 255, 255, 1);
 }
 
-.timecontrol {
+.time-control {
     display: flex;
     justify-content: center;
     gap: var(--8);
     padding-top: var(--8);
 }
 
-.timecontrolbtn {
+.time-control-btn {
     display: inline-block;
     padding: 10px 20px;
     margin-bottom: 10px;
@@ -86,17 +86,17 @@
     cursor: pointer;
 }
 
-.timecontrol input[type="radio"] {
+.time-control input[type="radio"] {
   display: none;
 }
 
-.timecontrol input[type="radio"]:checked + .timecontrolbtn{
+.time-control input[type="radio"]:checked + .time-control-btn {
   background-color: #007bff;
   color: #fff;
   border-color: #007bff;
 }
 
-.numberofcards > input[type="range"]::-webkit-slider-thumb {
+.number-of-cards > input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
   width: 20px;
@@ -107,18 +107,18 @@
   transition: background 2.15s ease-in-out;
 }
 
-.numberofcards input[type="range"] {
+.number-of-cards input[type="range"] {
   --webkit-appearance: none;
   width: 100%;
   background: #d3d3d3;
   outline: none;
   border-radius: 5px;
 }
-.numberofcards input[type="range"]::-webkit-slider-thumb:hover {
+.number-of-cards input[type="range"]::-webkit-slider-thumb:hover {
   background: #0056b3;
 }
 
-.numberofcards output {
+.number-of-cards output {
   display: block;
   margin-top: 10px;
   font-size: 14px;

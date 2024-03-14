@@ -18,7 +18,7 @@ export default function CardBoard({ options, color }: CardBoardProps) {
                     const optionStyles = isOption ? `${styles.option} ${styles[`option-${color}`]}` : ""
                     return (
                         <div key={i} className={`${styles.sqaure} ${styles[`bg-${squareColor}`]}`}>
-                            {isCenter && <span className={`${styles.option} ${styles.center}`}></span>}
+                            {isCenter && <span className={`${styles.option} ${styles.centerDot}`}></span>}
                             {isOption && <span className={optionStyles}></span>}
                         </div>
                     )

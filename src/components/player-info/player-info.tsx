@@ -16,12 +16,12 @@ export default function PlayerInfo({ name, remainingTime, hasTurn, isClockActive
     const decimal = minutes - minute
     const remainingAsSeconds = decimal ? Math.floor(decimal * 60) : 0
     const second = remainingAsSeconds < 10 ? "0" + remainingAsSeconds : remainingAsSeconds
-    const clockStyles = `${styles.clock} ${styles[`clock-${color}`]} ${!hasTurn ? styles.clocknotactive : ""}`
+    const clockStyles = `${styles.clock} ${styles[`clock-${color}`]} ${!hasTurn ? styles.clockNotActive : ""}`
     return (
-        <div className={styles.info}>
+        <div className={styles.playerInfo}>
             <span>{name}</span>
             <div className={clockStyles}>
-                <div className={styles.icon}>
+                <div className={styles.clockIcon}>
                     <StopwatchIcon />
                 </div>
                 <span>{`${minute}:${second}`}</span>

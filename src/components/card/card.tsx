@@ -13,10 +13,12 @@ type CardProps = {
 export default function Card({ card, isSelected, onSelected, optionColor }: CardProps) {
     return (
         <div onClick={onSelected && card ? () => onSelected(card) : undefined}
-            className={`${styles.card} ${isSelected ? styles.selected : ""}`}>
-            {card && <div className={styles.board}>
-                <CardBoard options={card.options} color={optionColor!!} />
-            </div>}
+            className={`${styles.card} ${isSelected ? styles.selectedCard : ""}`}>
+            {card && (
+                <div className={styles.board}>
+                    <CardBoard options={card.options} color={optionColor!!} />
+                </div>
+            )}
             <div className={styles.title}>
                 <div className={styles.logo}>
                     <LogoSecondary />

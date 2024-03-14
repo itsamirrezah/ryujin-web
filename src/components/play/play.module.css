@@ -6,7 +6,7 @@
     --side-width: min(calc(100vw - var(--board-width) - 4vmin - 2rem),var(--max-sidebar));
 }
 
-.game {
+.container {
     display: grid;
     grid-template-columns: [board] minmax(min-content, var(--board-width)) [side] minmax(min-content,var(--side-width));
     grid-template-rows: [main] min-content [control] min-content;
@@ -15,7 +15,7 @@
     grid-column: main;
 }
 
-.boardlyt {
+.board {
     position: relative;
     grid-column: board;
 }
@@ -37,11 +37,11 @@
     gap: var(--4);
 }
 
-.cardmobile {
+.mobile-cards {
     display: none;
 }
 
-.control {
+.player-actions {
     display: flex;
     gap: var(--8);
     padding-top: var(--4);
@@ -52,23 +52,23 @@
     grid-row: control;
 }
 
-.control > button {
+.player-actions > button {
     border-radius: 8px;
     padding: var(--8);
 
 }
 
-.control > button:hover {
+.player-actions > button:hover {
     background-color: #00000099;
 }
 
-.control > button > svg {
+.player-actions > button > svg {
     width: var(--20);
     height: var(--20);
     fill: #ccc;
 }
 
-.control > button:hover > svg {
+.player-actions > button:hover > svg {
     fill: #fff;
 }
 
@@ -85,27 +85,27 @@
         --max-card-height: var(--80);
         --board-width: calc(100vh - var(--header-height) - var(--footer-height) - calc(var(--player-info-height) * 2) - calc(var(--max-card-height) * 2) - var(--row-gap) - 1rem);
     }
-    .game {
+    .container {
         grid-template-columns: [board] minmax(min-content,var(--board-width)); 
         grid-template-rows: [opp-cards] min-content [board] min-content [self-cards] min-content [control] min-content;
         row-gap: var(--row-gap);
     }
 
-    .cardmobile {
+    .mobile-cards {
         display: block;
         grid-column: board;
     }
 
-    .cardmobile > div {
+    .mobile-cards > div {
         display: flex;
         gap: var(--4);
     }
 
-    .cardmobile:first-child{
+    .mobile-cards:first-child{
         grid-row: opp-cards;
     }
 
-    .cardmobile:last-child{
+    .mobile-cards:last-child{
         grid-row: self-cards;
     }
 
@@ -113,7 +113,7 @@
         display: none;
     }
     
-    .control {
+    .player-actions {
         margin-top: var(--16);
         grid-row: control;
     }

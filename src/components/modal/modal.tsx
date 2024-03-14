@@ -22,7 +22,7 @@ export default function Modal({ children }: ModalProps) {
     return (
         createPortal(
             <>
-                <div className={styles.backdrop}></div>
+                <div className={styles.backDrop}></div>
                 <div className={`${styles.content} ${showAnimation}`}>{children}</div>
             </>,
             modalElement

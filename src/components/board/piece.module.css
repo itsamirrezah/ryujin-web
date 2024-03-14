@@ -6,6 +6,6 @@
     opacity: 1;
 }
 
-.dragging {
+.is-dragging {
     opacity: 0;
 }

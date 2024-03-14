@@ -33,20 +33,20 @@
     background-color: rgba(192, 12, 12,.75);
 }
 
-.title{
+.result-title {
     font-size: var(--36);
     font-family: var(--font-marker);
     line-height: 1;
 }
 
-.description {
+.result-description {
     font-family: var(--font-lato);
     font-size: var(--14);
     font-style: italic;
     line-height: 1;
 }
 
-.result {
+.main {
     position: relative;
     z-index: 2;
     display: flex;
@@ -67,7 +67,7 @@
     text-align: center;
 }
 
-.middle {
+.score {
     display: flex;
     flex-direction: column;
     gap: 2px;
@@ -75,7 +75,7 @@
     align-items: center;
 }
 
-.middle > span {
+.score > span {
     font-family: var(--font-lato);
     font-weight: 800;
 }
@@ -88,7 +88,7 @@
     fill: #303456;
 }
 
-.actions {
+.play-actions {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -136,7 +136,7 @@
     visibility: visible;
 }
 
-.alerticon {
+.alert-btn {
     display: inline-block;
     width: var(--14);
     height: var(--14);

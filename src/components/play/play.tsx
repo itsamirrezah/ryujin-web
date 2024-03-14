@@ -24,26 +24,32 @@ export default function Play() {
     const shouldLoadCards = isPlaying || isGameOver
 
     return (
-        <div className={styles.game}>
-            {shouldLoadCards && <div className={styles.cardmobile}>
-                <OpponentCards />
-            </div>}
-            <div className={styles.boardlyt}>
+        <div className={styles.container}>
+            {shouldLoadCards && (
+                <div className={styles.mobileCards}>
+                    <OpponentCards />
+                </div>
+            )}
+            <div className={styles.board}>
                 <OpponentPlayerInfo />
                 <PlayBoard />
                 <SelfPlayerInfo />
                 {isGameOver && <GameOverModal />}
             </div>
-            {shouldLoadCards && <div className={styles.cardmobile}>
-                <SelfCards />
-            </div>}
+            {shouldLoadCards && (
+                <div className={styles.mobileCards}>
+                    <SelfCards />
+                </div>
+            )}
             {isLobby && <Lobby />}
-            {shouldLoadCards && <div className={styles.cards}>
-                <OpponentCards />
-                <SelfCards />
-            </div>}
+            {shouldLoadCards && (
+                <div className={styles.cards}>
+                    <OpponentCards />
+                    <SelfCards />
+                </div>
+            )}
             {isPlaying && (
-                <div className={styles.control}>
+                <div className={styles.playerActions}>
                     <button onClick={onResign}>
                         <FlagIcon />
                     </button>

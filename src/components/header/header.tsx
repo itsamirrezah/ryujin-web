@@ -3,10 +3,10 @@ import useOutsideClick from "@/lib/use-outside-click"
 import { Link } from "@tanstack/react-router"
 import { useState } from "react"
 import GithubIcon from "../icons/github-icon"
-import Hamburger from "../icons/hamburger"
+import HamburgerIcon from "../icons/hamburger"
 import LogoPrimary from "../icons/logo-primary"
-import SignoutIcon from "../icons/sign-out"
-import TriangleExclamation from "../icons/triangle-exclamation"
+import LogoutIcon from "../icons/sign-out"
+import TriangleExclamationIcon from "../icons/triangle-exclamation"
 import styles from "./header.module.css"
 
 
@@ -27,17 +27,17 @@ export default function Header() {
             <Link to="/" className={styles.logo}>
                 <LogoPrimary />
             </Link>
-            <button className={styles.hamburger} onClick={() => setNavOpen(state => !state)}>
-                <Hamburger />
+            <button className={styles.hamburgerMenu} onClick={() => setNavOpen(state => !state)}>
+                <HamburgerIcon />
             </button>
-            <nav ref={outsideRef} className={`${styles.navigation} ${isNavOpen ? styles.navopen : ""}`}>
+            <nav ref={outsideRef} className={`${styles.navMenu} ${isNavOpen ? styles.navOpen : ""}`}>
                 <ul>
                     {navItems.map(item => (
                         <li key={item.to}>
                             <Link
                                 to={item.to}
-                                activeProps={{ className: styles.active }}
-                                className={styles.item}>
+                                activeProps={{ className: styles.selectedItem }}
+                                className={styles.navItem}>
                                 {item.title}
                             </Link>
                         </li>
@@ -50,15 +50,15 @@ export default function Header() {
                     </a>
                 </div>
             </nav>
-            <div className={styles.actions}>
+            <div className={styles.userActions}>
                 {!isAuth && user && (
                     <button className={styles.action} onClick={openAuth}>
-                        <TriangleExclamation />
+                        <TriangleExclamationIcon />
                     </button>
                 )}
                 {user && (
                     <button className={styles.action} onClick={onLogout}>
-                        <SignoutIcon />
+                        <LogoutIcon />
                     </button>
                 )}
             </div>

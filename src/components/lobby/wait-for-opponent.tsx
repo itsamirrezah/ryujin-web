@@ -40,12 +40,12 @@ export default function WaitForOpponent() {
     }, [dot])
 
     return (
-        <div className={styles.waitforopponent}>
+        <div className={styles.container}>
             <span>{`${waitForOpponentMsg}${dot}`}</span>
-            <div className={styles.ripple}>
+            <div className={styles.rippleEffect}>
                 <Ripple />
             </div>
-            <button onClick={onCancelJoin} className={styles.cancelbtn}>cancel</button>
+            <button onClick={onCancelJoin} className={styles.cancelBtn}>cancel</button>
         </div>
     )
 }

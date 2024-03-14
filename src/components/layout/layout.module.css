@@ -4,16 +4,12 @@
     min-height: 100vh;
 }
 
-.container > main {
-    flex: 1;
-}
-
-.home {
+.home-page {
     background-image: url("../../assets/bg-home.png");
     background-size: cover;
 }
 
-.play {
+.play-page {
     background-image: url("../../assets/bg-play.png");
     background-size: cover;
 }

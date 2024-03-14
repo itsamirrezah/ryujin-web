@@ -6,11 +6,11 @@ export default function Footer() {
         <footer className={styles.footer}>
             <small>Ryujin is an open-source multiplayer game. We welcome suggestions and contributions from the community.</small>
             <div>
-                <a href="https://github.com/itsamirrezah/ryujin-web" target="_blank" className={styles.link}>
+                <a href="https://github.com/itsamirrezah/ryujin-web" target="_blank" className={styles.links}>
                     <div className={styles.icon}><GithubIcon /></div>
                     Github
                 </a>
             </div>
-        </footer >
+        </footer>
     )
 }

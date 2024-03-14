@@ -1,16 +1,16 @@
+.sqaure {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
 .bg-white {
     background-color: #D6C5AB;
 }
 
 .bg-black {
     background-color: #B0894F42;
-}
-
-.sqaure {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
 }
 
 .option {

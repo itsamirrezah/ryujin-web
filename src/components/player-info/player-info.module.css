@@ -1,4 +1,4 @@
-.info {
+.player-info {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -28,18 +28,18 @@
     background-color: #01C1AA5E;
 }
 
-.clocknotactive {
+.clock-not-active {
     opacity: 0.5;
 }
 
-.clocknotactive > .icon {
+.clock-not-active > .clock-icon {
     opacity: 0;
 }
 
-.icon {
+.clock-icon {
     width: var(--14);
 }
 
-.icon > svg {
+.clock-icon > svg {
     fill: #ddd;
 }
