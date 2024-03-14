@@ -23,6 +23,11 @@
     font-weight: 500;
 }
 
+.joinfriend {
+    display: flex;
+    flex-direction: column;
+}
+
 .backbtn {
     width: var(--16);
     position: absolute;
@@ -33,7 +38,6 @@
 .backbtn > svg {
     fill: #CCCCCC;
 }
-
 
 .custom {
     display: flex;

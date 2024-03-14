@@ -53,107 +53,112 @@ export default function Lobby() {
 
     return (
         <div className={styles.side}>
-            <div className={styles.sideoptions}>
-                {isIdle &&
-                    <>
-                        <SideBarButton
-                            icon={<DiceIcon />}
-                            onClick={() => !isAuth ? openAuth() : onQuickMatch()}>
-                            Quick Match
-                        </SideBarButton>
-                        <SideBarButton
-                            icon={<ChainIcon />}
-                            onClick={() => !isAuth ? openAuth() : onInviteFriend()}>
-                            With Friends
-                        </SideBarButton>
-                        <div className={styles.custom}>
-                            <button className={styles.custombtn} onClick={customSelectedHandler}>
-                                <span>Custom</span>
-                                <span className={styles.customicon}>
-                                    <ArrowIcon />
-                                </span>
-                            </button>
-                        </div>
-                        {isCustomSelected && (
-                            <div>
-                                <fieldset>
-                                    <legend>Time Control: </legend>
-                                    <div className={styles.timecontrol} role="radiogroup">
-                                        <label>
-                                            <input
-                                                type="radio"
-                                                name="time-control"
-                                                value="3"
-                                                checked={selectedTimeControl === 3}
-                                                onChange={timeControlHandlerHandler}
-                                            />
-                                            <span className={styles.timecontrolbtn}>3 min</span>
-                                        </label>
-                                        <label>
-                                            <input
-                                                type="radio"
-                                                name="time-control"
-                                                value="5"
-                                                checked={selectedTimeControl === 5}
-                                                onChange={timeControlHandlerHandler}
-                                            />
-                                            <span className={styles.timecontrolbtn}>5 min</span>
-                                        </label>
-                                        <label>
-                                            <input
-                                                type="radio"
-                                                name="time-control"
-                                                value="8"
-                                                checked={selectedTimeControl === 8}
-                                                onChange={timeControlHandlerHandler}
-                                            />
-                                            <span className={styles.timecontrolbtn}>8 min</span>
-                                        </label>
-                                    </div>
-                                </fieldset>
-                                <fieldset>
-                                    <legend>Select Number of Cards:</legend>
-                                    <div className={styles.numberofcards}>
-                                        <label htmlFor="card-number">Number of Cards:</label>
+            {isIdle && (
+                <div className={styles.sideoptions}>
+                    {!isCustomSelected ? (
+                        <>
+                            <SideBarButton
+                                icon={<DiceIcon />}
+                                onClick={() => !isAuth ? openAuth() : onQuickMatch()}>
+                                Quick Match
+                            </SideBarButton>
+                            <SideBarButton
+                                icon={<ChainIcon />}
+                                onClick={() => !isAuth ? openAuth() : onInviteFriend()}>
+                                With Friends
+                            </SideBarButton>
+                        </>
+                    ) : (
+                        <div>
+                            <fieldset>
+                                <legend>Time Control: </legend>
+                                <div className={styles.timecontrol} role="radiogroup">
+                                    <label>
                                         <input
-                                            onChange={(e) => setSelectedNumberOfCard(+e.target.value)}
-                                            type="range"
-                                            id="card-number"
-                                            name="card-number"
-                                            min="5"
-                                            max="16"
-                                            step="1"
-                                            value={selectedNumberOfCard}
+                                            type="radio"
+                                            name="time-control"
+                                            value="3"
+                                            checked={selectedTimeControl === 3}
+                                            onChange={timeControlHandlerHandler}
                                         />
-                                        <output htmlFor="card-number">{selectedNumberOfCard}</output>
-                                    </div>
-                                </fieldset>
-                                <SideBarButton icon={<></>}
-                                    onClick={() => {
-                                        if (!selectedTimeControl || !selectedNumberOfCard) return;
-                                        setGameInfo(selectedTimeControl * 60 * 1000, selectedNumberOfCard)
-                                    }}
-                                >Submit</SideBarButton>
-                            </div>
-                        )}
-                    </>
-                }
-                {(isWaitForOpponent || isWaitForRematch) && <WaitForOpponent />}
-                {isWaitForFriend && (
-                    <div className={styles.waitforfriend}>
-                        <button onClick={onCancelJoin} className={styles.backbtn}>
-                            <ArrowIcon />
+                                        <span className={styles.timecontrolbtn}>3 min</span>
+                                    </label>
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            name="time-control"
+                                            value="5"
+                                            checked={selectedTimeControl === 5}
+                                            onChange={timeControlHandlerHandler}
+                                        />
+                                        <span className={styles.timecontrolbtn}>5 min</span>
+                                    </label>
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            name="time-control"
+                                            value="8"
+                                            checked={selectedTimeControl === 8}
+                                            onChange={timeControlHandlerHandler}
+                                        />
+                                        <span className={styles.timecontrolbtn}>8 min</span>
+                                    </label>
+                                </div>
+                            </fieldset>
+                            <fieldset>
+                                <legend>Select Number of Cards:</legend>
+                                <div className={styles.numberofcards}>
+                                    <label htmlFor="card-number">Number of Cards:</label>
+                                    <input
+                                        onChange={(e) => setSelectedNumberOfCard(+e.target.value)}
+                                        type="range"
+                                        id="card-number"
+                                        name="card-number"
+                                        min="5"
+                                        max="16"
+                                        step="1"
+                                        value={selectedNumberOfCard}
+                                    />
+                                    <output htmlFor="card-number">{selectedNumberOfCard}</output>
+                                </div>
+                            </fieldset>
+                            <SideBarButton icon={<></>}
+                                onClick={() => {
+                                    if (!selectedTimeControl || !selectedNumberOfCard) return;
+                                    setGameInfo(selectedTimeControl * 60 * 1000, selectedNumberOfCard)
+                                }}
+                            >Submit</SideBarButton>
+                        </div>
+                    )}
+                    <div className={styles.custom}>
+                        <button className={styles.custombtn} onClick={customSelectedHandler}>
+                            <span>Custom</span>
+                            <span className={styles.customicon}>
+                                <ArrowIcon />
+                            </span>
                         </button>
-                        <SideBarButton onClick={onCopyHandler} icon={<CopyIcon />}>{"Copy Link"}</SideBarButton>
-                        <span>Share this link with your friend</span>
                     </div>
-                )}
-                {isJoinFriend && (
+                </div>
+            )}
+            {(isWaitForOpponent || isWaitForRematch) && <WaitForOpponent />}
+            {isWaitForFriend && (
+                <div className={styles.waitforfriend}>
+                    <button onClick={onCancelJoin} className={styles.backbtn}>
+                        <ArrowIcon />
+                    </button>
+                    <SideBarButton onClick={onCopyHandler} icon={<CopyIcon />}>{"Copy Link"}</SideBarButton>
+                    <span>Share this link with your friend</span>
+                </div>
+            )}
+            {isJoinFriend && (
+                <div className={styles.joinfriend}>
                     <SideBarButton
                         icon={<RocketIcon />}
                         onClick={() => !isAuth ? openAuth() : onQuickMatch(roomId)}>
                         Join Game
                     </SideBarButton>
-                )} </div>
-        </div>)
+                </div>
+            )}
+        </div >
+    )
 }
