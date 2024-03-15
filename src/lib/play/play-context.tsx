@@ -19,6 +19,9 @@ type PlayValues = {
     onJoinFriend: (roomId: string) => void,
     onCancelJoin: () => void,
     prevOpponent?: PlayerResponse,
+    gameTime: number,
+    numberOfCards: number,
+    setGameInfo: (gameTime: number, numberOfCards: number) => void,
     ryujinService: InterpreterFrom<typeof ryujinMachine>
 }
 
@@ -30,6 +33,9 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
     const { send } = ryujinService
     const gameId = useSelector(ryujinService, (state) => state.context.gameId)
     const [prevOpponent, setPrevOpponent] = useState<PlayerResponse>()
+    const [gameTime, setGameTime] = useState(480000)
+    const [numberOfCards, setNumberOfCards] = useState(16)
+
 
     useEffect(() => {
         socket.on("connect", () => { })
@@ -46,7 +52,6 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
             if (playersInfo?.opponent) {
                 setPrevOpponent(playersInfo.opponent)
             }
-
             send({ type: "UPDATE_PLAYERS", players: playersInfo, roomId: payload.id })
         })
 
@@ -151,13 +156,14 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
     }, [isAuth, socket])
 
     async function onQuickMatch(roomId?: string) {
-        const paylaod = roomId ? { roomId } : undefined
+        const paylaod = { roomId, gameInfo: { time: gameTime, numberOfCards } }
         await socket.emitWithAck("JOIN_ROOM", paylaod);
         send({ type: "QUICK_MATCH" })
     }
 
     async function onInviteFriend() {
-        await socket.emitWithAck("CREATE_ROOM")
+        const payload = { time: gameTime, numberOfCards }
+        await socket.emitWithAck("CREATE_ROOM", payload)
         send({ type: "INVITE_FRIEND" })
     }
 
@@ -207,6 +213,11 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
         send({ type: "REMATCH" })
     }
 
+    function setGameInfo(gameTimeArg: number, numberOfCardsArg: number) {
+        setGameTime(gameTimeArg)
+        setNumberOfCards(numberOfCardsArg)
+    }
+
     return (
         <PlayContext.Provider value={{
             onQuickMatch,
@@ -221,7 +232,10 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
             onJoinFriend,
             ryujinService,
             onCancelJoin,
-            prevOpponent
+            prevOpponent,
+            gameTime,
+            numberOfCards,
+            setGameInfo
         }}>
             {children}
         </PlayContext.Provider>
