@@ -65,63 +65,76 @@
     transform: rotate(-90deg);
 }
 
+.is-open .custom-icon {
+    transform: rotate(90deg);
+}
+
 .custom-btn:hover > .custom-icon {
     fill: rgba(255, 255, 255, 1);
 }
 
-.time-control {
+.custom-content {
+    display: flex;
+    flex-direction: column;
+    color: #ffffff;
+    font-family: var(--font-rubik);
+    gap: var(--16);
+}
+
+.legend {
+    display: flex;
+    gap: var(--4);
+    align-items: center;
+}
+
+.legend > svg {
+    fill: #fff;
+    width: var(--16) 
+}
+
+.time-control-group {
     display: flex;
     justify-content: center;
     gap: var(--8);
-    padding-top: var(--8);
+    margin-top: var(--8);
+}
+
+.time-control-group > * {
+    flex: 1;
+    min-width: max-content;
 }
 
 .time-control-btn {
     display: inline-block;
-    padding: 10px 20px;
-    margin-bottom: 10px;
+    padding: var(--8) var(--16);
     background-color: #f0f0f0;
-    border: 1px solid #ccc;
+    color: #000;
     border-radius: 5px;
     cursor: pointer;
+    width: 100%;
+    text-align: center;
 }
 
-.time-control input[type="radio"] {
-  display: none;
+.time-control-group input[type="radio"] {
+    display: none;
 }
 
-.time-control input[type="radio"]:checked + .time-control-btn {
-  background-color: #007bff;
-  color: #fff;
-  border-color: #007bff;
+.time-control-group input[type="radio"]:checked + .time-control-btn {
+    background-color: #005BAB;
+    color: #fff;
 }
 
-.number-of-cards > input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 20px;
-  height: 20px;
-  background: #007bff;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: background 2.15s ease-in-out;
+.number-of-cards > label {
+    display: flex;
+    align-items: center;
+    gap: var(--8);
 }
 
 .number-of-cards input[type="range"] {
-  --webkit-appearance: none;
-  width: 100%;
-  background: #d3d3d3;
-  outline: none;
-  border-radius: 5px;
-}
-.number-of-cards input[type="range"]::-webkit-slider-thumb:hover {
-  background: #0056b3;
-}
-
-.number-of-cards output {
-  display: block;
-  margin-top: 10px;
-  font-size: 14px;
+    font-size: var(--20);
+    width: 100%;
+    color: #005BAB;
+    margin-top: var(--4);
 }
 
 @media only screen and (max-width: 1024px){

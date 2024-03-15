@@ -10,6 +10,10 @@ import WaitForOpponent from "./wait-for-opponent";
 import { useAuthContext } from "@/lib/auth";
 import ArrowIcon from "../icons/arrow-icon";
 import { useEffect, useState } from "react";
+import StopwatchIcon from "../icons/stopwatch";
+import DiamondIcon from "../icons/diamond";
+
+const timeControlOptions = [3, 5, 8];
 
 export default function Lobby() {
     const [isCustomSelected, setCustomSelected] = useState(false)
@@ -46,6 +50,12 @@ export default function Lobby() {
         setSelectedTimeControl(+e.target.value)
     }
 
+    function onCustomSubmitHandler() {
+        if (!selectedTimeControl || !selectedNumberOfCard) return;
+        setGameInfo(selectedTimeControl * 60 * 1000, selectedNumberOfCard)
+        setCustomSelected(false)
+    }
+
     useEffect(() => {
         setSelectedNumberOfCard(numberOfCards)
         setSelectedTimeControl(Math.floor(gameTime / 1000 / 60))
@@ -69,69 +79,58 @@ export default function Lobby() {
                             </SideBarButton>
                         </>
                     ) : (
-                        <div>
+                        <div className={styles.customContent}>
                             <fieldset>
-                                <legend>Time Control: </legend>
-                                <div className={styles.timeControl} role="radiogroup">
-                                    <label>
-                                        <input
-                                            type="radio"
-                                            name="time-control"
-                                            value="3"
-                                            checked={selectedTimeControl === 3}
-                                            onChange={timeControlHandlerHandler}
-                                        />
-                                        <span className={styles.timeControlBtn}>3 min</span>
-                                    </label>
-                                    <label>
-                                        <input
-                                            type="radio"
-                                            name="time-control"
-                                            value="5"
-                                            checked={selectedTimeControl === 5}
-                                            onChange={timeControlHandlerHandler}
-                                        />
-                                        <span className={styles.timeControlBtn}>5 min</span>
-                                    </label>
-                                    <label>
-                                        <input
-                                            type="radio"
-                                            name="time-control"
-                                            value="8"
-                                            checked={selectedTimeControl === 8}
-                                            onChange={timeControlHandlerHandler}
-                                        />
-                                        <span className={styles.timeControlBtn}>8 min</span>
-                                    </label>
+                                <legend className={styles.legend}>
+                                    <StopwatchIcon />
+                                    Time Control
+                                </legend>
+                                <div className={styles.timeControlGroup} role="radiogroup">
+                                    {timeControlOptions.map((value) => (
+                                        <label key={value}>
+                                            <input
+                                                type="radio"
+                                                name="time-control"
+                                                value={value}
+                                                checked={selectedTimeControl === value}
+                                                onChange={timeControlHandlerHandler}
+                                            />
+                                            <span className={styles.timeControlBtn}>{`${value} min`}</span>
+                                        </label>
+                                    ))}
                                 </div>
                             </fieldset>
                             <fieldset>
-                                <legend>Select Number of Cards:</legend>
+                                <legend className={styles.legend}>
+                                    <DiamondIcon />
+                                    Number of Cards
+                                </legend>
                                 <div className={styles.numberOfCards}>
-                                    <label htmlFor="card-number">Number of Cards:</label>
-                                    <input
-                                        onChange={(e) => setSelectedNumberOfCard(+e.target.value)}
-                                        type="range"
-                                        id="card-number"
-                                        name="card-number"
-                                        min="5"
-                                        max="16"
-                                        step="1"
-                                        value={selectedNumberOfCard}
-                                    />
-                                    <output htmlFor="card-number">{selectedNumberOfCard}</output>
+                                    <label htmlFor="card-number">
+                                        <input
+                                            onChange={(e) => setSelectedNumberOfCard(+e.target.value)}
+                                            type="range"
+                                            id="card-number"
+                                            name="card-number"
+                                            min="5"
+                                            max="16"
+                                            step="1"
+                                            value={selectedNumberOfCard}
+                                        />
+                                        <output htmlFor="card-number">{selectedNumberOfCard}</output>
+                                    </label>
                                 </div>
                             </fieldset>
-                            <SideBarButton icon={<></>}
-                                onClick={() => {
-                                    if (!selectedTimeControl || !selectedNumberOfCard) return;
-                                    setGameInfo(selectedTimeControl * 60 * 1000, selectedNumberOfCard)
-                                }}
-                            >Submit</SideBarButton>
+                            <SideBarButton
+                                onClick={onCustomSubmitHandler}>
+                                Submit
+                            </SideBarButton>
                         </div>
                     )}
                     <div className={styles.custom}>
-                        <button className={styles.customBtn} onClick={customSelectedHandler}>
+                        <button
+                            className={`${styles.customBtn} ${isCustomSelected ? styles.isOpen : ""}`}
+                            onClick={customSelectedHandler}>
                             <span>Custom</span>
                             <span className={styles.customIcon}>
                                 <ArrowIcon />
@@ -139,7 +138,8 @@ export default function Lobby() {
                         </button>
                     </div>
                 </div>
-            )}
+            )
+            }
             {(isWaitForOpponent || isWaitForRematch) && <WaitForOpponent />}
             {isWaitForFriend && (
                 <div className={styles.waitForFriend}>
