@@ -1,5 +1,6 @@
 .container {
-    min-width: var(--320);
+    min-width: min(32rem,100vw);
+    max-width: 30rem;
     background-color: #EBD5B4EA;
     background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.3294) 11.45%, rgba(255, 214, 0, 0.1566) 139.13%);
     color: #303456;
@@ -12,6 +13,7 @@
     overflow: hidden;
     padding-bottom: var(--12);
     font-family: var(--font-lato);
+    z-index: 10;
 }
 
 .header {
@@ -99,7 +101,7 @@
 }
 
 .action {
-    flex: 1 0 45%;
+    flex: 1;
 }
 
 .action:last-child {
