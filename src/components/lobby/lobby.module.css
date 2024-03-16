@@ -4,7 +4,6 @@
     border-radius: var(--10);
     padding: 7%;
     position: relative;
-    min-width: max-content;
 }
 
 .side-actions {
@@ -101,12 +100,11 @@
 
 .time-control-group > * {
     flex: 1;
-    min-width: max-content;
 }
 
 .time-control-btn {
     display: inline-block;
-    padding: var(--8) var(--16);
+    padding: var(--8) 4%;
     background-color: #f0f0f0;
     color: #000;
     border-radius: 5px;

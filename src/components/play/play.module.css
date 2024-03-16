@@ -55,7 +55,6 @@
 .player-actions > button {
     border-radius: 8px;
     padding: var(--8);
-
 }
 
 .player-actions > button:hover {

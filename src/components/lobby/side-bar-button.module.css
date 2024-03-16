@@ -1,6 +1,11 @@
 .button {
-  padding-left: var(--8);
-  padding-right: var(--8);
+  padding-left: 4%;
+  padding-right: 4%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2%;
+  font-size: var(--20);
 }
 
 .button::before {
@@ -24,8 +29,9 @@
 }
 
 .icon {
-    display: inline-block;
-    vertical-align: middle;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .icon > svg {
@@ -33,11 +39,11 @@
 }
 
 .text {
-    display: inline-block;
-    margin-left: var(--8);
-    vertical-align: middle;
-    font-size: var(--20);
+    display: block;
     font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .navy {
@@ -51,4 +57,16 @@
 
 .navy::before {
   background: #001F3F33;
+}
+
+@media screen and (max-width: 1024px) {
+  .button {
+      font-size: calc(var(--side-width) * 0.01 + 12px);
+  }
+}
+
+@media screen and (max-width: 768px) and (orientation: portrait){
+  .button {
+    font-size: var(--20);
+  }
 }
