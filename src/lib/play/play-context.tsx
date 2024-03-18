@@ -29,7 +29,7 @@ const PlayContext = createContext({} as PlayValues);
 
 export default function PlayContextProvider({ children }: { children: ReactNode }) {
     const ryujinService = useInterpret(ryujinMachine)
-    const { isAuth } = useAuthContext()
+    const { isAuth, openAuth } = useAuthContext()
     const { send } = ryujinService
     const gameId = useSelector(ryujinService, (state) => state.context.gameId)
     const [prevOpponent, setPrevOpponent] = useState<PlayerResponse>()
@@ -152,6 +152,10 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
     useEffect(() => {
         if (!socket.connected && isAuth) {
             socket.connect()
+        } else if (socket.connected && !isAuth) {
+            socket.disconnect()
+            send({ type: "LEAVE_ROOM" })
+            openAuth()
         }
     }, [isAuth, socket])
 

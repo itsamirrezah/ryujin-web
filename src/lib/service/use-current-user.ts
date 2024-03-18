@@ -11,8 +11,6 @@ export default function useCurrentUser() {
     const logout = useLogout()
     const {
         data,
-        error,
-        isLoading,
         isError,
         isSuccess,
         refetch
@@ -34,9 +32,10 @@ export default function useCurrentUser() {
     }, [logout.isSuccess])
 
     useEffect(() => {
-        if (!isSuccess || !data) return;
-        setUser(data)
-    }, [data, isSuccess])
+        if (isSuccess || isError) {
+            setUser(data)
+        }
+    }, [isSuccess, isError, data])
 
 
     useEffect(() => {

@@ -168,6 +168,9 @@ export const ryujinMachine = createMachine<GameContext, Events, State>({
                 TIMEOUT_REJECTED: {
                     actions: assign({ hasFlagInProgress: false }),
                 },
+                LEAVE_ROOM: {
+                    target: "lobby"
+                }
             },
         },
         gameOver: {

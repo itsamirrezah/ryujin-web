@@ -28,6 +28,7 @@ export default function AuthContextProvider({ children }: AuthProps) {
         if (isAuth) return;
         setIsModalShown(true)
     }
+
     function closeAuth() {
         setIsModalShown(false)
     }
