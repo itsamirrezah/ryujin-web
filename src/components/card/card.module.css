@@ -46,8 +46,6 @@
     line-height: var(--24);
     text-transform: uppercase;
     text-align: center;
-    text-overflow: ellipsis;
-    text-wrap: nowrap;
     width: 100%;
 }
 
@@ -67,8 +65,7 @@
     }
 
     .title {
-        font-size: var(--14);
-        flex: 1;
+        font-size: var(--12);
     }
 }
 
@@ -78,12 +75,10 @@
     }
 
     .board {
-        max-width: calc(var(--max-card-height) - var(--4));
-        min-width: var(--48);
+        max-width: calc(var(--card-height) - var(--8));
     }
 
     .title {
-        font-size: var(--14);
-        flex: 0 0 60%;
+        font-size: calc(2vw + 1vh) 
     }
 }

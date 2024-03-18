@@ -2,7 +2,7 @@
     --player-info-height: var(--28);
     --min-sidebar: 35rem;
     --max-sidebar: 45rem;
-    --board-width: min(calc(100vw - var(--min-sidebar) - 4vmin - 2rem),calc(100vh - var(--header-height) - var(--footer-height) - calc(var(--player-info-height) * 2) - 1rem));
+    --board-width: min(calc(100vw - var(--min-sidebar) - 4vmin - 2rem),calc(100vh - var(--header-height) - var(--footer-height) - (var(--player-info-height) * 2) - 1rem));
     --side-width: min(calc(100vw - var(--board-width) - 4vmin - 2rem),var(--max-sidebar));
 }
 
@@ -74,7 +74,7 @@
 @media only screen and (max-width: 1024px) {
     :root {
         --min-sidebar: 15rem;
-        --max-sidebar: min(calc(var(--board-width) - calc(var(--player-info-height) * 2)),20rem); 
+        --max-sidebar: min(calc(var(--board-width) - (var(--player-info-height) * 2)),20rem); 
     }
     .board {
         position: static;
@@ -84,8 +84,10 @@
 @media only screen and (max-width: 768px) and (orientation: portrait){
     :root {
         --row-gap: var(--4);
-        --max-card-height: var(--80);
-        --board-width: calc(100vh - var(--header-height) - var(--footer-height) - calc(var(--player-info-height) * 2) - calc(var(--max-card-height) * 2) - var(--row-gap) - 1rem);
+        --min-card-height: var(--64);
+        --board-width: calc(100vh - var(--header-height) - var(--footer-height) - (var(--player-info-height) * 2) - (var(--min-card-height) * 2) - var(--row-gap) - 1rem);
+        --card-height: calc((100vh - var(--board-width) - var(--header-height) - (var(--player-info-height) * 2) - (var(--row-gap) * 2)) / 2);
+
     }
     .container {
         grid-template-columns: [board] minmax(min-content,var(--board-width)); 
