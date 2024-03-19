@@ -14,7 +14,7 @@ type AuthValues = {
     invalidateUser: () => void
     openAuth: () => void
     closeAuth: () => void,
-    onLogout: (payload: any) => void
+    onLogout: () => void
 }
 
 const AuthContext = createContext({} as AuthValues)

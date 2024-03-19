@@ -10,18 +10,37 @@ import styles from "./play.module.css"
 import SelfPlayerInfo from "./self-player-info"
 import SelfCards from "./selfCards"
 import HandIcon from "../icons/hand"
+import { useEffect, useState } from "react"
+import useOutsideClick from "@/lib/use-outside-click"
 
 export default function Play() {
+    const [resign, setResign] = useState<number>(0)
     const {
         onResign,
         onPassTurn,
         ryujinService
     } = usePlay()
+    const outsideRef = useOutsideClick<HTMLButtonElement>(() => setResign(0))
     const isLobby = useSelector(ryujinService, (state) => state.matches('lobby'))
     const isPlaying = useSelector(ryujinService, (state) => state.matches('playing'))
     const isGameOver = useSelector(ryujinService, (state) => state.matches('gameOver'))
     const hasNoMoves = useSelector(ryujinService, (state) => state.matches('playing.noMove'))
     const shouldLoadCards = isPlaying || isGameOver
+
+    function onResignHandler() {
+        setResign(prev => {
+            if (prev + 1 >= 2) {
+                onResign()
+                return 0
+            }
+            return prev + 1
+        })
+    }
+
+    useEffect(() => {
+        if (!isGameOver) return;
+        setResign(0)
+    }, [isGameOver])
 
     return (
         <div className={styles.container}>
@@ -50,7 +69,11 @@ export default function Play() {
             )}
             {isPlaying && (
                 <div className={styles.playerActions}>
-                    <button onClick={onResign}>
+                    <button
+                        ref={outsideRef}
+                        className={`${styles.actionBtn} ${resign === 1 ? styles.selected : ""}`}
+                        onClick={onResignHandler}
+                    >
                         <FlagIcon />
                     </button>
                     {hasNoMoves && (<button onClick={onPassTurn}>

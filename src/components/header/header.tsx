@@ -18,9 +18,21 @@ const navItems = [
 ] as const
 
 export default function Header() {
+    const [logout, setLogout] = useState<number>(0)
     const { isAuth, onLogout, openAuth, user } = useAuthContext()
     const [isNavOpen, setNavOpen] = useState(false)
-    const outsideRef = useOutsideClick(() => setNavOpen(false))
+    const navRef = useOutsideClick(() => setNavOpen(false))
+    const logoutRef = useOutsideClick<HTMLButtonElement>(() => setLogout(0))
+
+    function onLogoutHandler() {
+        setLogout(prev => {
+            if (prev + 1 >= 2) {
+                onLogout()
+                return 0
+            }
+            return prev + 1
+        })
+    }
 
     return (
         <header className={styles.container}>
@@ -30,7 +42,7 @@ export default function Header() {
             <button className={styles.hamburgerMenu} onClick={() => setNavOpen(state => !state)}>
                 <HamburgerIcon />
             </button>
-            <nav ref={outsideRef} className={`${styles.navMenu} ${isNavOpen ? styles.navOpen : ""}`}>
+            <nav ref={navRef} className={`${styles.navMenu} ${isNavOpen ? styles.navOpen : ""}`}>
                 <ul>
                     {navItems.map(item => (
                         <li key={item.to}>
@@ -57,7 +69,10 @@ export default function Header() {
                     </button>
                 )}
                 {user && (
-                    <button className={styles.action} onClick={onLogout}>
+                    <button
+                        ref={logoutRef}
+                        className={`${styles.action} ${logout === 1 ? styles.selected : ""}`}
+                        onClick={onLogoutHandler}>
                         <LogoutIcon />
                     </button>
                 )}

@@ -56,15 +56,35 @@
 }
 
 .action {
-    width: var(--20);
+    border-radius: 8px;
+    transition: all 0.5s;
+    padding: var(--6);
+}
+
+.action:hover {
+    background-color: #00000033;
 }
 
 .action > svg {
-        fill: #ccc
+    width: var(--20);
+    fill: #ccc
 }
 
 .action:hover > svg {
     fill: #fff
+}
+
+.selected.action {
+    background-color: #ffffff99;
+    box-shadow: 0 .3rem .4rem .1rem rgba(255,255,255,.1);
+}
+
+.selected.action:hover {
+    background-color: #ffffff;
+}
+
+.selected.action > svg {
+    filter: invert(1);
 }
 
 .links {

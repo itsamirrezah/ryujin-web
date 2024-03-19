@@ -52,24 +52,36 @@
     grid-row: control;
 }
 
-.player-actions > button {
+.action-btn {
     border-radius: 8px;
     padding: var(--8);
+    transition: all 0.5s;
 }
 
-.player-actions > button:hover {
-    background-color: #00000099;
-}
-
-.player-actions > button > svg {
+.action-btn > svg {
     width: var(--20);
     height: var(--20);
     fill: #ccc;
 }
 
-.player-actions > button:hover > svg {
-    fill: #fff;
+.action-btn:hover {
+    background-color: #00000099;
 }
+
+.selected.action-btn {
+    background-color: #ffffff99;
+    box-shadow: 0 .3rem .4rem .1rem rgba(255,255,255,.1);
+}
+
+.selected.action-btn:hover {
+    background-color: #ffffff;
+}
+
+.selected.action-btn > svg {
+    filter: invert(1);
+}
+
+
 
 @media only screen and (max-width: 1024px) {
     :root {
