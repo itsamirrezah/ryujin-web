@@ -1,4 +1,4 @@
-import { ActionFunction, assign } from "xstate";
+import { assign, AssignAction } from "xstate";
 import {
     BlackOrWhite,
     CardType,
@@ -80,7 +80,7 @@ export const startGame = assign((_, e) => {
         opponentTemple: e.selfColor === "w" ? "c5" : "c1",
         lastTracked: new Date().getTime()
     }
-}) as ActionFunction<GameContext, GameStartedEvent>
+}) as AssignAction<GameContext, GameStartedEvent>
 
 export const selectCard = assign({
     selectedCard: (ctx, e) => {
@@ -93,7 +93,7 @@ export const selectCard = assign({
         if (!selectedPiece || !selfColor) return []
         return getCardOptions(selectedPiece.square, selectedCard.delta, selfColor, boardPosition)
     }
-}) as ActionFunction<GameContext, SelectCardEvent>
+}) as AssignAction<GameContext, SelectCardEvent>
 
 export const selectPiece = assign({
     selectedPiece: (ctx, e) => {
@@ -107,7 +107,7 @@ export const selectPiece = assign({
         if (!selectedCard || !selfColor) return [];
         return getCardOptions(square, selectedCard.delta, selfColor, boardPosition)
     }
-}) as ActionFunction<GameContext, SelectPieceEvent>
+}) as AssignAction<GameContext, SelectPieceEvent>
 
 export const move = assign((ctx, e) => {
     const { from, to } = e
@@ -119,7 +119,7 @@ export const move = assign((ctx, e) => {
         selectedPiece: undefined,
         moveOptions: []
     }
-}) as ActionFunction<GameContext, MoveEvent>
+}) as AssignAction<GameContext, MoveEvent>
 
 export const moveConfirmed = assign((ctx, e) => {
     const { replacedCard } = e
@@ -133,7 +133,7 @@ export const moveConfirmed = assign((ctx, e) => {
         selectedCard: undefined
     }
 
-}) as ActionFunction<GameContext, MoveConfirmedEvent>
+}) as AssignAction<GameContext, MoveConfirmedEvent>
 
 export const tick = assign((ctx, e) => {
     const { hasTurn, selfRemainingTime, opponentRemainingTime, lastTracked } = ctx
@@ -147,7 +147,7 @@ export const tick = assign((ctx, e) => {
         opponentRemainingTime: updatedOpponentRemainingTime,
         lastTracked: now,
     }
-}) as ActionFunction<GameContext, TickEvent>
+}) as AssignAction<GameContext, TickEvent>
 
 export const opponentMove = assign((ctx, e) => {
     const { from, to, selectedCard, replacedCard } = e
@@ -160,7 +160,7 @@ export const opponentMove = assign((ctx, e) => {
         hasTurn: true,
         opponentCards: updatedOpponentCards,
     }
-}) as ActionFunction<GameContext, OpponentMoveEvent>
+}) as AssignAction<GameContext, OpponentMoveEvent>
 
 export const updateTime = assign((ctx, e) => {
     const { selfColor } = ctx;
@@ -173,7 +173,7 @@ export const updateTime = assign((ctx, e) => {
         //FIXME: get lastTracked from server
         lastTracked: new Date().getTime(),
     }
-}) as ActionFunction<GameContext, UpdateTimeEvent>
+}) as AssignAction<GameContext, UpdateTimeEvent>
 
 export const gameOver = assign((_, e) => {
     const {
@@ -195,4 +195,4 @@ export const gameOver = assign((_, e) => {
         opponentRemainingTime: selfColor === "w" ? blackRemainingTime : whiteRemainingTime,
         hasFlagInProgress: false,
     }
-}) as ActionFunction<GameContext, GameOverEvent>
+}) as AssignAction<GameContext, GameOverEvent>

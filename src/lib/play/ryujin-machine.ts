@@ -12,9 +12,13 @@ import {
     tick,
     updateTime
 } from "./consts";
-import { Events, GameContext, PieceType, SquareType, State } from "./types";
+import { Events, GameContext, PieceType, SquareType } from "./types";
 
-export const ryujinMachine = createMachine<GameContext, Events, State>({
+export const ryujinMachine = createMachine({
+    schema: {
+        context: {} as GameContext,
+        events: {} as Events,
+    },
     context: {
         roomId: undefined,
         gameId: undefined,

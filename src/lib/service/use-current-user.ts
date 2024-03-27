@@ -40,7 +40,7 @@ export default function useCurrentUser() {
 
     useEffect(() => {
         if (!user) return;
-        const interval = setTimeout(invalidateUser, 9000)
+        const interval = setTimeout(invalidateUser, 60 * 60 * 1000)
         return () => clearInterval(interval)
     }, [user])
 

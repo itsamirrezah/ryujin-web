@@ -6,6 +6,7 @@ import MoveOption from "../icons/move-option"
 import { useBoard } from "./board-context"
 import { DND_ITEM_TYPE } from "./consts"
 import styles from "./square.module.css"
+import { DndItem } from "./types"
 
 
 type SquareProps = {
