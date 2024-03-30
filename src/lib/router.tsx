@@ -1,7 +1,4 @@
 import Layout from "@/components/layout/layout";
-import PlayContextProvider from "./play/play-context";
-import HomePage from "@/pages/home";
-import PlayPage from "@/pages/play";
 import { redirect, createRoute, createRootRoute, createRouter } from "@tanstack/react-router";
 import axios from "axios";
 import { z } from "zod";
@@ -17,8 +14,7 @@ const root = createRootRoute({ component: Layout });
 const indexRoute = createRoute({
     getParentRoute: () => root,
     path: '/',
-    component: HomePage
-})
+}).lazy(() => import("@/pages/home").then(d => d.Route))
 
 const joinSearchSchema = z.object({
     join: z.string().optional()
@@ -38,8 +34,7 @@ export const playRoute = createRoute({
             throw redirect({ to: "/play" })
         }
     },
-    component: () => <PlayContextProvider><PlayPage /></PlayContextProvider>
-})
+}).lazy(() => import("@/pages/play").then(d => d.Route))
 
 const playRoomRoute = createRoute({
     getParentRoute: () => playRoute,

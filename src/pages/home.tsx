@@ -1,11 +1,11 @@
 import PlayNowButton from "@/components/home/play-now-button"
 import { useAuthContext } from "@/lib/auth"
-import { useNavigate } from "@tanstack/react-router"
+import { createLazyRoute, useNavigate } from "@tanstack/react-router"
 import styles from "./home.module.css"
 import MasterRed from "@/components/icons/master-red"
 import MasterGreen from "@/components/icons/master-green"
 
-export default function HomePage() {
+function HomePage() {
     const navigate = useNavigate()
     const { isAuth, openAuth } = useAuthContext()
 
@@ -31,3 +31,7 @@ export default function HomePage() {
         </div>
     )
 }
+
+export const Route = createLazyRoute('/')({
+    component: HomePage,
+})
