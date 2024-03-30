@@ -25,3 +25,5 @@ dist-ssr
 
 # environment variables
 .env
+.env.dev
+.env.prod
