@@ -1,12 +1,12 @@
-import { usePlay } from "@/lib/play/play-context";
+import PlayContextProvider, { usePlay } from "@/lib/play/play-context";
 import styles from "./play.module.css";
 import { useSelector } from "@xstate/react";
 import { useEffect } from "react";
-import { useNavigate, useSearch } from "@tanstack/react-router";
+import { createLazyRoute, useNavigate, useSearch } from "@tanstack/react-router";
 import Play from "@/components/play/play";
 import { playRoute } from "@/lib/router";
 
-export default function PlayPage() {
+function PlayPage() {
     const {
         ryujinService
     } = usePlay()
@@ -33,3 +33,14 @@ export default function PlayPage() {
     )
 }
 
+function PlayPageWithContext() {
+    return (
+        <PlayContextProvider>
+            <PlayPage />
+        </PlayContextProvider>
+    )
+}
+
+export const Route = createLazyRoute('/play')({
+    component: PlayPageWithContext,
+})

@@ -1,8 +1,5 @@
 import Layout from "@/components/layout/layout";
-import PlayContextProvider from "./play/play-context";
-import HomePage from "@/pages/home";
-import PlayPage from "@/pages/play";
-import { Router, Route, RootRoute, redirect } from "@tanstack/react-router";
+import { redirect, createRoute, createRootRoute, createRouter } from "@tanstack/react-router";
 import axios from "axios";
 import { z } from "zod";
 
@@ -12,19 +9,18 @@ declare module '@tanstack/react-router' {
     }
 }
 
-const root = new RootRoute({ component: Layout });
+const root = createRootRoute({ component: Layout });
 
-const indexRoute = new Route({
+const indexRoute = createRoute({
     getParentRoute: () => root,
     path: '/',
-    component: HomePage
-})
+}).lazy(() => import("@/pages/home").then(d => d.Route))
 
 const joinSearchSchema = z.object({
     join: z.string().optional()
 })
 
-export const playRoute = new Route({
+export const playRoute = createRoute({
     getParentRoute: () => root,
     path: '/play',
     validateSearch: (search: Record<string, unknown>) => joinSearchSchema.parse(search),
@@ -38,29 +34,16 @@ export const playRoute = new Route({
             throw redirect({ to: "/play" })
         }
     },
-    component: () => <PlayContextProvider><PlayPage /></PlayContextProvider>
-})
+}).lazy(() => import("@/pages/play").then(d => d.Route))
 
-const playRoomRoute = new Route({
+const playRoomRoute = createRoute({
     getParentRoute: () => playRoute,
     path: '$gameId'
-})
-
-const rulesRoute = new Route({
-    getParentRoute: () => root,
-    path: "/rules"
-})
-
-const aboutRoute = new Route({
-    getParentRoute: () => root,
-    path: "/about"
 })
 
 const routeTree = root.addChildren([
     indexRoute,
     playRoute.addChildren([playRoomRoute]),
-    rulesRoute,
-    aboutRoute
 ])
 
-export const router = new Router({ routeTree })
+export const router = createRouter({ routeTree })
