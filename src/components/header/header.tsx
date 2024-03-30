@@ -13,8 +13,6 @@ import styles from "./header.module.css"
 const navItems = [
     { title: "Home", to: "/" },
     { title: "Play", to: "/play" },
-    { title: "Rules", to: "/rules" },
-    { title: "About", to: "/about" }
 ] as const
 
 export default function Header() {
