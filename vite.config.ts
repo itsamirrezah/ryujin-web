@@ -11,6 +11,10 @@ export default defineConfig({
         }
     },
     server: {
+        https: {
+            key: "./secrets/private.key",
+            cert: "./secrets/certificate.crt"
+        },
         host: '0.0.0.0',
         port: 3000
     },
