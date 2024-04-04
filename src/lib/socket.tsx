@@ -48,6 +48,11 @@ export type GameInfo = {
     numberOfCards: number
 }
 
+export type JoinRoom = {
+    roomId?: string,
+    gameInfo: GameInfo
+}
+
 export type ServerEvents = {
     UPDATE_PLAYERS: (payload: UpdatePlayersPayload) => void
     START_GAME: (payload: GamePayload) => void
@@ -56,12 +61,12 @@ export type ServerEvents = {
     MOVE_CONFIRMED: (payload: MoveConfirmedPayload) => void
     MOVE_REJECTED: (payload: MoveRejectedPayload) => void
     TIMEOUT_REJECTED: (payload: TimePayload) => void
-    OPPONENT_REMATCH: () => void;
+    OPPONENT_REMATCH: () => void
 }
 
 export type ClientEvents = {
-    JOIN_ROOM: (payload?: { roomId: string, gameInfo: GameInfo }) => void;
-    CREATE_ROOM: (payload?: { time: number, numberOfCards: number }) => void;
+    JOIN_ROOM: (payload?: JoinRoom) => void;
+    CREATE_ROOM: (payload?: GameInfo) => void;
     MOVE: (payload: { playerId: string, gameId: string, from: SquareType, to: SquareType, selectedCard: CardType }) => void;
     LEAVE_ROOM: () => void;
     CLAIM_OPPONENT_TIMEOUT: (gameId: string) => void;
