@@ -1,4 +1,5 @@
 import { usePlay } from "@/lib/play/play-context"
+import { useSelector } from "@xstate/react"
 import { useEffect, useState } from "react"
 import Ripple from "../ripple/ripple"
 import styles from "./wait-for-opponent.module.css"
@@ -18,7 +19,12 @@ const waitForOpponentMessages = [
 ]
 
 export default function WaitForOpponent() {
-    const { onCancelJoin } = usePlay()
+    const {
+        onCancelJoin,
+        ryujinService,
+        isRoomActionInProgress
+    } = usePlay()
+    const roomId = useSelector(ryujinService, (state) => state.context.roomId)
 
     const [waitForOpponentMsg, setWaitForOpponentMsg] = useState(waitForOpponentMessages[0])
     const [dot, setDot] = useState("")
@@ -45,7 +51,9 @@ export default function WaitForOpponent() {
             <div className={styles.rippleEffect}>
                 <Ripple />
             </div>
-            <button onClick={onCancelJoin} className={styles.cancelBtn}>cancel</button>
+            {!!roomId && !isRoomActionInProgress && (
+                <button onClick={onCancelJoin} className={styles.cancelBtn}>cancel</button>
+            )}
         </div>
     )
 }

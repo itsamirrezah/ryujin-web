@@ -26,7 +26,8 @@ export default function Lobby() {
         onCancelJoin,
         setGameInfo,
         gameTime,
-        numberOfCards
+        numberOfCards,
+        isRoomActionInProgress
     } = usePlay()
     const { isAuth, openAuth } = useAuthContext()
     const isIdle = useSelector(ryujinService, (state) => state.matches('lobby.idle'))
@@ -69,11 +70,13 @@ export default function Lobby() {
                         <>
                             <SideBarButton
                                 icon={<DiceIcon />}
+                                disabled={isRoomActionInProgress}
                                 onClick={() => !isAuth ? openAuth() : onQuickMatch()}>
                                 Quick Match
                             </SideBarButton>
                             <SideBarButton
                                 icon={<ChainIcon />}
+                                disabled={isRoomActionInProgress}
                                 onClick={() => !isAuth ? openAuth() : onInviteFriend()}>
                                 With Friends
                             </SideBarButton>
@@ -130,6 +133,7 @@ export default function Lobby() {
                     <div className={styles.custom}>
                         <button
                             className={`${styles.customBtn} ${isCustomSelected ? styles.isOpen : ""}`}
+                            disabled={isRoomActionInProgress}
                             onClick={customSelectedHandler}>
                             <span>Custom</span>
                             <span className={styles.customIcon}>
@@ -154,6 +158,7 @@ export default function Lobby() {
                 <div className={styles.joinFriend}>
                     <SideBarButton
                         icon={<RocketIcon />}
+                        disabled={isRoomActionInProgress}
                         onClick={() => !isAuth ? openAuth() : onQuickMatch(roomId)}>
                         Join Game
                     </SideBarButton>

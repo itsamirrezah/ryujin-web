@@ -1,4 +1,4 @@
-import { assign, createMachine } from "xstate";
+import { actions, assign, createMachine } from "xstate";
 import {
     DEFAULT_POSITION,
     gameOver,
@@ -84,7 +84,8 @@ export const ryujinMachine = createMachine({
                     actions: startGame
                 },
                 LEAVE_ROOM: {
-                    target: "lobby"
+                    target: "lobby",
+                    actions: assign({ roomId: undefined })
                 }
             }
         },
@@ -173,7 +174,8 @@ export const ryujinMachine = createMachine({
                     actions: assign({ hasFlagInProgress: false }),
                 },
                 LEAVE_ROOM: {
-                    target: "lobby"
+                    target: "lobby",
+                    actions: assign({ roomId: undefined })
                 }
             },
         },
@@ -201,7 +203,8 @@ export const ryujinMachine = createMachine({
                     target: "lobby.waitingForOpponent"
                 },
                 LEAVE_ROOM: {
-                    target: "lobby"
+                    target: "lobby",
+                    actions: assign({ roomId: undefined })
                 },
             },
         }

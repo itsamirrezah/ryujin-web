@@ -19,7 +19,14 @@ function stringifyEndgame(gameOver: EndGame, selfColor: BlackOrWhite) {
 }
 
 export default function GameOverModal() {
-    const { ryujinService, onRematch, onQuickMatch, onCancelJoin, prevOpponent } = usePlay()
+    const {
+        ryujinService,
+        onRematch,
+        onQuickMatch,
+        onCancelJoin,
+        prevOpponent,
+        isRoomActionInProgress
+    } = usePlay()
     const gameOver = useSelector(ryujinService, (state) => state.context.endGame)
     const hasOpponentRequestRematch = useSelector(ryujinService, (state) => state.matches("gameOver.opponentRematchRequest"))
     const selfColor = useSelector(ryujinService, (state) => state.context.selfColor)
@@ -50,19 +57,22 @@ export default function GameOverModal() {
             <div
                 className={`${styles.alert} ${visibleRematchStyle}`}>
                 Good game! Rematch?
-                <button className={styles.alertBtn} onClick={onRematch}>
+                <button disabled={isRoomActionInProgress} className={styles.alertBtn} onClick={onRematch}>
                     <CheckIcon />
                 </button>
             </div>
             <div className={styles.playActions}>
                 <div className={styles.action}>
-                    <GameOverButton onClick={() => onQuickMatch()}>New Opponent</GameOverButton>
+                    <GameOverButton disabled={isRoomActionInProgress} onClick={() => onQuickMatch()}>New Opponent</GameOverButton>
                 </div>
                 <div className={styles.action}>
-                    <GameOverButton onClick={onRematch} disabled={!playerInfo?.opponent}>Rematch</GameOverButton>
+                    <GameOverButton
+                        onClick={onRematch} disabled={!playerInfo?.opponent || isRoomActionInProgress}>
+                        Rematch
+                    </GameOverButton>
                 </div>
                 <div className={styles.action}>
-                    <GameOverButton onClick={onCancelJoin}>Back to lobby</GameOverButton>
+                    <GameOverButton onClick={onCancelJoin} disabled={isRoomActionInProgress}>Back to lobby</GameOverButton>
                 </div>
             </div>
         </div >

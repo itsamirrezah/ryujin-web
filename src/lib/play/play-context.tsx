@@ -1,4 +1,4 @@
-import { socket } from "@/lib/socket";
+import { JoinRoom, socket } from "@/lib/socket";
 import { useInterpret, useSelector } from "@xstate/react";
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { InterpreterFrom } from "xstate";
@@ -22,6 +22,7 @@ type PlayValues = {
     gameTime: number,
     numberOfCards: number,
     setGameInfo: (gameTime: number, numberOfCards: number) => void,
+    isRoomActionInProgress: boolean,
     ryujinService: InterpreterFrom<typeof ryujinMachine>
 }
 
@@ -35,6 +36,7 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
     const [prevOpponent, setPrevOpponent] = useState<PlayerResponse>()
     const [gameTime, setGameTime] = useState(480000)
     const [numberOfCards, setNumberOfCards] = useState(16)
+    const [isRoomActionInProgress, setIsRoomActionInProgress] = useState(false)
 
 
     useEffect(() => {
@@ -160,20 +162,52 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
     }, [isAuth, socket])
 
     async function onQuickMatch(roomId?: string) {
-        const paylaod = { roomId, gameInfo: { time: gameTime, numberOfCards } }
-        await socket.emitWithAck("JOIN_ROOM", paylaod);
-        send({ type: "QUICK_MATCH" })
+        if (isRoomActionInProgress) return;
+        const payload = { roomId, gameInfo: { time: gameTime, numberOfCards } } as JoinRoom
+        try {
+            setIsRoomActionInProgress(true)
+            send({ type: "QUICK_MATCH" })
+            const res = await socket.emitWithAck("JOIN_ROOM", payload);
+            if (res.error) {
+                throw new Error("client did not acknowledge the event")
+            }
+        } catch (err) {
+            send({ type: "LEAVE_ROOM" })
+        }
+        finally {
+            setIsRoomActionInProgress(false)
+        }
     }
 
     async function onInviteFriend() {
+        if (isRoomActionInProgress) return;
         const payload = { time: gameTime, numberOfCards }
-        await socket.emitWithAck("CREATE_ROOM", payload)
-        send({ type: "INVITE_FRIEND" })
+        try {
+            setIsRoomActionInProgress(true)
+            const res = await socket.emitWithAck("CREATE_ROOM", payload)
+            send({ type: "INVITE_FRIEND" })
+            if (res.error) {
+                throw new Error("client did not acknowledge the event")
+            }
+        } catch (err) {
+            send({ type: "LEAVE_ROOM" })
+        } finally {
+            setIsRoomActionInProgress(false)
+        }
     }
 
     async function onCancelJoin() {
-        await socket.emitWithAck("LEAVE_ROOM")
-        send({ type: "LEAVE_ROOM" })
+        if (isRoomActionInProgress) return;
+        try {
+            setIsRoomActionInProgress(true)
+            const res = await socket.emitWithAck("LEAVE_ROOM")
+            if (res.error) {
+                throw new Error("client did not acknowledge the event")
+            }
+            send({ type: "LEAVE_ROOM" })
+        } finally {
+            setIsRoomActionInProgress(false)
+        }
     }
 
     function onJoinFriend(roomId: string) {
@@ -239,7 +273,8 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
             prevOpponent,
             gameTime,
             numberOfCards,
-            setGameInfo
+            setGameInfo,
+            isRoomActionInProgress
         }}>
             {children}
         </PlayContext.Provider>
