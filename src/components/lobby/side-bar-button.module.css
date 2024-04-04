@@ -28,6 +28,15 @@
   transform: translate3d(0, 0, -1em);
 }
 
+.button:disabled {
+  cursor: unset;
+}
+
+.button:disabled::before,
+.button:disabled:hover{
+  transform: unset;
+}
+
 .icon {
     display: flex;
     justify-content: center;
@@ -58,6 +67,11 @@
 .navy::before {
   background: #001F3F33;
 }
+
+.navy:disabled:hover {
+  background: #00477F;
+}
+
 
 @media screen and (max-width: 1024px) {
   .button {
