@@ -74,6 +74,12 @@ export type InvalidMoveResponse = {
     payload: GameResponse
 }
 
+type History = {
+    boardPosition: Position,
+    selfCards: [CardType, CardType],
+    opponentCards: [CardType, CardType],
+}
+
 export type GameContext = {
     boardPosition: Position,
     roomId?: string,
@@ -92,7 +98,8 @@ export type GameContext = {
     moveOptions?: SquareType[],
     lastTracked: number,
     endGame?: EndGame,
-    hasFlagInProgress: boolean
+    hasFlagInProgress: boolean,
+    history: History[],
 }
 
 export type QuickMatchEvent = {

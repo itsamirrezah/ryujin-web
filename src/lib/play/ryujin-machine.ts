@@ -1,4 +1,4 @@
-import { actions, assign, createMachine } from "xstate";
+import { assign, createMachine } from "xstate";
 import {
     DEFAULT_POSITION,
     gameOver,
@@ -37,7 +37,8 @@ export const ryujinMachine = createMachine({
         moveOptions: [],
         lastTracked: 0,
         endGame: undefined,
-        hasFlagInProgress: false
+        hasFlagInProgress: false,
+        history: []
     },
     initial: "lobby",
     on: {
