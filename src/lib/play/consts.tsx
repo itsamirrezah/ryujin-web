@@ -78,7 +78,9 @@ export const startGame = assign((_, e) => {
         opponentRemainingTime: e.time,
         selfTemple: e.selfColor === "w" ? "c1" : "c5",
         opponentTemple: e.selfColor === "w" ? "c5" : "c1",
-        lastTracked: new Date().getTime()
+        lastTracked: new Date().getTime(),
+        history: [{ selfCards: e.selfCards, opponentCards: e.opponentCard, boardPosition: e.boardPosition }],
+        currentHistory: 0
     }
 }) as AssignAction<GameContext, GameStartedEvent>
 
@@ -124,13 +126,23 @@ export const move = assign((ctx, e) => {
 export const moveConfirmed = assign((ctx, e) => {
     const { replacedCard } = e
 
-    const { selfCards, selectedCard } = ctx
-    if (!selfCards || !selectedCard) return ctx
+    const {
+        selfCards,
+        selectedCard,
+        history,
+        currentHistory,
+        opponentCards,
+        boardPosition
+    } = ctx
+    if (!selfCards || !selectedCard || !opponentCards) return ctx
 
     const updatedSelfCards = swapWithDeck(selectedCard, replacedCard, selfCards)
+    const updatedHistory = [...history, { selfCards: updatedSelfCards, opponentCards, boardPosition }]
     return {
         selfCards: updatedSelfCards,
-        selectedCard: undefined
+        selectedCard: undefined,
+        history: updatedHistory,
+        currentHistory: currentHistory + 1,
     }
 
 }) as AssignAction<GameContext, MoveConfirmedEvent>
@@ -151,14 +163,23 @@ export const tick = assign((ctx, e) => {
 
 export const opponentMove = assign((ctx, e) => {
     const { from, to, selectedCard, replacedCard } = e
-    const { opponentCards, boardPosition } = ctx
-    if (!opponentCards || !selectedCard || from === to) return ctx
+    const {
+        opponentCards,
+        boardPosition,
+        selfCards,
+        history,
+        currentHistory,
+    } = ctx
+    if (!opponentCards || !selectedCard || !selfCards || from === to) return ctx
 
     const updatedOpponentCards = swapWithDeck(selectedCard, replacedCard, opponentCards)
+    const updatedHistory = [...history, { selfCards, opponentCards: updatedOpponentCards, boardPosition }]
     return {
         boardPosition: updateBoard(boardPosition, from, to),
         hasTurn: true,
         opponentCards: updatedOpponentCards,
+        history: updatedHistory,
+        currentHistory: currentHistory + 1,
     }
 }) as AssignAction<GameContext, OpponentMoveEvent>
 
