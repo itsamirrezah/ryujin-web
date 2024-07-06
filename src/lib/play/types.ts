@@ -100,6 +100,7 @@ export type GameContext = {
     endGame?: EndGame,
     hasFlagInProgress: boolean,
     history: History[],
+    currentHistory: number,
 }
 
 export type QuickMatchEvent = {
