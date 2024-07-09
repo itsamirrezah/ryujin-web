@@ -1,3 +1,4 @@
+import SelfCards from "@/components/play/selfCards";
 import { assign, AssignAction } from "xstate";
 import {
     BlackOrWhite,
@@ -8,6 +9,8 @@ import {
     GameStartedEvent,
     MoveConfirmedEvent,
     MoveEvent,
+    NavigateBackEvent,
+    NavigateForwardEvent,
     OpponentMoveEvent,
     Position,
     SelectCardEvent,
@@ -217,3 +220,30 @@ export const gameOver = assign((_, e) => {
         hasFlagInProgress: false,
     }
 }) as AssignAction<GameContext, GameOverEvent>
+
+export const navigateBack = assign((ctx, e) => {
+    const { currentHistory, history } = ctx
+    if (currentHistory < 0) ctx
+    const updatedCurrentHistory = currentHistory - 1
+    const currHistory = history[updatedCurrentHistory]
+    return {
+        selfCards: currHistory.selfCards,
+        opponentCards: currHistory.opponentCards,
+        boardPosition: currHistory.boardPosition,
+        currentHistory: updatedCurrentHistory
+    }
+}) as AssignAction<GameContext, NavigateBackEvent>
+
+export const navigateForward = assign((ctx, e) => {
+
+    const { currentHistory, history } = ctx
+    if (currentHistory > history.length - 1) ctx
+    const updatedCurrentHistory = currentHistory + 1
+    const currHistory = history[updatedCurrentHistory]
+    return {
+        selfCards: currHistory.selfCards,
+        opponentCards: currHistory.opponentCards,
+        boardPosition: currHistory.boardPosition,
+        currentHistory: updatedCurrentHistory
+    }
+}) as AssignAction<GameContext, NavigateForwardEvent>

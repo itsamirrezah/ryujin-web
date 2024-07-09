@@ -5,6 +5,8 @@ import {
     getCardOptions,
     move,
     moveConfirmed,
+    navigateBack,
+    navigateForward,
     opponentMove,
     selectCard,
     selectPiece,
@@ -178,6 +180,12 @@ export const ryujinMachine = createMachine({
                 LEAVE_ROOM: {
                     target: "lobby",
                     actions: assign({ roomId: undefined })
+                },
+                NAVIGATE_BACK: {
+                    actions: navigateBack
+                },
+                NAVIGATE_FORWARD: {
+                    actions: navigateForward
                 }
             },
         },
