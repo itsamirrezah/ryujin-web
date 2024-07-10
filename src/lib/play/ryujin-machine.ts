@@ -41,7 +41,7 @@ export const ryujinMachine = createMachine({
         endGame: undefined,
         hasFlagInProgress: false,
         history: [],
-        currentHistory: -1
+        currentHistory: 0
     },
     initial: "lobby",
     on: {

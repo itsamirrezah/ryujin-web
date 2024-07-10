@@ -133,7 +133,6 @@ export const moveConfirmed = assign((ctx, e) => {
         selfCards,
         selectedCard,
         history,
-        currentHistory,
         opponentCards,
         boardPosition
     } = ctx
@@ -145,7 +144,7 @@ export const moveConfirmed = assign((ctx, e) => {
         selfCards: updatedSelfCards,
         selectedCard: undefined,
         history: updatedHistory,
-        currentHistory: currentHistory + 1,
+        currentHistory: updatedHistory.length - 1
     }
 
 }) as AssignAction<GameContext, MoveConfirmedEvent>
@@ -171,18 +170,18 @@ export const opponentMove = assign((ctx, e) => {
         boardPosition,
         selfCards,
         history,
-        currentHistory,
     } = ctx
     if (!opponentCards || !selectedCard || !selfCards || from === to) return ctx
 
     const updatedOpponentCards = swapWithDeck(selectedCard, replacedCard, opponentCards)
-    const updatedHistory = [...history, { selfCards, opponentCards: updatedOpponentCards, boardPosition }]
+    const updatedBoard = updateBoard(boardPosition, from, to)
+    const updatedHistory = [...history, { selfCards, opponentCards: updatedOpponentCards, boardPosition: updatedBoard }]
     return {
-        boardPosition: updateBoard(boardPosition, from, to),
+        boardPosition: updatedBoard,
         hasTurn: true,
         opponentCards: updatedOpponentCards,
         history: updatedHistory,
-        currentHistory: currentHistory + 1,
+        currentHistory: updatedHistory.length - 1
     }
 }) as AssignAction<GameContext, OpponentMoveEvent>
 
@@ -223,8 +222,8 @@ export const gameOver = assign((_, e) => {
 
 export const navigateBack = assign((ctx, e) => {
     const { currentHistory, history } = ctx
-    if (currentHistory < 0) ctx
     const updatedCurrentHistory = currentHistory - 1
+    if (updatedCurrentHistory < 0) return ctx
     const currHistory = history[updatedCurrentHistory]
     return {
         selfCards: currHistory.selfCards,
@@ -237,8 +236,8 @@ export const navigateBack = assign((ctx, e) => {
 export const navigateForward = assign((ctx, e) => {
 
     const { currentHistory, history } = ctx
-    if (currentHistory > history.length - 1) ctx
     const updatedCurrentHistory = currentHistory + 1
+    if (updatedCurrentHistory >= history.length) return ctx
     const currHistory = history[updatedCurrentHistory]
     return {
         selfCards: currHistory.selfCards,
