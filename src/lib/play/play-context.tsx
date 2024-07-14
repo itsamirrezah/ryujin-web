@@ -23,6 +23,8 @@ type PlayValues = {
     numberOfCards: number,
     setGameInfo: (gameTime: number, numberOfCards: number) => void,
     isRoomActionInProgress: boolean,
+    onNavigateBack: () => void,
+    onNavigateForward: () => void,
     ryujinService: InterpreterFrom<typeof ryujinMachine>
 }
 
@@ -256,6 +258,14 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
         setNumberOfCards(numberOfCardsArg)
     }
 
+    function onNavigateBack() {
+        send({ type: "NAVIGATE_BACK" })
+    }
+
+    function onNavigateForward() {
+        send({ type: "NAVIGATE_FORWARD" })
+    }
+
     return (
         <PlayContext.Provider value={{
             onQuickMatch,
@@ -274,7 +284,9 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
             gameTime,
             numberOfCards,
             setGameInfo,
-            isRoomActionInProgress
+            isRoomActionInProgress,
+            onNavigateBack,
+            onNavigateForward
         }}>
             {children}
         </PlayContext.Provider>
