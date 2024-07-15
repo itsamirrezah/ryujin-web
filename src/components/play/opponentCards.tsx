@@ -5,6 +5,7 @@ import Card from "../card/card";
 export default function OpponentCards() {
     const { ryujinService } = usePlay()
     const opponentCards = useSelector(ryujinService, (state) => state.context.opponentCards)
+    const selectedCard = useSelector(ryujinService, (state) => state.context.selectedCard)
     const optionColors = useSelector(ryujinService, (state) => state.context.selfColor === "w" ? "b" : "w")
     return (
         <div>
@@ -12,7 +13,7 @@ export default function OpponentCards() {
                 <Card
                     key={c.name}
                     card={c}
-                    isSelected={false}
+                    isSelected={selectedCard?.name === c.name}
                     optionColor={optionColors}
                 />)
             )}

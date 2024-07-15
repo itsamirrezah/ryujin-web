@@ -139,7 +139,6 @@ export const move = assign((ctx, e) => {
     const updatedHistory = history.slice()
     updatedHistory[updatedHistory.length - 1].selectedCard = selectedCard
     updatedHistory.push({ selfCards, opponentCards, boardPosition: updatedBoard })
-    console.log("updating on move")
 
     return {
         boardPosition: updatedBoard,
