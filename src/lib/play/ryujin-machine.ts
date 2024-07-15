@@ -5,6 +5,7 @@ import {
     getCardOptions,
     move,
     moveConfirmed,
+    moveRejected,
     navigateBack,
     navigateForward,
     opponentMove,
@@ -135,7 +136,7 @@ export const ryujinMachine = createMachine({
                     on: {
                         MOVE_CONFIRMED: { actions: moveConfirmed, target: 'normal' },
                         MOVE_REJECTED: {
-                            actions: assign((_, e) => e),
+                            actions: moveRejected,
                             target: 'isOutOfMoves'
                         },
                         TICK: undefined,

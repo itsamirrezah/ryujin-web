@@ -78,6 +78,7 @@ type History = {
     boardPosition: Position,
     selfCards: [CardType, CardType],
     opponentCards: [CardType, CardType],
+    selectedCard?: CardType,
 }
 
 export type GameContext = {
