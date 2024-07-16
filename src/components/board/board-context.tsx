@@ -63,25 +63,53 @@ export function BoardContextProvider({
         setCoordinates(prev => ({ ...prev, [square]: coord }))
     }
 
-    function getDiffPosition(current: Position, next: Position) {
+    function getNextMove(current: Position, next: Position): Move | null {
         let from = "" as SquareType
         let to = "" as SquareType
 
-        const nextSquares = Object.keys(next)
-        for (let i = 0; i < nextSquares.length; i++) {
-            const square = nextSquares[i] as SquareType
-            if (next[square] === current[square]) continue;
-            if (!!to) return null
-            to = square
-        }
+        const squares = Object.keys(next)
         const currentSquares = Object.keys(current)
         for (let i = 0; i < currentSquares.length; i++) {
-            const square = currentSquares[i] as SquareType
-            if (current[square] === next[square] || square === to) continue;
-            if (!!from) return null
-            from = square
+            const square = currentSquares[i]
+            if (squares.includes(square)) {
+                continue
+            }
+            squares.push(square)
         }
-        if (!from || !to) return null
+
+        let reserved = "" as SquareType
+        for (let i = 0; i < squares.length; i++) {
+            const square = squares[i] as SquareType
+            const currPiece = current[square]
+            const nextPiece = next[square]
+            if (currPiece === nextPiece) {
+                continue
+            }
+            if (!!currPiece && !!nextPiece && currPiece !== nextPiece) {
+                reserved = square
+                continue
+            }
+            if (!!currPiece && !nextPiece) {
+                from = square
+            } else if (!currPiece && !!nextPiece) {
+                to = square
+            }
+        }
+        console.log({ reserved, from, to })
+        if (!from && !to) {
+            return null
+        }
+        console.log("1")
+        if (!!reserved && !from) {
+            from = reserved
+        } else if (!!reserved && !to) {
+            to = reserved
+        }
+        if (!from && !to) {
+            return null
+        }
+        console.log("2")
+        console.log({ reserved, from, to })
         return { from, to }
     }
 
@@ -102,7 +130,7 @@ export function BoardContextProvider({
             setIsNextMoveDrop(false)
             return;
         }
-        const nextMove = getDiffPosition(position, currentPosition)
+        const nextMove = getNextMove(position, currentPosition)
         if (!nextMove) {
             setPosition(currentPosition)
             setIsWaitForAnimation(false)
