@@ -64,6 +64,18 @@
     fill: #ccc;
 }
 
+.action-btn:disabled {
+    cursor: unset;
+}
+
+.action-btn:disabled:hover {
+    background: unset;
+}
+
+.action-btn:disabled > svg {
+    opacity: 0.5;
+}
+
 .action-btn:hover {
     background-color: #00000099;
 }

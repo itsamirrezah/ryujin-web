@@ -12,12 +12,16 @@ import SelfCards from "./selfCards"
 import HandIcon from "../icons/hand"
 import { useEffect, useState } from "react"
 import useOutsideClick from "@/lib/use-outside-click"
+import CircleArrowLeft from "../icons/circle-arrow-left"
+import CircleArrowRight from "../icons/circle-arrow-right"
 
 export default function Play() {
     const [resign, setResign] = useState<number>(0)
     const {
         onResign,
         onPassTurn,
+        onNavigateBack,
+        onNavigateForward,
         ryujinService
     } = usePlay()
     const outsideRef = useOutsideClick<HTMLButtonElement>(() => setResign(0))
@@ -25,6 +29,7 @@ export default function Play() {
     const isPlaying = useSelector(ryujinService, (state) => state.matches('playing'))
     const isGameOver = useSelector(ryujinService, (state) => state.matches('gameOver'))
     const hasNoMoves = useSelector(ryujinService, (state) => state.matches('playing.noMove'))
+    const gameHistory = useSelector(ryujinService, (state) => ({ history: state.context.history, currentHistory: state.context.currentHistory }))
     const shouldLoadCards = isPlaying || isGameOver
 
     function onResignHandler() {
@@ -70,15 +75,29 @@ export default function Play() {
             {isPlaying && (
                 <div className={styles.playerActions}>
                     <button
+                        className={styles.actionBtn}
+                        onClick={onNavigateBack}
+                        disabled={gameHistory.currentHistory <= 0}>
+                        <CircleArrowLeft />
+                    </button>
+                    <button
                         ref={outsideRef}
                         className={`${styles.actionBtn} ${resign === 1 ? styles.selected : ""}`}
                         onClick={onResignHandler}
                     >
                         <FlagIcon />
                     </button>
-                    {hasNoMoves && (<button onClick={onPassTurn}>
-                        <HandIcon />
-                    </button>)}
+                    {hasNoMoves && (
+                        <button className={styles.actionBtn} onClick={onPassTurn}>
+                            <HandIcon />
+                        </button>
+                    )}
+                    <button
+                        className={styles.actionBtn}
+                        onClick={onNavigateForward}
+                        disabled={gameHistory.currentHistory === gameHistory.history.length - 1}>
+                        <CircleArrowRight />
+                    </button>
                 </div>
             )}
         </div>

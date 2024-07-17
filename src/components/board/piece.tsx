@@ -21,6 +21,7 @@ export default function Piece({ piece, square }: PieceProps) {
         nextMove,
         animationDuration,
         coordinates,
+        currentPosition
     } = useBoard()
 
     const PieceComponent = DEFAULT_PIECES[piece];
@@ -57,6 +58,20 @@ export default function Piece({ piece, square }: PieceProps) {
             canDrag: isPieceDraggable(piece)
         }),
     }), [piece, isPieceDraggable, onPieceDrag])
+
+    useEffect(() => {
+        const pieceCoord = coordinates?.[square]
+        if (!pieceCoord) return;
+        setAnimationStyle((prev) => {
+            return {
+                ...prev,
+                transform: "translate(0px,0px)",
+                transition: "transform 0ms",
+                zIndex: 1
+            }
+        })
+
+    }, [currentPosition])
 
     preview(getEmptyImage(), { captureDraggingState: true });
 

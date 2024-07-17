@@ -8,6 +8,9 @@ import {
     GameStartedEvent,
     MoveConfirmedEvent,
     MoveEvent,
+    MoveRejectedEvent,
+    NavigateBackEvent,
+    NavigateForwardEvent,
     OpponentMoveEvent,
     Position,
     SelectCardEvent,
@@ -22,7 +25,7 @@ export const DEFAULT_POSITION: Position = {
     a5: "bP", b5: "bP", c5: "bK", d5: "bP", e5: "bP"
 }
 
-export function updateBoard(board: Position, from: SquareType, to: SquareType) {
+export function updateBoard(board: Position, from: SquareType, to: SquareType): Position {
     const mutableBoard = { ...board }
     mutableBoard[to] = mutableBoard[from]
     delete mutableBoard[from]
@@ -78,62 +81,122 @@ export const startGame = assign((_, e) => {
         opponentRemainingTime: e.time,
         selfTemple: e.selfColor === "w" ? "c1" : "c5",
         opponentTemple: e.selfColor === "w" ? "c5" : "c1",
-        lastTracked: new Date().getTime()
+        lastTracked: new Date().getTime(),
+        history: [{ selfCards: e.selfCards, opponentCards: e.opponentCard, boardPosition: e.boardPosition }],
+        currentHistory: 0
     }
 }) as AssignAction<GameContext, GameStartedEvent>
 
-export const selectCard = assign({
-    selectedCard: (ctx, e) => {
-        if (ctx.selfCards?.find(c => c.name === e.card.name)) return e.card
-        return ctx.selectedCard
-    },
-    moveOptions: (ctx, e) => {
-        const { selectedPiece, selfColor, boardPosition } = ctx
-        const { card: selectedCard } = e
-        if (!selectedPiece || !selfColor) return []
-        return getCardOptions(selectedPiece.square, selectedCard.delta, selfColor, boardPosition)
+export const selectCard = assign((ctx, e) => {
+    const { card } = e
+    const {
+        history,
+        currentHistory,
+        selfCards,
+        selectedPiece,
+        selfColor,
+        boardPosition,
+    } = ctx
+    if (currentHistory < history.length - 1 || !selfColor) return ctx
+    else if (!selfCards?.find(c => c.name === card.name)) return ctx
+    return {
+        selectedCard: card,
+        moveOptions: !selectedPiece ? [] : getCardOptions(selectedPiece.square, card.delta, selfColor, boardPosition)
     }
 }) as AssignAction<GameContext, SelectCardEvent>
 
-export const selectPiece = assign({
-    selectedPiece: (ctx, e) => {
-        if (e.piece[0] !== ctx.selfColor) return
-        const { piece, square } = e;
-        return { piece, square }
-    },
-    moveOptions: (ctx, e) => {
-        const { selectedCard, selfColor, boardPosition } = ctx
-        const { square } = e
-        if (!selectedCard || !selfColor) return [];
-        return getCardOptions(square, selectedCard.delta, selfColor, boardPosition)
+export const selectPiece = assign((ctx, e) => {
+    const { piece, square } = e
+    const {
+        history,
+        currentHistory,
+        selfColor,
+        selectedCard,
+        boardPosition
+    } = ctx
+
+    if (currentHistory < history.length - 1 || piece[0] !== selfColor) return ctx
+
+    return {
+        selectedPiece: { piece, square },
+        moveOptions: !selectedCard ? [] : getCardOptions(square, selectedCard.delta, selfColor, boardPosition)
     }
+
 }) as AssignAction<GameContext, SelectPieceEvent>
 
 export const move = assign((ctx, e) => {
     const { from, to } = e
-    const { boardPosition } = ctx
+    const {
+        boardPosition,
+        history,
+        selfCards,
+        opponentCards,
+        selectedCard,
+    } = ctx
+    if (!selfCards || !opponentCards || !selectedCard) return ctx
+
+    const updatedBoard = updateBoard(boardPosition, from, to)
+    const updatedHistory = history.slice()
+    updatedHistory[updatedHistory.length - 1].selectedCard = selectedCard
+    updatedHistory.push({ selfCards, opponentCards, boardPosition: updatedBoard })
 
     return {
-        boardPosition: updateBoard(boardPosition, from, to),
+        boardPosition: updatedBoard,
         hasTurn: false,
         selectedPiece: undefined,
-        moveOptions: []
+        moveOptions: [],
+        history: updatedHistory,
+        currentHistory: updatedHistory.length - 1
     }
 }) as AssignAction<GameContext, MoveEvent>
 
 export const moveConfirmed = assign((ctx, e) => {
     const { replacedCard } = e
 
-    const { selfCards, selectedCard } = ctx
-    if (!selfCards || !selectedCard) return ctx
+    const {
+        history,
+        opponentCards,
+    } = ctx
+    if (!opponentCards) return ctx
+    const updatedHistory = history.slice()
+    const { selfCards, selectedCard } = updatedHistory[updatedHistory.length - 2]
+
+    if (!selectedCard) return ctx
 
     const updatedSelfCards = swapWithDeck(selectedCard, replacedCard, selfCards)
+    updatedHistory[updatedHistory.length - 1].selfCards = updatedSelfCards
+
     return {
         selfCards: updatedSelfCards,
-        selectedCard: undefined
+        selectedCard: undefined,
+        history: updatedHistory,
     }
 
 }) as AssignAction<GameContext, MoveConfirmedEvent>
+
+export const moveRejected = assign((ctx, e) => {
+    const {
+        selfCards,
+        boardPosition,
+        opponentCards,
+        hasTurn,
+        selfColor
+    } = e
+    const { history } = ctx
+    const updatedHistory = history.slice()
+    updatedHistory.pop()
+    updatedHistory[updatedHistory.length - 1] = { boardPosition, opponentCards, selfCards, selectedCard: undefined }
+
+    return {
+        selfCards,
+        boardPosition,
+        opponentCards,
+        hasTurn,
+        selfColor,
+        history: updatedHistory,
+        currentHistory: updatedHistory.length - 1
+    }
+}) as AssignAction<GameContext, MoveRejectedEvent>
 
 export const tick = assign((ctx, e) => {
     const { hasTurn, selfRemainingTime, opponentRemainingTime, lastTracked } = ctx
@@ -151,14 +214,22 @@ export const tick = assign((ctx, e) => {
 
 export const opponentMove = assign((ctx, e) => {
     const { from, to, selectedCard, replacedCard } = e
-    const { opponentCards, boardPosition } = ctx
-    if (!opponentCards || !selectedCard || from === to) return ctx
+    const { history } = ctx
+    const { selfCards, opponentCards, boardPosition } = history[history.length - 1]
+    if (!opponentCards || !selectedCard || !selfCards || from === to) return ctx
 
     const updatedOpponentCards = swapWithDeck(selectedCard, replacedCard, opponentCards)
+    const updatedBoard = updateBoard(boardPosition, from, to)
+    const updatedHistory = history.slice()
+    updatedHistory[updatedHistory.length - 1].selectedCard = selectedCard
+    updatedHistory.push({ selfCards, opponentCards: updatedOpponentCards, boardPosition: updatedBoard })
     return {
-        boardPosition: updateBoard(boardPosition, from, to),
+        boardPosition: updatedBoard,
         hasTurn: true,
         opponentCards: updatedOpponentCards,
+        history: updatedHistory,
+        currentHistory: updatedHistory.length - 1,
+        selfCards
     }
 }) as AssignAction<GameContext, OpponentMoveEvent>
 
@@ -196,3 +267,36 @@ export const gameOver = assign((_, e) => {
         hasFlagInProgress: false,
     }
 }) as AssignAction<GameContext, GameOverEvent>
+
+export const navigateBack = assign((ctx, _) => {
+    const { currentHistory, history } = ctx
+    const updatedCurrentHistory = currentHistory - 1
+    if (updatedCurrentHistory < 0) return ctx
+    const currHistory = history[updatedCurrentHistory]
+    return {
+        selfCards: currHistory.selfCards,
+        opponentCards: currHistory.opponentCards,
+        boardPosition: currHistory.boardPosition,
+        currentHistory: updatedCurrentHistory,
+        moveOptions: [],
+        selectedCard: currHistory.selectedCard,
+        selectedPiece: undefined
+    }
+}) as AssignAction<GameContext, NavigateBackEvent>
+
+export const navigateForward = assign((ctx, _) => {
+
+    const { currentHistory, history } = ctx
+    const updatedCurrentHistory = currentHistory + 1
+    if (updatedCurrentHistory >= history.length) return ctx
+    const currHistory = history[updatedCurrentHistory]
+    return {
+        selfCards: currHistory.selfCards,
+        opponentCards: currHistory.opponentCards,
+        boardPosition: currHistory.boardPosition,
+        currentHistory: updatedCurrentHistory,
+        moveOptions: [],
+        selectedCard: currHistory.selectedCard,
+        selectedPiece: undefined
+    }
+}) as AssignAction<GameContext, NavigateForwardEvent>

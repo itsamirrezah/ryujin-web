@@ -1,10 +1,13 @@
-import { actions, assign, createMachine } from "xstate";
+import { assign, createMachine } from "xstate";
 import {
     DEFAULT_POSITION,
     gameOver,
     getCardOptions,
     move,
     moveConfirmed,
+    moveRejected,
+    navigateBack,
+    navigateForward,
     opponentMove,
     selectCard,
     selectPiece,
@@ -37,7 +40,9 @@ export const ryujinMachine = createMachine({
         moveOptions: [],
         lastTracked: 0,
         endGame: undefined,
-        hasFlagInProgress: false
+        hasFlagInProgress: false,
+        history: [],
+        currentHistory: 0
     },
     initial: "lobby",
     on: {
@@ -131,7 +136,7 @@ export const ryujinMachine = createMachine({
                     on: {
                         MOVE_CONFIRMED: { actions: moveConfirmed, target: 'normal' },
                         MOVE_REJECTED: {
-                            actions: assign((_, e) => e),
+                            actions: moveRejected,
                             target: 'isOutOfMoves'
                         },
                         TICK: undefined,
@@ -176,6 +181,12 @@ export const ryujinMachine = createMachine({
                 LEAVE_ROOM: {
                     target: "lobby",
                     actions: assign({ roomId: undefined })
+                },
+                NAVIGATE_BACK: {
+                    actions: navigateBack
+                },
+                NAVIGATE_FORWARD: {
+                    actions: navigateForward
                 }
             },
         },

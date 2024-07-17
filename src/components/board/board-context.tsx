@@ -63,26 +63,57 @@ export function BoardContextProvider({
         setCoordinates(prev => ({ ...prev, [square]: coord }))
     }
 
-    function getDiffPosition(current: Position, next: Position) {
-        let from = "" as SquareType
-        let to = "" as SquareType
+    function getNextMove(current: Position, next: Position): Move | null {
+        let nextMove: Move = { from: undefined, to: undefined }
 
-        const nextSquares = Object.keys(next)
-        for (let i = 0; i < nextSquares.length; i++) {
-            const square = nextSquares[i] as SquareType
-            if (next[square] === current[square]) continue;
-            if (!!to) return null
-            to = square
-        }
+        // merge all the squares from current and next positions
+        const squares = Object.keys(next)
         const currentSquares = Object.keys(current)
         for (let i = 0; i < currentSquares.length; i++) {
-            const square = currentSquares[i] as SquareType
-            if (current[square] === next[square] || square === to) continue;
-            if (!!from) return null
-            from = square
+            const square = currentSquares[i]
+            if (squares.includes(square)) {
+                continue
+            }
+            squares.push(square)
         }
-        if (!from || !to) return null
-        return { from, to }
+
+        let clashSquare = "" as SquareType
+        let changes = 0
+        for (let i = 0; i < squares.length; i++) {
+            const square = squares[i] as SquareType
+            const currPiece = current[square]
+            const nextPiece = next[square]
+            if (currPiece === nextPiece) {
+                continue
+            }
+            if (changes > 2) {
+                break;
+            }
+            if (!!currPiece && !!nextPiece && currPiece !== nextPiece) {
+                clashSquare = square
+                continue
+            }
+            if (!!currPiece && !nextPiece) {
+                nextMove.from = square
+                changes++
+            } else if (!currPiece && !!nextPiece) {
+                nextMove.to = square
+                changes++
+            }
+        }
+
+        if (changes > 2) {
+            return null
+        }
+        const { from, to } = nextMove
+        if (!!clashSquare && !from) {
+            nextMove.from = clashSquare
+        } else if (!!clashSquare && !to) {
+            nextMove.to = clashSquare
+        } else if (!from && !to) {
+            return null
+        }
+        return nextMove
     }
 
     function onMoveHandler(to: SquareType, isDrop: boolean = false) {
@@ -102,7 +133,7 @@ export function BoardContextProvider({
             setIsNextMoveDrop(false)
             return;
         }
-        const nextMove = getDiffPosition(position, currentPosition)
+        const nextMove = getNextMove(position, currentPosition)
         if (!nextMove) {
             setPosition(currentPosition)
             setIsWaitForAnimation(false)

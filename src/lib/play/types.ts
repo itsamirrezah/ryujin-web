@@ -74,6 +74,13 @@ export type InvalidMoveResponse = {
     payload: GameResponse
 }
 
+type History = {
+    boardPosition: Position,
+    selfCards: [CardType, CardType],
+    opponentCards: [CardType, CardType],
+    selectedCard?: CardType,
+}
+
 export type GameContext = {
     boardPosition: Position,
     roomId?: string,
@@ -92,7 +99,9 @@ export type GameContext = {
     moveOptions?: SquareType[],
     lastTracked: number,
     endGame?: EndGame,
-    hasFlagInProgress: boolean
+    hasFlagInProgress: boolean,
+    history: History[],
+    currentHistory: number,
 }
 
 export type QuickMatchEvent = {
@@ -164,6 +173,12 @@ export type GameOverEvent = {
     whiteRemainingTime: number,
     blackRemainingTime: number
 }
+export type NavigateBackEvent = {
+    type: "NAVIGATE_BACK"
+}
+export type NavigateForwardEvent = {
+    type: "NAVIGATE_FORWARD"
+}
 export type OpponentRematch = {
     type: "OPPONENT_REMATCH"
 }
@@ -180,7 +195,7 @@ export type Events =
     | MoveEvent | OpponentMoveEvent | MoveConfirmedEvent | TickEvent
     | UpdateTimeEvent | MoveRejectedEvent | GameOverEvent | ClaimOpponentTimeoutEvent
     | TimeoutRejectedEvent | PassTurnEvent | OpponentPassEvent | QuickMatchEvent | InviteFriendEvent
-    | JoinFriendEvent | LeaveRoomEvent | OpponentRematch | RematchEvent
+    | JoinFriendEvent | LeaveRoomEvent | OpponentRematch | RematchEvent | NavigateBackEvent | NavigateForwardEvent
 
 export type StateOptions =
     | "lobby" | "lobby.idle" | "lobby.waitingForOpponent" | "lobby.waitingForFriend" | "lobby.friendInJoinLobby" | "lobby.waitingForRematch"
