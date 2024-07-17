@@ -29,6 +29,7 @@ export default function Play() {
     const isPlaying = useSelector(ryujinService, (state) => state.matches('playing'))
     const isGameOver = useSelector(ryujinService, (state) => state.matches('gameOver'))
     const hasNoMoves = useSelector(ryujinService, (state) => state.matches('playing.noMove'))
+    const gameHistory = useSelector(ryujinService, (state) => ({ history: state.context.history, currentHistory: state.context.currentHistory }))
     const shouldLoadCards = isPlaying || isGameOver
 
     function onResignHandler() {
@@ -73,7 +74,10 @@ export default function Play() {
             )}
             {isPlaying && (
                 <div className={styles.playerActions}>
-                    <button className={styles.actionBtn} onClick={onNavigateBack}>
+                    <button
+                        className={styles.actionBtn}
+                        onClick={onNavigateBack}
+                        disabled={gameHistory.currentHistory <= 0}>
                         <CircleArrowLeft />
                     </button>
                     <button
@@ -88,7 +92,10 @@ export default function Play() {
                             <HandIcon />
                         </button>
                     )}
-                    <button className={styles.actionBtn} onClick={onNavigateForward}>
+                    <button
+                        className={styles.actionBtn}
+                        onClick={onNavigateForward}
+                        disabled={gameHistory.currentHistory === gameHistory.history.length - 1}>
                         <CircleArrowRight />
                     </button>
                 </div>
