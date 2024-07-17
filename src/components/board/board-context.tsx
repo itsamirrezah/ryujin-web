@@ -64,9 +64,9 @@ export function BoardContextProvider({
     }
 
     function getNextMove(current: Position, next: Position): Move | null {
-        let from = "" as SquareType
-        let to = "" as SquareType
+        let nextMove: Move = { from: undefined, to: undefined }
 
+        // merge all the squares from current and next positions
         const squares = Object.keys(next)
         const currentSquares = Object.keys(current)
         for (let i = 0; i < currentSquares.length; i++) {
@@ -77,7 +77,8 @@ export function BoardContextProvider({
             squares.push(square)
         }
 
-        let reserved = "" as SquareType
+        let clashSquare = "" as SquareType
+        let changes = 0
         for (let i = 0; i < squares.length; i++) {
             const square = squares[i] as SquareType
             const currPiece = current[square]
@@ -85,32 +86,34 @@ export function BoardContextProvider({
             if (currPiece === nextPiece) {
                 continue
             }
+            if (changes > 2) {
+                break;
+            }
             if (!!currPiece && !!nextPiece && currPiece !== nextPiece) {
-                reserved = square
+                clashSquare = square
                 continue
             }
             if (!!currPiece && !nextPiece) {
-                from = square
+                nextMove.from = square
+                changes++
             } else if (!currPiece && !!nextPiece) {
-                to = square
+                nextMove.to = square
+                changes++
             }
         }
-        console.log({ reserved, from, to })
-        if (!from && !to) {
+
+        if (changes > 2) {
             return null
         }
-        console.log("1")
-        if (!!reserved && !from) {
-            from = reserved
-        } else if (!!reserved && !to) {
-            to = reserved
-        }
-        if (!from && !to) {
+        const { from, to } = nextMove
+        if (!!clashSquare && !from) {
+            nextMove.from = clashSquare
+        } else if (!!clashSquare && !to) {
+            nextMove.to = clashSquare
+        } else if (!from && !to) {
             return null
         }
-        console.log("2")
-        console.log({ reserved, from, to })
-        return { from, to }
+        return nextMove
     }
 
     function onMoveHandler(to: SquareType, isDrop: boolean = false) {
