@@ -13,6 +13,7 @@ import {
     NavigateBackEvent,
     NavigateForwardEvent,
     OpponentMoveEvent,
+    PieceType,
     PlayerResponse,
     Position,
     SelectCardEvent,
@@ -126,6 +127,20 @@ export function getCardOptions(
         options.push(destSquare)
     }
     return options
+}
+
+export function hasMoves(boardPosition: Position, playerCards: [CardType, CardType], turnColor: BlackOrWhite) {
+    const sourceSquares = Object.entries(boardPosition)
+    for (let i = 0; i < sourceSquares.length; i++) {
+        const [square, piece] = sourceSquares[i] as [SquareType, PieceType]
+        if (piece[0] !== turnColor) continue
+        for (let j = 0; j < playerCards.length; j++) {
+            const card = playerCards[j]
+            const options = getCardOptions(square, card.delta, turnColor, boardPosition)
+            if (options.length > 0) return true
+        }
+    }
+    return false
 }
 
 export function getPlayersForPlayOffline(): Record<"self" | "opponent", PlayerResponse> {

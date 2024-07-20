@@ -2,7 +2,7 @@ import { assign, createMachine } from "xstate";
 import {
     DEFAULT_POSITION,
     gameOver,
-    getCardOptions,
+    hasMoves,
     move,
     moveConfirmed,
     moveRejected,
@@ -15,7 +15,7 @@ import {
     tick,
     updateTime
 } from "./consts";
-import { Events, GameContext, PieceType, SquareType } from "./types";
+import { Events, GameContext } from "./types";
 
 export const ryujinMachine = createMachine({
     schema: {
@@ -108,17 +108,7 @@ export const ryujinMachine = createMachine({
                         cond: (ctx) => {
                             const { hasTurn, selfCards, boardPosition, selfColor } = ctx
                             if (!hasTurn || !selfCards || !selfCards || !selfColor) return false
-                            const sourceSquares = Object.entries(boardPosition)
-                            for (let i = 0; i < sourceSquares.length; i++) {
-                                const [square, piece] = sourceSquares[i] as [SquareType, PieceType]
-                                if (piece[0] !== selfColor) continue
-                                for (let j = 0; j < selfCards.length; j++) {
-                                    const card = selfCards[j]
-                                    const options = getCardOptions(square, card.delta, selfColor, boardPosition)
-                                    if (options.length > 0) return false
-                                }
-                            }
-                            return true
+                            return !hasMoves(boardPosition, selfCards, selfColor)
                         },
                         target: "noMove",
                     },
