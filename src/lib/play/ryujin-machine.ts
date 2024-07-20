@@ -59,9 +59,6 @@ export const ryujinMachine = createMachine({
             states: {
                 idle: {
                     on: {
-                        QUICK_MATCH: {
-                            target: "waitingForOpponent"
-                        },
                         INVITE_FRIEND: {
                             target: "waitingForFriend"
                         },
@@ -78,12 +75,17 @@ export const ryujinMachine = createMachine({
                     on: {
                         UPDATE_PLAYERS: [{
                             target: "idle",
+                            actions: assign({ roomId: undefined }),
                             cond: (_, e) => !e.players?.opponent
                         }]
                     },
                 },
+                waitingForComputer: {}
             },
             on: {
+                QUICK_MATCH: {
+                    target: "lobby.waitingForOpponent"
+                },
                 GAME_STARTED: {
                     target: "playing",
                     actions: startGame
@@ -211,7 +213,8 @@ export const ryujinMachine = createMachine({
                     target: "lobby.waitingForRematch"
                 },
                 QUICK_MATCH: {
-                    target: "lobby.waitingForOpponent"
+                    target: "lobby.waitingForOpponent",
+                    actions: assign({ roomId: undefined })
                 },
                 LEAVE_ROOM: {
                     target: "lobby",

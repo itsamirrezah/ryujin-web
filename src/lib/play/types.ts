@@ -198,7 +198,7 @@ export type Events =
     | JoinFriendEvent | LeaveRoomEvent | OpponentRematch | RematchEvent | NavigateBackEvent | NavigateForwardEvent
 
 export type StateOptions =
-    | "lobby" | "lobby.idle" | "lobby.waitingForOpponent" | "lobby.waitingForFriend" | "lobby.friendInJoinLobby" | "lobby.waitingForRematch"
+    | "lobby" | "lobby.idle" | "lobby.waitingForOpponent" | "lobby.waitingForFriend" | "lobby.friendInJoinLobby" | "lobby.waitingForRematch" | "lobby.waitingForComputer"
     | "playing" | "playing.isOutOfMoves" | "playing.normal" | "playing.noMove" | "playing.pendingMove"
     | "gameOver" | "gameOver.idle" | "gameOver.opponentRematchRequest"
 

@@ -7,28 +7,30 @@ import { ryujinMachine } from "./ryujin-machine";
 import { CardType, PlayerResponse, SquareType } from "./types";
 
 export type PlayImp = {
-    onQuickMatch: (roomId?: string) => void,
     onMove: (from: SquareType, to: SquareType, selectedCard: CardType) => void,
     onPassTurn: () => void,
     onClaimOpponentTimeout: () => void,
     onResign: () => void,
     onRematch: () => void
-    onInviteFriend: () => void,
     onCancelJoin: () => void,
     isRoomActionInProgress: boolean,
     prevOpponent?: PlayerResponse
 }
 
 export type PlayArgs = {
-    ryujinService: InterpreterFrom<typeof ryujinMachine>
-    gameInfo: GameInfo
+    ryujinService: InterpreterFrom<typeof ryujinMachine>,
+    gameInfo: GameInfo,
+    requestedRoomId?: string
 }
 
-export default function usePlayOnline(args: PlayArgs): PlayImp {
-    const ryujinService = args.ryujinService
+export default function usePlayOnline({ ryujinService, gameInfo }: PlayArgs): PlayImp {
     const { isAuth, openAuth } = useAuthContext()
     const { send } = ryujinService
     const gameId = useSelector(ryujinService, (state) => state.context.gameId)
+    const roomId = useSelector(ryujinService, (state) => state.context.roomId)
+    const isWaitForOpponent = useSelector(ryujinService, (state) => state.matches('lobby.waitingForOpponent'))
+    const isWaitForFriend = useSelector(ryujinService, (state) => state.matches('lobby.waitingForFriend'))
+    const isJoinFriend = useSelector(ryujinService, (state) => state.matches('lobby.friendInJoinLobby'))
     const [isRoomActionInProgress, setIsRoomActionInProgress] = useState(false)
     const [prevOpponent, setPrevOpponent] = useState<PlayerResponse>()
 
@@ -140,9 +142,9 @@ export default function usePlayOnline(args: PlayArgs): PlayImp {
             socket.off("MOVE_CONFIRMED")
             socket.off("TIMEOUT_REJECTED")
             socket.off("OPPONENT_REMATCH")
-            // socket.disconnect()
         }
     }, [])
+
     useEffect(() => {
         if (!socket.connected && isAuth) {
             socket.connect()
@@ -153,40 +155,47 @@ export default function usePlayOnline(args: PlayArgs): PlayImp {
         }
     }, [isAuth, socket])
 
-    async function onQuickMatch(roomId?: string) {
-        if (isRoomActionInProgress) return;
-        const payload = { roomId, gameInfo: args.gameInfo } as JoinRoom
-        try {
-            setIsRoomActionInProgress(true)
-            send({ type: "QUICK_MATCH" })
-            const res = await socket.emitWithAck("JOIN_ROOM", payload);
-            if (res.error) {
-                throw new Error("client did not acknowledge the event")
+    useEffect(() => {
+        async function onQuickMatch(payload: JoinRoom) {
+            try {
+                setIsRoomActionInProgress(true)
+                const res = await socket.emitWithAck("JOIN_ROOM", payload);
+                if (res.error) {
+                    throw new Error("client did not acknowledge the event")
+                }
+            } catch (err) {
+                send({ type: "LEAVE_ROOM" })
             }
-        } catch (err) {
-            send({ type: "LEAVE_ROOM" })
+            finally {
+                setIsRoomActionInProgress(false)
+            }
         }
-        finally {
-            setIsRoomActionInProgress(false)
-        }
-    }
+        if (!isWaitForOpponent || isRoomActionInProgress) return;
+        onQuickMatch({ roomId, gameInfo })
 
-    async function onInviteFriend() {
-        if (isRoomActionInProgress) return;
-        const payload = args.gameInfo
-        try {
-            setIsRoomActionInProgress(true)
-            const res = await socket.emitWithAck("CREATE_ROOM", payload)
-            send({ type: "INVITE_FRIEND" })
-            if (res.error) {
-                throw new Error("client did not acknowledge the event")
+    }, [isWaitForOpponent, isJoinFriend])
+
+
+    useEffect(() => {
+        async function onInviteFriend() {
+            if (isRoomActionInProgress) return;
+            const payload = gameInfo
+            try {
+                setIsRoomActionInProgress(true)
+                const res = await socket.emitWithAck("CREATE_ROOM", payload)
+                if (res.error) {
+                    throw new Error("client did not acknowledge the event")
+                }
+            } catch (err) {
+                send({ type: "LEAVE_ROOM" })
+            } finally {
+                setIsRoomActionInProgress(false)
             }
-        } catch (err) {
-            send({ type: "LEAVE_ROOM" })
-        } finally {
-            setIsRoomActionInProgress(false)
         }
-    }
+        if (!isWaitForFriend) return;
+        onInviteFriend()
+    }, [isWaitForFriend])
+
 
     async function onCancelJoin() {
         if (isRoomActionInProgress) return;
@@ -232,13 +241,11 @@ export default function usePlayOnline(args: PlayArgs): PlayImp {
     }
 
     return {
-        onQuickMatch,
         onRematch,
         onMove,
         onResign,
         onPassTurn,
         onCancelJoin,
-        onInviteFriend,
         isRoomActionInProgress,
         onClaimOpponentTimeout,
         prevOpponent

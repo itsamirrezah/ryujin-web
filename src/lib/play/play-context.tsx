@@ -35,10 +35,22 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
     const { send } = ryujinService
     const [time, setTime] = useState(480000)
     const [numberOfCards, setNumberOfCards] = useState(16)
+    const [playingMode, setPlayingMode] = useState<0 | 1 | 2>(0)
     const playOnline = usePlayOnline({ ryujinService, gameInfo: { time, numberOfCards } })
     const playOffline = usePlayWithComputer({ ryujinService, gameInfo: { time, numberOfCards } })
+    const rootPlay = playingMode === 1 ? playOnline : playOffline
+
+    function onQuickMatch() {
+        setPlayingMode(1)
+        send({ type: "QUICK_MATCH" })
+    }
+    function onInviteFriend() {
+        setPlayingMode(1)
+        send({ type: "INVITE_FRIEND" })
+    }
 
     function onJoinFriend(roomId: string) {
+        setPlayingMode(1)
         send({ type: "JOIN_FRIEND", roomId })
     }
 
@@ -74,7 +86,9 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
             setGameInfo,
             onNavigateBack,
             onNavigateForward,
-            ...playOnline
+            onQuickMatch,
+            onInviteFriend,
+            ...rootPlay,
         }}>
             {children}
         </PlayContext.Provider>
