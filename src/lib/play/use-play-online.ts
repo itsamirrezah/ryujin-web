@@ -20,7 +20,6 @@ export type PlayImp = {
 export type PlayArgs = {
     ryujinService: InterpreterFrom<typeof ryujinMachine>,
     gameInfo: GameInfo,
-    requestedRoomId?: string
 }
 
 export default function usePlayOnline({ ryujinService, gameInfo }: PlayArgs): PlayImp {

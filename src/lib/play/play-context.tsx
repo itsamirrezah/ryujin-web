@@ -18,6 +18,7 @@ type PlayValues = {
     onInviteFriend: () => void,
     onJoinFriend: (roomId: string) => void,
     onCancelJoin: () => void,
+    onPlayWithComputer: () => void
     prevOpponent?: PlayerResponse,
     gameTime: number,
     numberOfCards: number,
@@ -54,6 +55,11 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
         send({ type: "JOIN_FRIEND", roomId })
     }
 
+    function onPlayWithComputer() {
+        setPlayingMode(2)
+        send({ type: "PLAY_OFFLINE" })
+    }
+
     function onCardSelected(card: CardType) {
         send({ type: "SELECT_CARD", card })
     }
@@ -88,6 +94,7 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
             onNavigateForward,
             onQuickMatch,
             onInviteFriend,
+            onPlayWithComputer,
             ...rootPlay,
         }}>
             {children}

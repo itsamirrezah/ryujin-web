@@ -117,6 +117,8 @@ export type JoinFriendEvent = {
     roomId: string
 }
 
+export type PlayOfflineEvent = { type: "PLAY_OFFLINE" }
+
 export type LeaveRoomEvent = {
     type: "LEAVE_ROOM",
 }
@@ -194,7 +196,7 @@ export type Events =
     | UpdatePlayersEvent | GameStartedEvent | SelectCardEvent | SelectPieceEvent
     | MoveEvent | OpponentMoveEvent | MoveConfirmedEvent | TickEvent
     | UpdateTimeEvent | MoveRejectedEvent | GameOverEvent | ClaimOpponentTimeoutEvent
-    | TimeoutRejectedEvent | PassTurnEvent | OpponentPassEvent | QuickMatchEvent | InviteFriendEvent
+    | TimeoutRejectedEvent | PassTurnEvent | OpponentPassEvent | QuickMatchEvent | InviteFriendEvent | PlayOfflineEvent
     | JoinFriendEvent | LeaveRoomEvent | OpponentRematch | RematchEvent | NavigateBackEvent | NavigateForwardEvent
 
 export type StateOptions =

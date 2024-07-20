@@ -65,6 +65,9 @@ export const ryujinMachine = createMachine({
                         JOIN_FRIEND: {
                             actions: assign({ roomId: (_, e) => e.roomId }),
                             target: "friendInJoinLobby"
+                        },
+                        PLAY_OFFLINE: {
+                            target: "waitingForComputer"
                         }
                     }
                 },
