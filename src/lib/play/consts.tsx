@@ -90,7 +90,7 @@ export function updateBoard(board: Position, from: SquareType, to: SquareType): 
     return mutableBoard
 }
 
-export function swapWithDeck(
+function updatePlayerCards(
     selectedCard: CardType,
     replacedCard: CardType,
     playerCards: [CardType, CardType]
@@ -271,7 +271,7 @@ export const moveConfirmed = assign((ctx, e) => {
 
     if (!selectedCard) return ctx
 
-    const updatedSelfCards = swapWithDeck(selectedCard, replacedCard, selfCards)
+    const updatedSelfCards = updatePlayerCards(selectedCard, replacedCard, selfCards)
     updatedHistory[updatedHistory.length - 1].selfCards = updatedSelfCards
 
     return {
@@ -326,7 +326,7 @@ export const opponentMove = assign((ctx, e) => {
     const { selfCards, opponentCards, boardPosition } = history[history.length - 1]
     if (!opponentCards || !selectedCard || !selfCards || from === to) return ctx
 
-    const updatedOpponentCards = swapWithDeck(selectedCard, replacedCard, opponentCards)
+    const updatedOpponentCards = updatePlayerCards(selectedCard, replacedCard, opponentCards)
     const updatedBoard = updateBoard(boardPosition, from, to)
     const updatedHistory = history.slice()
     updatedHistory[updatedHistory.length - 1].selectedCard = selectedCard
