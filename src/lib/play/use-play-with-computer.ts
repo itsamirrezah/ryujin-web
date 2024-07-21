@@ -33,16 +33,24 @@ export default function usePlayWithComputer({ ryujinService, gameInfo }: PlayArg
     }, [isWaitingForComputer])
 
     useEffect(() => {
-        if (hasTurn || deckCards.length <= 0) return;
-        const nextMove = getComputerNextMove()
-        if (!nextMove) {
-            //should pass turn
-            return;
+        function performComputerMove() {
+            const nextMove = getComputerNextMove()
+            if (!nextMove) {
+                //should pass turn
+                return;
+            }
+            const { selectedCard, from, to } = nextMove
+            const [replacedCard, deck] = subtituteCardWithDeck(selectedCard, deckCards)
+            send({ type: "OPPONENT_MOVED", to, from, selectedCard, replacedCard })
+            setDeckCards(deck)
         }
-        const { selectedCard, from, to } = nextMove
-        const [replacedCard, deck] = subtituteCardWithDeck(selectedCard, deckCards)
-        send({ type: "OPPONENT_MOVED", to, from, selectedCard, replacedCard })
-        setDeckCards(deck)
+
+        if (hasTurn || deckCards.length <= 0) return;
+        const timeout = setTimeout(() => {
+            performComputerMove()
+        }, 1000)
+
+        return () => clearTimeout(timeout)
 
     }, [hasTurn, deckCards])
 
