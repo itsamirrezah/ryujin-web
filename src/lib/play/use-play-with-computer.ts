@@ -114,7 +114,7 @@ export default function usePlayWithComputer({ ryujinService, gameInfo }: PlayArg
         function performComputerMove() {
             const nextMove = getComputerNextMove()
             if (!nextMove) {
-                //should pass turn
+                send({ type: "OPPONENT_PASS" })
                 return;
             }
             const { selectedCard, from, to } = nextMove
@@ -171,9 +171,24 @@ export default function usePlayWithComputer({ ryujinService, gameInfo }: PlayArg
         setDeckCards(updatedDeck)
     }
 
-    function onPassTurn() { }
+    function onPassTurn() {
+        send({ type: "PASS_TURN" })
+    }
+
     function onClaimOpponentTimeout() { }
-    function onResign() { }
+
+    function onResign() {
+        if (!playersInfo || !selfColor) return;
+        const opponentId = playersInfo.opponent.socketId
+        const opponentColor = selfColor === "w" ? "b" : "w"
+        const endGame = {
+            result: "won",
+            by: "resignation",
+            playerWon: opponentId,
+            playerWonColor: opponentColor
+        } as EndGame
+        send({ type: "GAME_OVER", endGame, boardPosition: boardPosition })
+    }
     function onCancelJoin() { }
 
     return { onMove, onPassTurn, onClaimOpponentTimeout, onResign, onCancelJoin } as PlayImp
