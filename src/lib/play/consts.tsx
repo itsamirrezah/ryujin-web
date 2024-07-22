@@ -354,24 +354,25 @@ export const updateTime = assign((ctx, e) => {
     }
 }) as AssignAction<GameContext, UpdateTimeEvent>
 
-export const gameOver = assign((_, e) => {
+export const gameOver = assign((ctx, e) => {
     const {
         boardPosition,
         endGame,
         selfColor,
         selfCards,
         opponentCards,
-        whiteRemainingTime,
-        blackRemainingTime
+        selfRemainingTime,
+        opponentRemainingTime
     } = e
+
     return {
         boardPosition,
-        selfColor,
-        selfCards,
-        opponentCards,
+        selfColor: selfColor || ctx.selfColor,
+        selfCards: selfCards || ctx.selfCards,
+        opponentCards: opponentCards || ctx.opponentCards,
         endGame,
-        selfRemainingTime: selfColor === "w" ? whiteRemainingTime : blackRemainingTime,
-        opponentRemainingTime: selfColor === "w" ? blackRemainingTime : whiteRemainingTime,
+        selfRemainingTime: selfRemainingTime || ctx.selfRemainingTime,
+        opponentRemainingTime: opponentRemainingTime || ctx.opponentRemainingTime,
         hasFlagInProgress: false,
     }
 }) as AssignAction<GameContext, GameOverEvent>

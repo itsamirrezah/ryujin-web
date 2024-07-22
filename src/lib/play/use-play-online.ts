@@ -111,18 +111,32 @@ export default function usePlayOnline({ ryujinService, gameInfo }: PlayArgs): Pl
         })
 
         socket.on("END_GAME", (payload) => {
-            const [selfCards, opponentCards] = socket.id === payload.whiteId
-                ? [payload.whiteCards, payload.blackCards]
-                : [payload.blackCards, payload.whiteCards]
+            const {
+                whiteId,
+                whiteCards,
+                blackCards,
+                boardPosition,
+                endGame,
+                whiteRemaining,
+                blackRemaining
+            } = payload
+
+            const [selfCards, opponentCards] = socket.id === whiteId
+                ? [whiteCards, blackCards]
+                : [blackCards, whiteCards]
+            const [selfRemainingTime, opponentRemainingTime] = socket.id === whiteId
+                ? [whiteRemaining, blackRemaining]
+                : [blackRemaining, whiteRemaining]
+
             send({
                 type: "GAME_OVER",
-                boardPosition: payload.boardPosition,
-                selfColor: socket.id === payload.whiteId ? "w" : "b",
+                boardPosition: boardPosition,
+                selfColor: socket.id === whiteId ? "w" : "b",
                 selfCards: selfCards as [CardType, CardType],
                 opponentCards: opponentCards as [CardType, CardType],
-                endGame: payload.endGame,
-                whiteRemainingTime: payload.whiteRemaining,
-                blackRemainingTime: payload.blackRemaining
+                endGame: endGame,
+                selfRemainingTime,
+                opponentRemainingTime
             })
         })
 

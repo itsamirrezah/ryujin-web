@@ -168,12 +168,12 @@ export type MoveRejectedEvent = {
 export type GameOverEvent = {
     type: "GAME_OVER"
     boardPosition: Position,
-    selfColor: BlackOrWhite,
-    selfCards: [CardType, CardType],
-    opponentCards: [CardType, CardType],
+    selfColor?: BlackOrWhite,
+    selfCards?: [CardType, CardType],
+    opponentCards?: [CardType, CardType],
     endGame: EndGame,
-    whiteRemainingTime: number,
-    blackRemainingTime: number
+    selfRemainingTime?: number,
+    opponentRemainingTime?: number
 }
 export type NavigateBackEvent = {
     type: "NAVIGATE_BACK"
