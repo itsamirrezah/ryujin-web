@@ -8,6 +8,7 @@ export default function usePlayWithComputer({ ryujinService, gameInfo }: PlayArg
     const [deckCards, setDeckCards] = useState<CardType[]>([])
     const { send } = ryujinService
     const isWaitingForComputer = useSelector(ryujinService, (state) => state.matches('lobby.waitingForComputer'))
+    const isMovePending = useSelector(ryujinService, (state) => state.matches('playing.pendingMove'))
     const opponentCards = useSelector(ryujinService, (state) => state.context.opponentCards)
     const boardPosition = useSelector(ryujinService, (state) => state.context.boardPosition)
     const selfColor = useSelector(ryujinService, (state) => state.context.selfColor)
@@ -21,6 +22,16 @@ export default function usePlayWithComputer({ ryujinService, gameInfo }: PlayArg
         if (!isWaitingForComputer) return;
         startNewGame()
     }, [isWaitingForComputer])
+
+    useEffect(() => {
+        if (!isMovePending) return;
+        const selectedCard = history[history.length - 2].selectedCard
+        if (!selectedCard) return;
+        const [replacedCard, updatedDeck] = subtituteCardWithDeck(selectedCard, deckCards)
+        send({ type: "MOVE_CONFIRMED", replacedCard })
+        setDeckCards(updatedDeck)
+
+    }, [isMovePending, history])
 
     useEffect(() => {
         if (!selfColor || !playersInfo || (selfRemainingTime > 0 && opponentRemainingTime > 0)) return
@@ -170,10 +181,7 @@ export default function usePlayWithComputer({ ryujinService, gameInfo }: PlayArg
     }
 
     function onMove(from: SquareType, to: SquareType, selectedCard: CardType) {
-        send({ type: "MOVE", to, from })
-        const [replacedCard, updatedDeck] = subtituteCardWithDeck(selectedCard, deckCards)
-        send({ type: "MOVE_CONFIRMED", replacedCard })
-        setDeckCards(updatedDeck)
+        send({ type: "MOVE", to, from, selectedCard })
     }
 
     function onPassTurn() {

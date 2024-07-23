@@ -233,13 +233,12 @@ export const selectPiece = assign((ctx, e) => {
 }) as AssignAction<GameContext, SelectPieceEvent>
 
 export const move = assign((ctx, e) => {
-    const { from, to } = e
+    const { from, to, selectedCard } = e
     const {
         boardPosition,
         history,
         selfCards,
         opponentCards,
-        selectedCard,
     } = ctx
     if (!selfCards || !opponentCards || !selectedCard) return ctx
 
