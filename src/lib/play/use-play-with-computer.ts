@@ -19,21 +19,7 @@ export default function usePlayWithComputer({ ryujinService, gameInfo }: PlayArg
 
     useEffect(() => {
         if (!isWaitingForComputer) return;
-        const players = getPlayersForPlayOffline()
-        send({ type: "UPDATE_PLAYERS", players, roomId: "999" })
-        const newGame = NewGameWithComputer(players, gameInfo)
-        const { selfCards, boardPosition, id, deck, time, hasTurn, selfColor, opponentCards } = newGame
-        setDeckCards(deck)
-        send({
-            type: "GAME_STARTED",
-            id,
-            boardPosition,
-            hasTurn,
-            selfColor,
-            selfCards,
-            opponentCard: opponentCards,
-            time
-        })
+        startNewGame()
     }, [isWaitingForComputer])
 
     useEffect(() => {
@@ -158,6 +144,25 @@ export default function usePlayWithComputer({ ryujinService, gameInfo }: PlayArg
         return null
     }
 
+
+    function startNewGame() {
+        const players = getPlayersForPlayOffline()
+        send({ type: "UPDATE_PLAYERS", players, roomId: "999" })
+        const newGame = NewGameWithComputer(players, gameInfo)
+        const { selfCards, boardPosition, id, deck, time, hasTurn, selfColor, opponentCards } = newGame
+        setDeckCards(deck)
+        send({
+            type: "GAME_STARTED",
+            id,
+            boardPosition,
+            hasTurn,
+            selfColor,
+            selfCards,
+            opponentCard: opponentCards,
+            time
+        })
+    }
+
     function subtituteCardWithDeck(card: CardType, deck: CardType[]) {
         const [replaceCard, ...rest] = deck
         rest.push(card)
@@ -189,7 +194,23 @@ export default function usePlayWithComputer({ ryujinService, gameInfo }: PlayArg
         } as EndGame
         send({ type: "GAME_OVER", endGame, boardPosition: boardPosition })
     }
-    function onCancelJoin() { }
 
-    return { onMove, onPassTurn, onClaimOpponentTimeout, onResign, onCancelJoin } as PlayImp
+    function onCancelJoin() {
+        send({ type: "LEAVE_ROOM" })
+    }
+
+    function onRematch() {
+        startNewGame()
+    }
+
+    return {
+        onMove,
+        onPassTurn,
+        onClaimOpponentTimeout,
+        onResign,
+        onCancelJoin,
+        onRematch,
+        prevOpponent: playersInfo?.opponent,
+        isRoomActionInProgress: false,
+    }
 }
