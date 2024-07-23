@@ -1,32 +1,50 @@
 import { useInterpret } from "@xstate/react";
-import { createContext, ReactNode, useContext, useState } from "react";
+import {
+    createContext,
+    Dispatch,
+    ReactNode,
+    SetStateAction,
+    useContext,
+    useState
+} from "react";
 import { InterpreterFrom } from "xstate";
+import { GameInfo } from "../socket";
+import PlayOnline from "./play-online";
+import PlayWithComputer from "./play-with-computer";
 import { ryujinMachine } from "./ryujin-machine";
 import { CardType, PieceType, PlayerResponse, SquareType } from "./types";
-import usePlayOnline from "./use-play-online";
-import usePlayWithComputer from "./use-play-with-computer";
 
 type PlayValues = {
     onQuickMatch: (roomId?: string) => void,
     onCardSelected: (card: CardType) => void,
     onPieceSelected: (piece: PieceType, square: SquareType) => void,
+    onInviteFriend: () => void,
+    onJoinFriend: (roomId: string) => void,
+    onPlayWithComputer: () => void
+    gameTime: number,
+    numberOfCards: number,
+    setGameInfo: (gameTime: number, numberOfCards: number) => void,
+    onNavigateBack: () => void,
+    onNavigateForward: () => void,
+    ryujinService: InterpreterFrom<typeof ryujinMachine>
+} & Partial<Play>
+
+type Play = {
     onMove: (from: SquareType, to: SquareType, selectedCard: CardType) => void,
     onPassTurn: () => void
     onClaimOpponentTimeout: () => void,
     onResign: () => void,
-    onRematch: () => void
-    onInviteFriend: () => void,
-    onJoinFriend: (roomId: string) => void,
+    onRematch: () => void,
     onCancelJoin: () => void,
-    onPlayWithComputer: () => void
     prevOpponent?: PlayerResponse,
-    gameTime: number,
-    numberOfCards: number,
-    setGameInfo: (gameTime: number, numberOfCards: number) => void,
     isRoomActionInProgress: boolean,
-    onNavigateBack: () => void,
-    onNavigateForward: () => void,
-    ryujinService: InterpreterFrom<typeof ryujinMachine>
+}
+
+export type PlayComponentArgs = {
+    ryujinService: InterpreterFrom<typeof ryujinMachine>,
+    gameInfo: GameInfo,
+    children: ReactNode,
+    setPlay: Dispatch<SetStateAction<Play | null>>
 }
 
 const PlayContext = createContext({} as PlayValues);
@@ -37,9 +55,8 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
     const [time, setTime] = useState(480000)
     const [numberOfCards, setNumberOfCards] = useState(16)
     const [playingMode, setPlayingMode] = useState<0 | 1 | 2>(0)
-    const playOnline = usePlayOnline({ ryujinService, gameInfo: { time, numberOfCards } })
-    const playOffline = usePlayWithComputer({ ryujinService, gameInfo: { time, numberOfCards } })
-    const rootPlay = playingMode === 1 ? playOnline : playOffline
+    const gameInfo = { time, numberOfCards }
+    const [play, setPlay] = useState<Play | null>(null)
 
     function onQuickMatch() {
         setPlayingMode(1)
@@ -95,9 +112,21 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
             onQuickMatch,
             onInviteFriend,
             onPlayWithComputer,
-            ...rootPlay,
+            ...play
         }}>
-            {children}
+            {playingMode === 0 && (
+                children
+            )}
+            {playingMode === 1 && (
+                <PlayOnline ryujinService={ryujinService} gameInfo={gameInfo} setPlay={setPlay}>
+                    {children}
+                </PlayOnline>
+            )}
+            {playingMode === 2 && (
+                <PlayWithComputer ryujinService={ryujinService} gameInfo={gameInfo} setPlay={setPlay}>
+                    {children}
+                </PlayWithComputer>
+            )}
         </PlayContext.Provider>
     );
 };
