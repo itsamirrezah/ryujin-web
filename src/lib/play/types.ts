@@ -167,7 +167,7 @@ export type MoveRejectedEvent = {
 }
 export type GameOverEvent = {
     type: "GAME_OVER"
-    boardPosition: Position,
+    boardPosition?: Position,
     selfColor?: BlackOrWhite,
     selfCards?: [CardType, CardType],
     opponentCards?: [CardType, CardType],

@@ -365,7 +365,7 @@ export const gameOver = assign((ctx, e) => {
     } = e
 
     return {
-        boardPosition,
+        boardPosition: boardPosition || ctx.boardPosition,
         selfColor: selfColor || ctx.selfColor,
         selfCards: selfCards || ctx.selfCards,
         opponentCards: opponentCards || ctx.opponentCards,

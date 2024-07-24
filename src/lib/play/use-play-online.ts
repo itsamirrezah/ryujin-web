@@ -226,7 +226,7 @@ export default function usePlayOnline({ ryujinService, gameInfo }: PlayArgs): Pl
 
     function onMove(from: SquareType, to: SquareType, selectedCard: CardType) {
         if (!gameId) return;
-        send({ type: "MOVE", from, to })
+        send({ type: "MOVE", from, to, selectedCard })
         socket.emit("MOVE", { playerId: socket.id, gameId, from, to, selectedCard })
     }
 

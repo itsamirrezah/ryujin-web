@@ -1,5 +1,5 @@
 import { useSelector } from "@xstate/react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { getCardOptions, getPlayersForPlayOffline, NewGameWithComputer } from "./consts";
 import { BlackOrWhite, CardType, PieceType, SquareType, EndGame } from "./types";
 import { PlayImp, PlayArgs } from "./use-play-online";
@@ -190,7 +190,7 @@ export default function usePlayWithComputer({ ryujinService, gameInfo }: PlayArg
 
     function onClaimOpponentTimeout() { }
 
-    function onResign() {
+    const onResign = useCallback(() => {
         if (!playersInfo || !selfColor) return;
         const opponentId = playersInfo.opponent.socketId
         const opponentColor = selfColor === "w" ? "b" : "w"
@@ -200,8 +200,8 @@ export default function usePlayWithComputer({ ryujinService, gameInfo }: PlayArg
             playerWon: opponentId,
             playerWonColor: opponentColor
         } as EndGame
-        send({ type: "GAME_OVER", endGame, boardPosition: boardPosition })
-    }
+        send({ type: "GAME_OVER", endGame })
+    }, [playersInfo, selfColor, send])
 
     function onCancelJoin() {
         send({ type: "LEAVE_ROOM" })

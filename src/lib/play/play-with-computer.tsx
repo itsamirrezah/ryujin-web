@@ -7,7 +7,7 @@ export default function PlayWithComputer({ ryujinService, gameInfo, setPlay, chi
 
     useEffect(() => {
         setPlay(playOffline)
-    }, [])
+    }, [playOffline.onResign])
 
     return <>{children}</>
 }
