@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { PlayComponentArgs } from "./play-context";
+import { PlayComponentArgs } from "../play/play-context";
 import usePlayOnline from "./use-play-online";
 
 export default function PlayOnline({ ryujinService, gameInfo, setPlay, setPlayingMode, children }: PlayComponentArgs) {

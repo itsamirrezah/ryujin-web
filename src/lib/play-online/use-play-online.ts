@@ -1,10 +1,11 @@
-import { GameInfo, JoinRoom, socket } from "@/lib/socket";
+import { JoinRoom } from "./types";
+import { socket } from "./consts";
 import { useSelector } from "@xstate/react";
 import { useCallback, useEffect, useState } from "react";
 import { InterpreterFrom } from "xstate";
 import { useAuthContext } from "../auth";
-import { ryujinMachine } from "./ryujin-machine";
-import { CardType, PlayerResponse, SquareType } from "./types";
+import { ryujinMachine } from "../ryujin/ryujin-machine";
+import { CardType, PlayerResponse, SquareType, GameInfo } from "../play/types";
 
 export type PlayImp = {
     onMove: (from: SquareType, to: SquareType, selectedCard: CardType) => void,

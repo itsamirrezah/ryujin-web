@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { PlayComponentArgs } from "./play-context"
+import { PlayComponentArgs } from "../play/play-context"
 import usePlayWithComputer from "./use-play-with-computer"
 
 export default function PlayWithComputer({ ryujinService, gameInfo, setPlay, children }: PlayComponentArgs) {

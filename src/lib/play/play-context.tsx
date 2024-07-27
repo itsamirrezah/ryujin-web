@@ -8,11 +8,10 @@ import {
     useState
 } from "react";
 import { InterpreterFrom } from "xstate";
-import { GameInfo } from "../socket";
-import PlayOnline from "./play-online";
-import PlayWithComputer from "./play-with-computer";
-import { ryujinMachine } from "./ryujin-machine";
-import { CardType, PieceType, PlayerResponse, SquareType } from "./types";
+import PlayOnline from "../play-online/play-online";
+import PlayWithComputer from "../play-with-computer/play-with-computer";
+import { ryujinMachine } from "../ryujin/ryujin-machine";
+import { CardType, PieceType, PlayerResponse, SquareType, GameInfo } from "./types";
 
 type PlayValues = {
     onQuickMatch: (roomId?: string) => void,

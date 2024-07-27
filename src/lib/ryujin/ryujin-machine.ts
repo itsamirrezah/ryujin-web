@@ -1,8 +1,7 @@
 import { assign, createMachine } from "xstate";
+import { DEFAULT_POSITION, hasMoves } from "../play/consts";
 import {
-    DEFAULT_POSITION,
     gameOver,
-    hasMoves,
     leaveRoom,
     move,
     moveConfirmed,
@@ -15,7 +14,7 @@ import {
     startGame,
     tick,
     updateTime
-} from "./consts";
+} from "./events";
 import { Events, GameContext } from "./types";
 
 export const ryujinMachine = createMachine({
