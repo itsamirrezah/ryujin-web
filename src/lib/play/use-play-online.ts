@@ -1,6 +1,6 @@
 import { GameInfo, JoinRoom, socket } from "@/lib/socket";
 import { useSelector } from "@xstate/react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { InterpreterFrom } from "xstate";
 import { useAuthContext } from "../auth";
 import { ryujinMachine } from "./ryujin-machine";
@@ -12,7 +12,7 @@ export type PlayImp = {
     onClaimOpponentTimeout: () => void,
     onResign: () => void,
     onRematch: () => void
-    onCancelJoin: () => void,
+    onCancelJoin: () => Promise<void>,
     isRoomActionInProgress: boolean,
     prevOpponent?: PlayerResponse
 }
@@ -30,8 +30,10 @@ export default function usePlayOnline({ ryujinService, gameInfo }: PlayArgs): Pl
     const isWaitForOpponent = useSelector(ryujinService, (state) => state.matches('lobby.waitingForOpponent'))
     const isWaitForFriend = useSelector(ryujinService, (state) => state.matches('lobby.waitingForFriend'))
     const isJoinFriend = useSelector(ryujinService, (state) => state.matches('lobby.friendInJoinLobby'))
+    const selfPlayer = useSelector(ryujinService, (state) => state.context.playersInfo?.self)
     const [isRoomActionInProgress, setIsRoomActionInProgress] = useState(false)
     const [prevOpponent, setPrevOpponent] = useState<PlayerResponse>()
+    const [isJoiningNewGame, setIsJoiningNewGame] = useState(false)
 
     useEffect(() => {
         socket.on("connect", () => { })
@@ -155,6 +157,7 @@ export default function usePlayOnline({ ryujinService, gameInfo }: PlayArgs): Pl
             socket.off("MOVE_CONFIRMED")
             socket.off("TIMEOUT_REJECTED")
             socket.off("OPPONENT_REMATCH")
+            socket.disconnect()
         }
     }, [])
 
@@ -169,6 +172,27 @@ export default function usePlayOnline({ ryujinService, gameInfo }: PlayArgs): Pl
     }, [isAuth, socket])
 
     useEffect(() => {
+        if (!isWaitForOpponent || isRoomActionInProgress || selfPlayer) return;
+        setIsJoiningNewGame(true)
+
+    }, [isWaitForOpponent, isJoinFriend, roomId, isRoomActionInProgress, selfPlayer])
+
+    useEffect(() => {
+        async function onInviteFriend() {
+            const payload = gameInfo
+            try {
+                setIsRoomActionInProgress(true)
+                const res = await socket.emitWithAck("CREATE_ROOM", payload)
+                if (res.error) {
+                    throw new Error("client did not acknowledge the event")
+                }
+            } catch (err) {
+                send({ type: "LEAVE_ROOM" })
+            } finally {
+                setIsRoomActionInProgress(false)
+            }
+        }
+
         async function onQuickMatch(payload: JoinRoom) {
             try {
                 setIsRoomActionInProgress(true)
@@ -183,35 +207,24 @@ export default function usePlayOnline({ ryujinService, gameInfo }: PlayArgs): Pl
                 setIsRoomActionInProgress(false)
             }
         }
-        if (!isWaitForOpponent || isRoomActionInProgress) return;
-        onQuickMatch({ roomId, gameInfo })
+        if (!isJoiningNewGame) return;
+        if (isWaitForOpponent) {
+            onQuickMatch({ roomId, gameInfo })
+        } else if (isWaitForFriend) {
+            onInviteFriend()
+        }
+        setIsJoiningNewGame(false)
 
-    }, [isWaitForOpponent, isJoinFriend])
+    }, [isJoiningNewGame, isWaitForOpponent, isWaitForFriend, roomId, gameInfo])
 
 
     useEffect(() => {
-        async function onInviteFriend() {
-            if (isRoomActionInProgress) return;
-            const payload = gameInfo
-            try {
-                setIsRoomActionInProgress(true)
-                const res = await socket.emitWithAck("CREATE_ROOM", payload)
-                if (res.error) {
-                    throw new Error("client did not acknowledge the event")
-                }
-            } catch (err) {
-                send({ type: "LEAVE_ROOM" })
-            } finally {
-                setIsRoomActionInProgress(false)
-            }
-        }
-        if (!isWaitForFriend) return;
-        onInviteFriend()
-    }, [isWaitForFriend])
+        if (!isWaitForFriend || isRoomActionInProgress || selfPlayer) return;
+        setIsJoiningNewGame(true)
+    }, [isWaitForFriend, isRoomActionInProgress, selfPlayer])
 
-
-    async function onCancelJoin() {
-        if (isRoomActionInProgress) return;
+    const onCancelJoin = useCallback(async () => {
+        if (!roomId || isRoomActionInProgress) return;
         try {
             setIsRoomActionInProgress(true)
             const res = await socket.emitWithAck("LEAVE_ROOM")
@@ -222,36 +235,36 @@ export default function usePlayOnline({ ryujinService, gameInfo }: PlayArgs): Pl
         } finally {
             setIsRoomActionInProgress(false)
         }
-    }
+    }, [roomId, isRoomActionInProgress])
 
-    function onMove(from: SquareType, to: SquareType, selectedCard: CardType) {
+    const onMove = useCallback((from: SquareType, to: SquareType, selectedCard: CardType) => {
         if (!gameId) return;
         send({ type: "MOVE", from, to, selectedCard })
         socket.emit("MOVE", { playerId: socket.id, gameId, from, to, selectedCard })
-    }
+    }, [gameId])
 
-    function onPassTurn() {
+    const onPassTurn = useCallback(() => {
         if (!gameId) return
         send({ type: "PASS_TURN" })
         socket.emit("PASS_TURN", { playerId: socket.id, gameId })
-    }
+    }, [gameId])
 
-    function onClaimOpponentTimeout() {
+    const onClaimOpponentTimeout = useCallback(() => {
         if (!gameId) return
         send({ type: "CLAIM_OPPONENT_TIMEOUT" })
         socket.emit("CLAIM_OPPONENT_TIMEOUT", gameId)
-    }
+    }, [gameId])
 
-    function onResign() {
+    const onResign = useCallback(() => {
         if (!gameId) return;
         socket.emit("RESIGNATION", { playerId: socket.id, gameId })
-    }
+    }, [gameId])
 
-    function onRematch() {
+    const onRematch = useCallback(() => {
         if (!gameId) return
         socket.emit("REQUEST_REMATCH", { playerId: socket.id, gameId })
         send({ type: "REMATCH" })
-    }
+    }, [gameId])
 
     return {
         onRematch,

@@ -6,6 +6,7 @@ import { PlayImp, PlayArgs } from "./use-play-online";
 
 export default function usePlayWithComputer({ ryujinService, gameInfo }: PlayArgs): PlayImp {
     const [deckCards, setDeckCards] = useState<CardType[]>([])
+    const [isJoiningNewGame, setIsJoiningNewGame] = useState(false)
     const { send } = ryujinService
     const isWaitingForComputer = useSelector(ryujinService, (state) => state.matches('lobby.waitingForComputer'))
     const isMovePending = useSelector(ryujinService, (state) => state.matches('playing.pendingMove'))
@@ -20,8 +21,14 @@ export default function usePlayWithComputer({ ryujinService, gameInfo }: PlayArg
 
     useEffect(() => {
         if (!isWaitingForComputer) return;
-        startNewGame()
+        setIsJoiningNewGame(true)
     }, [isWaitingForComputer])
+
+    useEffect(() => {
+        if (!isJoiningNewGame) return;
+        startNewGame()
+        setIsJoiningNewGame(false)
+    }, [isJoiningNewGame])
 
     useEffect(() => {
         if (!isMovePending) return;
@@ -155,7 +162,6 @@ export default function usePlayWithComputer({ ryujinService, gameInfo }: PlayArg
         return null
     }
 
-
     function startNewGame() {
         const players = getPlayersForPlayOffline()
         send({ type: "UPDATE_PLAYERS", players, roomId: "999" })
@@ -203,7 +209,7 @@ export default function usePlayWithComputer({ ryujinService, gameInfo }: PlayArg
         send({ type: "GAME_OVER", endGame })
     }, [playersInfo, selfColor, send])
 
-    function onCancelJoin() {
+    async function onCancelJoin() {
         send({ type: "LEAVE_ROOM" })
     }
 

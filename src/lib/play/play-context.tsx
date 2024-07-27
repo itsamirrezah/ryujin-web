@@ -45,6 +45,7 @@ export type PlayComponentArgs = {
     gameInfo: GameInfo,
     children: ReactNode,
     setPlay: Dispatch<SetStateAction<Play | null>>
+    setPlayingMode: Dispatch<SetStateAction<0 | 1 | 2>>
 }
 
 const PlayContext = createContext({} as PlayValues);
@@ -62,6 +63,7 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
         setPlayingMode(1)
         send({ type: "QUICK_MATCH" })
     }
+
     function onInviteFriend() {
         setPlayingMode(1)
         send({ type: "INVITE_FRIEND" })
@@ -118,12 +120,12 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
                 children
             )}
             {playingMode === 1 && (
-                <PlayOnline ryujinService={ryujinService} gameInfo={gameInfo} setPlay={setPlay}>
+                <PlayOnline ryujinService={ryujinService} gameInfo={gameInfo} setPlay={setPlay} setPlayingMode={setPlayingMode}>
                     {children}
                 </PlayOnline>
             )}
             {playingMode === 2 && (
-                <PlayWithComputer ryujinService={ryujinService} gameInfo={gameInfo} setPlay={setPlay}>
+                <PlayWithComputer ryujinService={ryujinService} gameInfo={gameInfo} setPlay={setPlay} setPlayingMode={setPlayingMode}>
                     {children}
                 </PlayWithComputer>
             )}

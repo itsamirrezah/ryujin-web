@@ -3,6 +3,7 @@ import {
     DEFAULT_POSITION,
     gameOver,
     hasMoves,
+    leaveRoom,
     move,
     moveConfirmed,
     moveRejected,
@@ -95,7 +96,7 @@ export const ryujinMachine = createMachine({
                 },
                 LEAVE_ROOM: {
                     target: "lobby",
-                    actions: assign({ roomId: undefined })
+                    actions: leaveRoom
                 }
             }
         },
@@ -175,7 +176,7 @@ export const ryujinMachine = createMachine({
                 },
                 LEAVE_ROOM: {
                     target: "lobby",
-                    actions: assign({ roomId: undefined })
+                    actions: leaveRoom
                 },
                 NAVIGATE_BACK: {
                     actions: navigateBack
@@ -207,11 +208,11 @@ export const ryujinMachine = createMachine({
                 },
                 QUICK_MATCH: {
                     target: "lobby.waitingForOpponent",
-                    actions: assign({ roomId: undefined })
+                    actions: assign({ roomId: undefined, playersInfo: undefined })
                 },
                 LEAVE_ROOM: {
                     target: "lobby",
-                    actions: assign({ roomId: undefined })
+                    actions: leaveRoom
                 },
             },
         }

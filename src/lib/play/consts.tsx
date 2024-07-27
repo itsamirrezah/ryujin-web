@@ -7,6 +7,7 @@ import {
     GameContext,
     GameOverEvent,
     GameStartedEvent,
+    LeaveRoomEvent,
     MoveConfirmedEvent,
     MoveEvent,
     MoveRejectedEvent,
@@ -373,8 +374,18 @@ export const gameOver = assign((ctx, e) => {
         selfRemainingTime: selfRemainingTime || ctx.selfRemainingTime,
         opponentRemainingTime: opponentRemainingTime || ctx.opponentRemainingTime,
         hasFlagInProgress: false,
+        selectedCard: undefined,
+        selectedPiece: undefined,
+        moveOptions: [],
     }
 }) as AssignAction<GameContext, GameOverEvent>
+
+export const leaveRoom = assign(() => {
+    return {
+        playersInfo: undefined,
+        roomId: undefined
+    }
+}) as AssignAction<GameContext, LeaveRoomEvent>
 
 export const navigateBack = assign((ctx, _) => {
     const { currentHistory, history } = ctx
