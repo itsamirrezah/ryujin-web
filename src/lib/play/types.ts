@@ -53,7 +53,7 @@ export type GameContext = {
     onClaimOpponentTimeout: () => void,
     onResign: () => void,
     onRematch: () => void,
-    onCancelJoin: () => Promise<void>,
+    onCancelJoin: () => void,
     prevOpponent?: PlayerResponse,
     isRoomActionInProgress: boolean,
 }

@@ -210,7 +210,7 @@ export default function usePlayWithComputer({ ryujinService, gameInfo }: UsePlay
         send({ type: "GAME_OVER", endGame })
     }, [playersInfo, selfColor, send])
 
-    async function onCancelJoin() {
+    function onCancelJoin() {
         send({ type: "LEAVE_ROOM" })
     }
 

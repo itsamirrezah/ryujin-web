@@ -1,22 +1,33 @@
 import { useCallback, useEffect, useState } from "react";
-import { PlayWithProps } from "../play/types";
+import { GameContext, PlayWithProps } from "../play/types";
 import usePlayOnline from "./use-play-online";
 
 export default function PlayOnline({ ryujinService, gameInfo, setContext, setPlayingMode, children }: PlayWithProps) {
     const [isLeavingRoom, setIsLeavingRoom] = useState(false)
-    const playOnline = usePlayOnline({ ryujinService, gameInfo })
-    const { onResign, onClaimOpponentTimeout, onCancelJoin, onPassTurn, onRematch, onMove, isRoomActionInProgress } = playOnline
+    const {
+        onResign,
+        onClaimOpponentTimeout,
+        onCancelJoin,
+        onPassTurn,
+        onRematch,
+        onMove,
+        isRoomActionInProgress,
+        prevOpponent,
+        roomId
+    } = usePlayOnline({ ryujinService, gameInfo })
 
     useEffect(() => {
-        async function onLeave() {
-            await onCancelJoin()
-            setIsLeavingRoom(false)
-            setContext(prev => prev && ({ ...prev, isRoomActionInProgress: false }))
-            setPlayingMode(0)
-        }
         if (!isLeavingRoom) return;
-        onLeave()
+        onCancelJoin()
     }, [isLeavingRoom, onCancelJoin])
+
+    useEffect(() => {
+        if (!isLeavingRoom || roomId) return;
+        setIsLeavingRoom(false)
+        setContext(prev => prev && ({ ...prev, isRoomActionInProgress: false }))
+        setPlayingMode(0)
+
+    }, [roomId, isLeavingRoom])
 
     const onLeaveRoom = useCallback(async () => {
         if (isLeavingRoom) return;
@@ -25,8 +36,17 @@ export default function PlayOnline({ ryujinService, gameInfo, setContext, setPla
 
 
     useEffect(() => {
-        setContext({ ...playOnline, onCancelJoin: onLeaveRoom })
-    }, [isRoomActionInProgress, onLeaveRoom, onMove, onResign, onClaimOpponentTimeout, onPassTurn, onRematch])
+        setContext({
+            isRoomActionInProgress,
+            onMove,
+            onResign,
+            onClaimOpponentTimeout,
+            onPassTurn,
+            onRematch,
+            prevOpponent,
+            onCancelJoin: onLeaveRoom
+        })
+    }, [isRoomActionInProgress, onLeaveRoom, onMove, onResign, onClaimOpponentTimeout, onPassTurn, onRematch, prevOpponent])
 
     return <>{children}</>
 }

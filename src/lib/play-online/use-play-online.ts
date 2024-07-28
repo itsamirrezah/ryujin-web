@@ -6,7 +6,11 @@ import { useAuthContext } from "../auth";
 import { CardType, PlayerResponse, SquareType, UsePlayWithProps } from "../play/types";
 import { GameContext } from "../play/types";
 
-export default function usePlayOnline({ ryujinService, gameInfo }: UsePlayWithProps): GameContext {
+type GameContextOnline = {
+    roomId: string | undefined
+} & GameContext
+
+export default function usePlayOnline({ ryujinService, gameInfo }: UsePlayWithProps): GameContextOnline {
     const { isAuth, openAuth } = useAuthContext()
     const { send } = ryujinService
     const gameId = useSelector(ryujinService, (state) => state.context.gameId)
@@ -258,6 +262,7 @@ export default function usePlayOnline({ ryujinService, gameInfo }: UsePlayWithPr
         onCancelJoin,
         isRoomActionInProgress,
         onClaimOpponentTimeout,
-        prevOpponent
+        prevOpponent,
+        roomId
     }
 }
