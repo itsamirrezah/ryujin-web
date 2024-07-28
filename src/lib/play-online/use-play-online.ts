@@ -2,28 +2,11 @@ import { JoinRoom } from "./types";
 import { socket } from "./consts";
 import { useSelector } from "@xstate/react";
 import { useCallback, useEffect, useState } from "react";
-import { InterpreterFrom } from "xstate";
 import { useAuthContext } from "../auth";
-import { ryujinMachine } from "../ryujin/ryujin-machine";
-import { CardType, PlayerResponse, SquareType, GameInfo } from "../play/types";
+import { CardType, PlayerResponse, SquareType, UsePlayWithProps } from "../play/types";
+import { GameContext } from "../play/types";
 
-export type PlayImp = {
-    onMove: (from: SquareType, to: SquareType, selectedCard: CardType) => void,
-    onPassTurn: () => void,
-    onClaimOpponentTimeout: () => void,
-    onResign: () => void,
-    onRematch: () => void
-    onCancelJoin: () => Promise<void>,
-    isRoomActionInProgress: boolean,
-    prevOpponent?: PlayerResponse
-}
-
-export type PlayArgs = {
-    ryujinService: InterpreterFrom<typeof ryujinMachine>,
-    gameInfo: GameInfo,
-}
-
-export default function usePlayOnline({ ryujinService, gameInfo }: PlayArgs): PlayImp {
+export default function usePlayOnline({ ryujinService, gameInfo }: UsePlayWithProps): GameContext {
     const { isAuth, openAuth } = useAuthContext()
     const { send } = ryujinService
     const gameId = useSelector(ryujinService, (state) => state.context.gameId)

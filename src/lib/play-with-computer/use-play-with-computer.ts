@@ -2,10 +2,10 @@ import { useSelector } from "@xstate/react";
 import { useCallback, useEffect, useState } from "react";
 import { getCardOptions } from "../play/consts";
 import { getPlayersForPlayOffline, NewGameWithComputer } from "./consts";
-import { BlackOrWhite, CardType, PieceType, SquareType, EndGame } from "../play/types";
-import { PlayImp, PlayArgs } from "../play-online/use-play-online";
+import { BlackOrWhite, CardType, PieceType, SquareType, EndGame, UsePlayWithProps } from "../play/types";
+import { GameContext } from "../play/types";
 
-export default function usePlayWithComputer({ ryujinService, gameInfo }: PlayArgs): PlayImp {
+export default function usePlayWithComputer({ ryujinService, gameInfo }: UsePlayWithProps): GameContext {
     const [deckCards, setDeckCards] = useState<CardType[]>([])
     const [isJoiningNewGame, setIsJoiningNewGame] = useState(false)
     const { send } = ryujinService

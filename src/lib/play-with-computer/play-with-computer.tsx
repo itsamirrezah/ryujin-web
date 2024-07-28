@@ -1,12 +1,12 @@
 import { useEffect } from "react"
-import { PlayComponentArgs } from "../play/play-context"
+import { PlayWithProps } from "../play/types"
 import usePlayWithComputer from "./use-play-with-computer"
 
-export default function PlayWithComputer({ ryujinService, gameInfo, setPlay, children }: PlayComponentArgs) {
+export default function PlayWithComputer({ ryujinService, gameInfo, setContext, children }: PlayWithProps) {
     const playOffline = usePlayWithComputer({ ryujinService, gameInfo })
 
     useEffect(() => {
-        setPlay(playOffline)
+        setContext(playOffline)
     }, [playOffline.onResign])
 
     return <>{children}</>

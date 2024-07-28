@@ -13,7 +13,7 @@ export default function OpponentPlayerInfo() {
     const isPlaying = useSelector(ryujinService, (state) => state.matches('playing'))
 
     useEffect(() => {
-        if (hasFlagInProgress || opponentRemaining > 0 || !isPlaying) return
+        if (hasFlagInProgress || opponentRemaining > 0 || !isPlaying || !onClaimOpponentTimeout) return
         onClaimOpponentTimeout()
     }, [opponentRemaining, hasFlagInProgress, isPlaying])
 

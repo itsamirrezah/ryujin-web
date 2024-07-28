@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
-import { PlayComponentArgs } from "../play/play-context";
+import { PlayWithProps } from "../play/types";
 import usePlayOnline from "./use-play-online";
 
-export default function PlayOnline({ ryujinService, gameInfo, setPlay, setPlayingMode, children }: PlayComponentArgs) {
+export default function PlayOnline({ ryujinService, gameInfo, setContext, setPlayingMode, children }: PlayWithProps) {
     const [isLeavingRoom, setIsLeavingRoom] = useState(false)
     const playOnline = usePlayOnline({ ryujinService, gameInfo })
     const { onResign, onClaimOpponentTimeout, onCancelJoin, onPassTurn, onRematch, onMove, isRoomActionInProgress } = playOnline
@@ -11,21 +11,21 @@ export default function PlayOnline({ ryujinService, gameInfo, setPlay, setPlayin
         async function onLeave() {
             await onCancelJoin()
             setIsLeavingRoom(false)
-            setPlay(prev => prev && ({ ...prev, isRoomActionInProgress: false }))
+            setContext(prev => prev && ({ ...prev, isRoomActionInProgress: false }))
             setPlayingMode(0)
         }
         if (!isLeavingRoom) return;
         onLeave()
     }, [isLeavingRoom, onCancelJoin])
 
-    const onLeaveRoom = useCallback(() => {
+    const onLeaveRoom = useCallback(async () => {
         if (isLeavingRoom) return;
         setIsLeavingRoom(true)
     }, [isLeavingRoom])
 
 
     useEffect(() => {
-        setPlay({ ...playOnline, onCancelJoin: onLeaveRoom })
+        setContext({ ...playOnline, onCancelJoin: onLeaveRoom })
     }, [isRoomActionInProgress, onLeaveRoom, onMove, onResign, onClaimOpponentTimeout, onPassTurn, onRematch])
 
     return <>{children}</>

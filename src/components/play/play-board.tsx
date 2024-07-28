@@ -17,7 +17,7 @@ export default function PlayBoard() {
     }
 
     function onMoveHandler(to: SquareType) {
-        if (!selectedPiece || !selectedCard) return
+        if (!selectedPiece || !selectedCard || !onMove) return
         onMove(selectedPiece.square, to, selectedCard)
     }
 

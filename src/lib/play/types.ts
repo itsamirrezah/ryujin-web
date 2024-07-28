@@ -1,3 +1,7 @@
+import { Dispatch, ReactNode, SetStateAction } from "react";
+import { InterpreterFrom } from "xstate";
+import { ryujinMachine } from "../ryujin/ryujin-machine";
+
 export type PieceType = "wP" | "wK" | "bP" | "bK";
 
 export type SquareType =
@@ -41,4 +45,26 @@ export type CardType = {
 export type Delta = {
     x: number,
     y: number
+}
+
+export type GameContext = {
+    onMove: (from: SquareType, to: SquareType, selectedCard: CardType) => void,
+    onPassTurn: () => void
+    onClaimOpponentTimeout: () => void,
+    onResign: () => void,
+    onRematch: () => void,
+    onCancelJoin: () => Promise<void>,
+    prevOpponent?: PlayerResponse,
+    isRoomActionInProgress: boolean,
+}
+
+export type PlayWithProps = {
+    children: ReactNode,
+    setContext: Dispatch<SetStateAction<GameContext | null>>
+    setPlayingMode: Dispatch<SetStateAction<0 | 1 | 2>>
+} & UsePlayWithProps
+
+export type UsePlayWithProps = {
+    ryujinService: InterpreterFrom<typeof ryujinMachine>,
+    gameInfo: GameInfo,
 }

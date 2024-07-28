@@ -1,9 +1,7 @@
 import { useInterpret } from "@xstate/react";
 import {
     createContext,
-    Dispatch,
     ReactNode,
-    SetStateAction,
     useContext,
     useState
 } from "react";
@@ -11,7 +9,7 @@ import { InterpreterFrom } from "xstate";
 import PlayOnline from "../play-online/play-online";
 import PlayWithComputer from "../play-with-computer/play-with-computer";
 import { ryujinMachine } from "../ryujin/ryujin-machine";
-import { CardType, PieceType, PlayerResponse, SquareType, GameInfo } from "./types";
+import { CardType, PieceType, SquareType, GameContext } from "./types";
 
 type PlayValues = {
     onQuickMatch: (roomId?: string) => void,
@@ -26,26 +24,7 @@ type PlayValues = {
     onNavigateBack: () => void,
     onNavigateForward: () => void,
     ryujinService: InterpreterFrom<typeof ryujinMachine>
-} & Partial<Play>
-
-type Play = {
-    onMove: (from: SquareType, to: SquareType, selectedCard: CardType) => void,
-    onPassTurn: () => void
-    onClaimOpponentTimeout: () => void,
-    onResign: () => void,
-    onRematch: () => void,
-    onCancelJoin: () => void,
-    prevOpponent?: PlayerResponse,
-    isRoomActionInProgress: boolean,
-}
-
-export type PlayComponentArgs = {
-    ryujinService: InterpreterFrom<typeof ryujinMachine>,
-    gameInfo: GameInfo,
-    children: ReactNode,
-    setPlay: Dispatch<SetStateAction<Play | null>>
-    setPlayingMode: Dispatch<SetStateAction<0 | 1 | 2>>
-}
+} & Partial<GameContext>
 
 const PlayContext = createContext({} as PlayValues);
 
@@ -56,7 +35,7 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
     const [numberOfCards, setNumberOfCards] = useState(16)
     const [playingMode, setPlayingMode] = useState<0 | 1 | 2>(0)
     const gameInfo = { time, numberOfCards }
-    const [play, setPlay] = useState<Play | null>(null)
+    const [gameContext, setGameContext] = useState<GameContext | null>(null)
 
     function onQuickMatch() {
         setPlayingMode(1)
@@ -113,18 +92,18 @@ export default function PlayContextProvider({ children }: { children: ReactNode 
             onQuickMatch,
             onInviteFriend,
             onPlayWithComputer,
-            ...play
+            ...gameContext
         }}>
             {playingMode === 0 && (
                 children
             )}
             {playingMode === 1 && (
-                <PlayOnline ryujinService={ryujinService} gameInfo={gameInfo} setPlay={setPlay} setPlayingMode={setPlayingMode}>
+                <PlayOnline ryujinService={ryujinService} gameInfo={gameInfo} setContext={setGameContext} setPlayingMode={setPlayingMode}>
                     {children}
                 </PlayOnline>
             )}
             {playingMode === 2 && (
-                <PlayWithComputer ryujinService={ryujinService} gameInfo={gameInfo} setPlay={setPlay} setPlayingMode={setPlayingMode}>
+                <PlayWithComputer ryujinService={ryujinService} gameInfo={gameInfo} setContext={setGameContext} setPlayingMode={setPlayingMode}>
                     {children}
                 </PlayWithComputer>
             )}
