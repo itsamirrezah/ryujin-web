@@ -1,10 +1,4 @@
-import { io, Socket } from "socket.io-client";
-import { CardType, EndGame, PlayerResponse, Position, SquareType } from "./play/types";
-
-export const socket = io(
-    `${import.meta.env.VITE_SERVER_BASEURL}/play`,
-    { autoConnect: false, withCredentials: true, transports: ["websocket"] }
-) as Socket<ServerEvents, ClientEvents>
+import { CardType, EndGame, GameInfo, PlayerResponse, Position, SquareType } from "../play/types";
 
 export type TimePayload = { whiteRemaining: number, blackRemaining: number }
 
@@ -42,11 +36,6 @@ export type MoveRejectedPayload = Omit<GamePayload, "gameTime"> & TimePayload
 export type MoveConfirmedPayload = {
     replacedCard: CardType
 } & TimePayload
-
-export type GameInfo = {
-    time: number,
-    numberOfCards: number
-}
 
 export type JoinRoom = {
     roomId?: string,

@@ -1,8 +1,8 @@
 import { assign, createMachine } from "xstate";
+import { DEFAULT_POSITION, hasMoves } from "../play/consts";
 import {
-    DEFAULT_POSITION,
     gameOver,
-    getCardOptions,
+    leaveRoom,
     move,
     moveConfirmed,
     moveRejected,
@@ -14,8 +14,8 @@ import {
     startGame,
     tick,
     updateTime
-} from "./consts";
-import { Events, GameContext, PieceType, SquareType } from "./types";
+} from "./events";
+import { Events, GameContext } from "./types";
 
 export const ryujinMachine = createMachine({
     schema: {
@@ -59,15 +59,15 @@ export const ryujinMachine = createMachine({
             states: {
                 idle: {
                     on: {
-                        QUICK_MATCH: {
-                            target: "waitingForOpponent"
-                        },
                         INVITE_FRIEND: {
                             target: "waitingForFriend"
                         },
                         JOIN_FRIEND: {
                             actions: assign({ roomId: (_, e) => e.roomId }),
                             target: "friendInJoinLobby"
+                        },
+                        PLAY_OFFLINE: {
+                            target: "waitingForComputer"
                         }
                     }
                 },
@@ -78,19 +78,24 @@ export const ryujinMachine = createMachine({
                     on: {
                         UPDATE_PLAYERS: [{
                             target: "idle",
+                            actions: assign({ roomId: undefined }),
                             cond: (_, e) => !e.players?.opponent
                         }]
                     },
                 },
+                waitingForComputer: {}
             },
             on: {
+                QUICK_MATCH: {
+                    target: "lobby.waitingForOpponent"
+                },
                 GAME_STARTED: {
                     target: "playing",
                     actions: startGame
                 },
                 LEAVE_ROOM: {
                     target: "lobby",
-                    actions: assign({ roomId: undefined })
+                    actions: leaveRoom
                 }
             }
         },
@@ -103,17 +108,7 @@ export const ryujinMachine = createMachine({
                         cond: (ctx) => {
                             const { hasTurn, selfCards, boardPosition, selfColor } = ctx
                             if (!hasTurn || !selfCards || !selfCards || !selfColor) return false
-                            const sourceSquares = Object.entries(boardPosition)
-                            for (let i = 0; i < sourceSquares.length; i++) {
-                                const [square, piece] = sourceSquares[i] as [SquareType, PieceType]
-                                if (piece[0] !== selfColor) continue
-                                for (let j = 0; j < selfCards.length; j++) {
-                                    const card = selfCards[j]
-                                    const options = getCardOptions(square, card.delta, selfColor, boardPosition)
-                                    if (options.length > 0) return false
-                                }
-                            }
-                            return true
+                            return !hasMoves(boardPosition, selfCards, selfColor)
                         },
                         target: "noMove",
                     },
@@ -180,7 +175,7 @@ export const ryujinMachine = createMachine({
                 },
                 LEAVE_ROOM: {
                     target: "lobby",
-                    actions: assign({ roomId: undefined })
+                    actions: leaveRoom
                 },
                 NAVIGATE_BACK: {
                     actions: navigateBack
@@ -211,11 +206,12 @@ export const ryujinMachine = createMachine({
                     target: "lobby.waitingForRematch"
                 },
                 QUICK_MATCH: {
-                    target: "lobby.waitingForOpponent"
+                    target: "lobby.waitingForOpponent",
+                    actions: assign({ roomId: undefined, playersInfo: undefined })
                 },
                 LEAVE_ROOM: {
                     target: "lobby",
-                    actions: assign({ roomId: undefined })
+                    actions: leaveRoom
                 },
             },
         }

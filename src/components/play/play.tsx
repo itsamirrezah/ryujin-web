@@ -33,6 +33,7 @@ export default function Play() {
     const shouldLoadCards = isPlaying || isGameOver
 
     function onResignHandler() {
+        if (!onResign) return;
         setResign(prev => {
             if (prev + 1 >= 2) {
                 onResign()

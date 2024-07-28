@@ -32,7 +32,7 @@ export default function Piece({ piece, square }: PieceProps) {
     }
 
     useEffect(() => {
-        if (!isWaitForAnimation || nextMove?.from !== square) return
+        if (!isWaitForAnimation || nextMove?.from !== square || !nextMove.to) return
         const source = coordinates?.[nextMove.from]
         const dest = coordinates?.[nextMove.to]
         if (!source || !dest) return;

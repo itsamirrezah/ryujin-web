@@ -12,6 +12,7 @@ import ArrowIcon from "../icons/arrow-icon";
 import { useEffect, useState } from "react";
 import StopwatchIcon from "../icons/stopwatch";
 import DiamondIcon from "../icons/diamond";
+import RobotIcon from "../icons/robot";
 
 const timeControlOptions = [3, 5, 8];
 
@@ -27,7 +28,8 @@ export default function Lobby() {
         setGameInfo,
         gameTime,
         numberOfCards,
-        isRoomActionInProgress
+        isRoomActionInProgress,
+        onPlayWithComputer
     } = usePlay()
     const { isAuth, openAuth } = useAuthContext()
     const isIdle = useSelector(ryujinService, (state) => state.matches('lobby.idle'))
@@ -79,6 +81,12 @@ export default function Lobby() {
                                 disabled={isRoomActionInProgress}
                                 onClick={() => !isAuth ? openAuth() : onInviteFriend()}>
                                 With Friends
+                            </SideBarButton>
+                            <SideBarButton
+                                icon={<RobotIcon />}
+                                disabled={isRoomActionInProgress}
+                                onClick={() => !isAuth ? openAuth() : onPlayWithComputer()}>
+                                With Computer
                             </SideBarButton>
                         </>
                     ) : (
