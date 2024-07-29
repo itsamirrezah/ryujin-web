@@ -77,8 +77,11 @@ export const ryujinMachine = createMachine({
                 waitingForRematch: {
                     on: {
                         UPDATE_PLAYERS: [{
-                            target: "idle",
-                            actions: assign({ roomId: undefined }),
+                            actions: assign({
+                                playersInfo: (_, e) => e.players,
+                                roomId: (_, e) => e.roomId
+                            }),
+                            target: "#game-over",
                             cond: (_, e) => !e.players?.opponent
                         }]
                     },
@@ -186,6 +189,7 @@ export const ryujinMachine = createMachine({
             },
         },
         gameOver: {
+            id: "game-over",
             initial: "idle",
             states: {
                 idle: {
