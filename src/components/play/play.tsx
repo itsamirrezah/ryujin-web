@@ -34,19 +34,18 @@ export default function Play() {
 
     function onResignHandler() {
         if (!onResign) return;
-        setResign(prev => {
-            if (prev + 1 >= 2) {
-                onResign()
-                return 0
-            }
-            return prev + 1
-        })
+        setResign(prev => prev < 2 ? prev + 1 : prev)
     }
 
     useEffect(() => {
         if (!isGameOver) return;
         setResign(0)
     }, [isGameOver])
+
+    useEffect(() => {
+        if (resign < 2 || !onResign) return;
+        onResign()
+    }, [resign, onResign])
 
     return (
         <div className={styles.container}>
@@ -82,6 +81,7 @@ export default function Play() {
                         <CircleArrowLeft />
                     </button>
                     <button
+                        disabled={resign >= 2}
                         ref={outsideRef}
                         className={`${styles.actionBtn} ${resign === 1 ? styles.selected : ""}`}
                         onClick={onResignHandler}
