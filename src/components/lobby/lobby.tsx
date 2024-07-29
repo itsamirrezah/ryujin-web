@@ -4,7 +4,6 @@ import ChainIcon from "../icons/chain";
 import DiceIcon from "../icons/dice";
 import SideBarButton from "./side-bar-button";
 import styles from "./lobby.module.css"
-import CopyIcon from "../icons/copy";
 import RocketIcon from "../icons/rocket";
 import WaitForOpponent from "./wait-for-opponent";
 import { useAuthContext } from "@/lib/auth";
@@ -13,6 +12,7 @@ import { useEffect, useState } from "react";
 import StopwatchIcon from "../icons/stopwatch";
 import DiamondIcon from "../icons/diamond";
 import RobotIcon from "../icons/robot";
+import WaitForFriend from "./wait-for-friend";
 
 const timeControlOptions = [3, 5, 8];
 
@@ -24,7 +24,6 @@ export default function Lobby() {
         onQuickMatch,
         onInviteFriend,
         ryujinService,
-        onCancelJoin,
         setGameInfo,
         gameTime,
         numberOfCards,
@@ -38,12 +37,6 @@ export default function Lobby() {
     const isWaitForFriend = useSelector(ryujinService, (state) => state.matches('lobby.waitingForFriend'))
     const isJoinFriend = useSelector(ryujinService, (state) => state.matches('lobby.friendInJoinLobby'))
     const roomId = useSelector(ryujinService, (state) => state.context.roomId)
-
-    async function onCopyHandler() {
-        if (!roomId) return;
-        const shareLink = `${import.meta.env.VITE_BASE_URL}/play?join=${roomId}`
-        await navigator.clipboard.writeText(shareLink)
-    }
 
     function customSelectedHandler() {
         setCustomSelected(prev => !prev)
@@ -85,7 +78,7 @@ export default function Lobby() {
                             <SideBarButton
                                 icon={<RobotIcon />}
                                 disabled={isRoomActionInProgress}
-                                onClick={() => !isAuth ? openAuth() : onPlayWithComputer()}>
+                                onClick={onPlayWithComputer}>
                                 With Computer
                             </SideBarButton>
                         </>
@@ -150,18 +143,9 @@ export default function Lobby() {
                         </button>
                     </div>
                 </div>
-            )
-            }
-            {(isWaitForOpponent || isWaitForRematch) && <WaitForOpponent />}
-            {isWaitForFriend && (
-                <div className={styles.waitForFriend}>
-                    <button onClick={onCancelJoin} className={styles.backBtn}>
-                        <ArrowIcon />
-                    </button>
-                    <SideBarButton onClick={onCopyHandler} icon={<CopyIcon />}>{"Copy Link"}</SideBarButton>
-                    <span>Share this link with your friend</span>
-                </div>
             )}
+            {(isWaitForOpponent || isWaitForRematch) && <WaitForOpponent />}
+            {isWaitForFriend && <WaitForFriend />}
             {isJoinFriend && (
                 <div className={styles.joinFriend}>
                     <SideBarButton

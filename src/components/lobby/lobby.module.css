@@ -12,30 +12,9 @@
     gap: var(--12);
 }
 
-.wait-for-friend {
-    display: flex;
-    flex-direction: column;
-    text-align: center;
-    row-gap: var(--8);
-    font-size: var(--14);
-    color: #CCCCCC;
-    font-weight: 500;
-}
-
 .join-friend {
     display: flex;
     flex-direction: column;
-}
-
-.back-btn {
-    width: var(--16);
-    position: absolute;
-    left: 5%;
-    top: 5%
-}
-
-.back-btn > svg {
-    fill: #CCCCCC;
 }
 
 .custom {
