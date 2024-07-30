@@ -5,11 +5,11 @@
 }
 
 .home-page {
-    background-image: url("../../assets/bg-home.png");
+    background-image: url("../../assets/bg-home.webp");
     background-size: cover;
 }
 
 .play-page {
-    background-image: url("../../assets/bg-play.png");
+    background-image: url("../../assets/bg-play.webp");
     background-size: cover;
 }
