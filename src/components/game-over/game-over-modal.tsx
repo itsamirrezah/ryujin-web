@@ -7,6 +7,7 @@ import MasterGreen from "../icons/master-green"
 import MasterRed from "../icons/master-red"
 import styles from "./game-over-modal.module.css"
 import CheckIcon from "../icons/check"
+import { useAuthContext } from "@/lib/auth"
 
 function stringifyEndgame(gameOver: EndGame, selfColor: BlackOrWhite) {
     const { result: strResult, by } = gameOver
@@ -27,6 +28,7 @@ export default function GameOverModal() {
         prevOpponent,
         isRoomActionInProgress
     } = usePlay()
+    const { isAuth } = useAuthContext()
     const gameOver = useSelector(ryujinService, (state) => state.context.endGame)
     const hasOpponentRequestRematch = useSelector(ryujinService, (state) => state.matches("gameOver.opponentRematchRequest"))
     const selfColor = useSelector(ryujinService, (state) => state.context.selfColor)
@@ -63,7 +65,11 @@ export default function GameOverModal() {
             </div>
             <div className={styles.playActions}>
                 <div className={styles.action}>
-                    <GameOverButton disabled={isRoomActionInProgress} onClick={() => onQuickMatch()}>New Opponent</GameOverButton>
+                    <GameOverButton
+                        disabled={!isAuth || isRoomActionInProgress}
+                        onClick={() => onQuickMatch()}>
+                        New Opponent
+                    </GameOverButton>
                 </div>
                 <div className={styles.action}>
                     <GameOverButton
