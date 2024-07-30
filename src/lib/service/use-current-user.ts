@@ -12,6 +12,7 @@ export default function useCurrentUser() {
     const {
         data,
         isError,
+        isLoading,
         isSuccess,
         refetch
     } = useFetch<User>(() => axios.get(url, { withCredentials: true })
@@ -45,5 +46,6 @@ export default function useCurrentUser() {
     }, [user])
 
     const isAuth = !!user && !!user.username && !!user.emailConfirmed
-    return [user, isAuth, invalidateUser, onLogout] as const
+    const isUserActionInProgress = isLoading || logout.isLoading
+    return [user, isAuth, invalidateUser, onLogout, isUserActionInProgress] as const
 }

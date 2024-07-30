@@ -22,7 +22,7 @@ type AuthValues = {
 const AuthContext = createContext({} as AuthValues)
 
 export default function AuthContextProvider({ children }: AuthProps) {
-    const [user, isAuth, invalidateUser, onLogout] = useCurrentUser()
+    const [user, isAuth, invalidateUser, onLogout, isUserActionInProgress] = useCurrentUser()
     const [isModalShown, setIsModalShown] = useState(false)
     const [isLogoutEnabled, setLogoutEnabled] = useState(false)
     const signOptions = !user ? "signup" : !user.username ? "username" : !user.emailConfirmed ? "email" : undefined
@@ -38,10 +38,15 @@ export default function AuthContextProvider({ children }: AuthProps) {
 
     useEffect(() => {
         if (isAuth) {
-            setLogoutEnabled(true)
             closeAuth()
         }
     }, [isAuth])
+
+    useEffect(() => {
+        if (user) {
+            setLogoutEnabled(true)
+        }
+    }, [user])
 
     return (
         <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_AUTH_CLIENT_ID}>
@@ -52,7 +57,7 @@ export default function AuthContextProvider({ children }: AuthProps) {
                 onLogout,
                 openAuth,
                 closeAuth,
-                isLogoutEnabled,
+                isLogoutEnabled: isLogoutEnabled && !isUserActionInProgress,
                 setLogoutEnabled
             }}>
                 {children}
