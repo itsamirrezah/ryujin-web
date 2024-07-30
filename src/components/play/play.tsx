@@ -14,6 +14,7 @@ import { useEffect, useState } from "react"
 import useOutsideClick from "@/lib/use-outside-click"
 import CircleArrowLeft from "../icons/circle-arrow-left"
 import CircleArrowRight from "../icons/circle-arrow-right"
+import IconActionButton from "../buttons/icon-action-button"
 
 export default function Play() {
     const [resign, setResign] = useState<number>(0)
@@ -74,31 +75,30 @@ export default function Play() {
             )}
             {isPlaying && (
                 <div className={styles.playerActions}>
-                    <button
-                        className={styles.actionBtn}
+                    <IconActionButton
                         onClick={onNavigateBack}
                         disabled={gameHistory.currentHistory <= 0}>
                         <CircleArrowLeft />
-                    </button>
-                    <button
-                        disabled={resign >= 2}
+                    </IconActionButton>
+                    <IconActionButton
                         ref={outsideRef}
-                        className={`${styles.actionBtn} ${resign === 1 ? styles.selected : ""}`}
+                        disabled={resign >= 2}
+                        isSelected={resign === 1}
                         onClick={onResignHandler}
                     >
                         <FlagIcon />
-                    </button>
+                    </IconActionButton>
                     {hasNoMoves && (
-                        <button className={styles.actionBtn} onClick={onPassTurn}>
+                        <IconActionButton
+                            onClick={onPassTurn}>
                             <HandIcon />
-                        </button>
+                        </IconActionButton>
                     )}
-                    <button
-                        className={styles.actionBtn}
+                    <IconActionButton
                         onClick={onNavigateForward}
                         disabled={gameHistory.currentHistory === gameHistory.history.length - 1}>
                         <CircleArrowRight />
-                    </button>
+                    </IconActionButton>
                 </div>
             )}
         </div>

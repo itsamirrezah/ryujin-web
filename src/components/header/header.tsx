@@ -2,6 +2,7 @@ import { useAuthContext } from "@/lib/auth"
 import useOutsideClick from "@/lib/use-outside-click"
 import { Link } from "@tanstack/react-router"
 import { useState } from "react"
+import IconActionButton from "../buttons/icon-action-button"
 import GithubIcon from "../icons/github-icon"
 import HamburgerIcon from "../icons/hamburger"
 import LogoPrimary from "../icons/logo-primary"
@@ -62,17 +63,22 @@ export default function Header() {
             </nav>
             <div className={styles.userActions}>
                 {!isAuth && user && (
-                    <button className={styles.action} onClick={openAuth}>
+                    <IconActionButton
+                        className={styles.action}
+                        onClick={openAuth}>
                         <TriangleExclamationIcon />
-                    </button>
+                    </IconActionButton>
                 )}
-                {user && isLogoutEnabled && (
-                    <button
+                {user && (
+                    <IconActionButton
                         ref={logoutRef}
-                        className={`${styles.action} ${logout === 1 ? styles.selected : ""}`}
-                        onClick={onLogoutHandler}>
+                        className={styles.action}
+                        onClick={onLogoutHandler}
+                        isSelected={logout === 1}
+                        disabled={!isLogoutEnabled}
+                    >
                         <LogoutIcon />
-                    </button>
+                    </IconActionButton>
                 )}
             </div>
         </header>

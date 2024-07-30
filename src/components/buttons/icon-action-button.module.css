@@ -1,0 +1,44 @@
+.container {
+    border-radius: 8px;
+    transition: all 0.5s;
+    padding: var(--8);
+}
+
+.container > svg {
+    width: var(--20);
+    height: var(--20);
+    fill: #ccc;
+}
+
+.container:hover {
+    background-color: #00000099;
+}
+
+.container:hover > svg {
+    fill: #fff
+}
+
+.container:disabled {
+    cursor: unset;
+}
+
+.container:disabled:hover {
+    background: unset;
+}
+
+.container:disabled > svg {
+    opacity: 0.5;
+}
+
+.selected.container {
+    background-color: #ffffff99;
+    box-shadow: 0 .3rem .4rem .1rem rgba(255,255,255,.1);
+}
+
+.selected.container:hover {
+    background-color: #ffffff;
+}
+
+.selected.container > svg {
+    filter: invert(1);
+}

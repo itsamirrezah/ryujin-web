@@ -52,49 +52,6 @@
     grid-row: control;
 }
 
-.action-btn {
-    border-radius: 8px;
-    padding: var(--8);
-    transition: all 0.5s;
-}
-
-.action-btn > svg {
-    width: var(--20);
-    height: var(--20);
-    fill: #ccc;
-}
-
-.action-btn:disabled {
-    cursor: unset;
-}
-
-.action-btn:disabled:hover {
-    background: unset;
-}
-
-.action-btn:disabled > svg {
-    opacity: 0.5;
-}
-
-.action-btn:hover {
-    background-color: #00000099;
-}
-
-.selected.action-btn {
-    background-color: #ffffff99;
-    box-shadow: 0 .3rem .4rem .1rem rgba(255,255,255,.1);
-}
-
-.selected.action-btn:hover {
-    background-color: #ffffff;
-}
-
-.selected.action-btn > svg {
-    filter: invert(1);
-}
-
-
-
 @media only screen and (max-width: 1024px) {
     :root {
         --min-sidebar: 15rem;
