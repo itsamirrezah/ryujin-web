@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { GameContext, PlayWithProps } from "../play/types";
+import { useAuthContext } from "../auth";
+import { PlayWithProps } from "../play/types";
 import usePlayOnline from "./use-play-online";
 
 export default function PlayOnline({ ryujinService, gameInfo, setContext, setPlayingMode, children }: PlayWithProps) {
@@ -15,6 +16,7 @@ export default function PlayOnline({ ryujinService, gameInfo, setContext, setPla
         prevOpponent,
         roomId
     } = usePlayOnline({ ryujinService, gameInfo })
+    const { setLogoutEnabled } = useAuthContext()
 
     useEffect(() => {
         if (!isLeavingRoom) return;
@@ -26,8 +28,12 @@ export default function PlayOnline({ ryujinService, gameInfo, setContext, setPla
         setIsLeavingRoom(false)
         setContext(prev => prev && ({ ...prev, isRoomActionInProgress: false }))
         setPlayingMode(0)
-
     }, [roomId, isLeavingRoom])
+
+    useEffect(() => {
+        setLogoutEnabled(false)
+        return () => setLogoutEnabled(true)
+    }, [])
 
     const onLeaveRoom = useCallback(async () => {
         if (isLeavingRoom) return;

@@ -1,6 +1,6 @@
 import AuthModal from "@/components/auth/auth-modal";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useEffect, useState } from "react";
 import useCurrentUser from "./service/use-current-user";
 import { User } from "./types/users";
 
@@ -14,7 +14,9 @@ type AuthValues = {
     invalidateUser: () => void
     openAuth: () => void
     closeAuth: () => void,
-    onLogout: () => void
+    onLogout: () => void,
+    isLogoutEnabled: boolean
+    setLogoutEnabled: Dispatch<SetStateAction<boolean>>
 }
 
 const AuthContext = createContext({} as AuthValues)
@@ -22,6 +24,7 @@ const AuthContext = createContext({} as AuthValues)
 export default function AuthContextProvider({ children }: AuthProps) {
     const [user, isAuth, invalidateUser, onLogout] = useCurrentUser()
     const [isModalShown, setIsModalShown] = useState(false)
+    const [isLogoutEnabled, setLogoutEnabled] = useState(false)
     const signOptions = !user ? "signup" : !user.username ? "username" : !user.emailConfirmed ? "email" : undefined
 
     function openAuth() {
@@ -35,6 +38,7 @@ export default function AuthContextProvider({ children }: AuthProps) {
 
     useEffect(() => {
         if (isAuth) {
+            setLogoutEnabled(true)
             closeAuth()
         }
     }, [isAuth])
@@ -47,7 +51,9 @@ export default function AuthContextProvider({ children }: AuthProps) {
                 invalidateUser,
                 onLogout,
                 openAuth,
-                closeAuth
+                closeAuth,
+                isLogoutEnabled,
+                setLogoutEnabled
             }}>
                 {children}
                 <AuthModal onClose={closeAuth} signOption={signOptions} isShown={isModalShown} />

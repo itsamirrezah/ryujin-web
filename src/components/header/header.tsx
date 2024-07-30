@@ -17,7 +17,7 @@ const navItems = [
 
 export default function Header() {
     const [logout, setLogout] = useState<number>(0)
-    const { isAuth, onLogout, openAuth, user } = useAuthContext()
+    const { isAuth, onLogout, openAuth, user, isLogoutEnabled } = useAuthContext()
     const [isNavOpen, setNavOpen] = useState(false)
     const navRef = useOutsideClick(() => setNavOpen(false))
     const logoutRef = useOutsideClick<HTMLButtonElement>(() => setLogout(0))
@@ -66,7 +66,7 @@ export default function Header() {
                         <TriangleExclamationIcon />
                     </button>
                 )}
-                {user && (
+                {user && isLogoutEnabled && (
                     <button
                         ref={logoutRef}
                         className={`${styles.action} ${logout === 1 ? styles.selected : ""}`}
