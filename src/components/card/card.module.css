@@ -40,9 +40,9 @@
 }
 
 .title > h4 {
-    font-family: var(--font-row);
+    font-family: var(--font-rubik);
     color: #303456;
-    font-weight: 900 ;
+    font-weight: 900;
     line-height: var(--24);
     text-transform: uppercase;
     text-align: center;

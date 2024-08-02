@@ -39,7 +39,8 @@
 }
 
 .nav-item {
-    font-family: var(--font-row);
+    font-family: var(--font-rubik);
+    font-weight: 800;
     color: #FFCECE;
     font-size: var(--16);
     line-height: var(--24);

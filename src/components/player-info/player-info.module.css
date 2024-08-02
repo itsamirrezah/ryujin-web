@@ -3,7 +3,7 @@
     justify-content: space-between;
     align-items: center;
     color: #fff;
-    font-family: var(--font-mukta);
+    font-family: var(--font-lato);
     font-weight: 400;
     padding: 0 var(--8);
 }
@@ -12,10 +12,9 @@
     border-radius: 4px;
     padding: var(--4) var(--8);
     font-size: var(--16);
-    font-weight: 600;
+    font-weight: 700;
     display: flex;
     gap: var(--8);
-    font-family: var(--font-lato);
     align-items: center;
     opacity: 1;
 }
@@ -32,7 +31,7 @@
     opacity: 0.5;
 }
 
-.clock-not-active > .clock-icon {
+.clock-not-active>.clock-icon {
     opacity: 0;
 }
 
@@ -40,6 +39,6 @@
     width: var(--14);
 }
 
-.clock-icon > svg {
+.clock-icon>svg {
     fill: #ddd;
 }

@@ -21,7 +21,7 @@
     display: inline-block;
     margin-left: var(--8);
     vertical-align: middle;
-    font-family: var(--font-mukta);
+    font-family: var(--font-rubik);
     font-size: inherit;
-    font-weight: 500;
+    font-weight: 400;
 }

@@ -12,7 +12,6 @@
     border-radius: var(--16);
     overflow: hidden;
     padding-bottom: var(--12);
-    font-family: var(--font-lato);
     z-index: 10;
 }
 
@@ -79,7 +78,7 @@
 
 .score > span {
     font-family: var(--font-lato);
-    font-weight: 800;
+    font-weight: 900;
 }
 
 .logo {

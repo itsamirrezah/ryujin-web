@@ -79,8 +79,6 @@
 .join > small {
     font-family: var(--font-marker) ;
     font-size: var(--12);
-    font-style: italic;
-    font-weight: 500;
 }
 
 @media only screen and (max-width: 768px){
