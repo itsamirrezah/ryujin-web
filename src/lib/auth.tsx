@@ -1,5 +1,4 @@
 import AuthModal from "@/components/auth/auth-modal";
-import { GoogleOAuthProvider } from "@react-oauth/google";
 import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useEffect, useState } from "react";
 import useCurrentUser from "./service/use-current-user";
 import { User } from "./types/users";
@@ -49,21 +48,19 @@ export default function AuthContextProvider({ children }: AuthProps) {
     }, [user])
 
     return (
-        <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_AUTH_CLIENT_ID}>
-            <AuthContext.Provider value={{
-                user,
-                isAuth,
-                invalidateUser,
-                onLogout,
-                openAuth,
-                closeAuth,
-                isLogoutEnabled: isLogoutEnabled && !isUserActionInProgress,
-                setLogoutEnabled
-            }}>
-                {children}
-                <AuthModal onClose={closeAuth} signOption={signOptions} isShown={isModalShown} />
-            </AuthContext.Provider>
-        </GoogleOAuthProvider>
+        <AuthContext.Provider value={{
+            user,
+            isAuth,
+            invalidateUser,
+            onLogout,
+            openAuth,
+            closeAuth,
+            isLogoutEnabled: isLogoutEnabled && !isUserActionInProgress,
+            setLogoutEnabled
+        }}>
+            {children}
+            <AuthModal onClose={closeAuth} signOption={signOptions} isShown={isModalShown} />
+        </AuthContext.Provider>
     )
 }
 
